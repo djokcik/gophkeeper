@@ -1,21 +1,32 @@
 package controller
 
 import (
+	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
+	"gophkeeper/client/view/loadpage"
+	"gophkeeper/client/view/savepage"
 )
 
 type UIController struct {
-	RegisterLoginPage *view.LoginRegisterPage
-	MainPage          *view.MainPage
-	SavePage          *view.SagePage
-	LoadPage          *view.LoadPage
+	RegisterLoginPage     *view.LoginRegisterPage
+	MainPage              *view.MainPage
+	SavePage              *savepage.SavePage
+	LoginPasswordSavePage *savepage.LoginPasswordSagePage
+	BinaryDataSavePage    *savepage.BinaryDataSavePage
+	TextDataSavePage      *savepage.TextDataSavePage
+	CardSavePage          *savepage.CardSavePage
+	LoadPage              *loadpage.LoadPage
 }
 
-func NewUIController() *UIController {
+func NewUIController(serviceRegistry registry.ServiceRegistry) *UIController {
 	return &UIController{
-		RegisterLoginPage: view.NewLoginRegisterPage(),
-		MainPage:          view.NewMainPage(),
-		SavePage:          view.NewSagePage(),
-		LoadPage:          view.NewLoadPage(),
+		RegisterLoginPage:     view.NewLoginRegisterPage(serviceRegistry),
+		MainPage:              view.NewMainPage(serviceRegistry),
+		SavePage:              savepage.NewSagePage(),
+		LoadPage:              loadpage.NewLoadPage(),
+		LoginPasswordSavePage: savepage.NewLoginPasswordSagePage(),
+		TextDataSavePage:      savepage.NewTextDataSavePage(),
+		BinaryDataSavePage:    savepage.NewBinaryDataSavePage(),
+		CardSavePage:          savepage.NewCardSavePage(),
 	}
 }

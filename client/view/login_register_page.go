@@ -1,12 +1,20 @@
 package view
 
-import "github.com/marcusolsson/tui-go"
+import (
+	"github.com/marcusolsson/tui-go"
+	"gophkeeper/client/registry"
+)
 
 type LoginRegisterPage struct {
+	PageHooks
+	serviceRegistry registry.ServiceRegistry
+
 	Root *tui.Box
 
 	user     *tui.Entry
 	password *tui.Entry
+	status   *tui.StatusBar
+
 	Login    *tui.Button
 	Register *tui.Button
 }
@@ -15,19 +23,27 @@ func (p LoginRegisterPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.user, p.password, p.Login, p.Register}
 }
 
-func (p LoginRegisterPage) GetRoot() *tui.Box {
+func (p LoginRegisterPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
-func (p LoginRegisterPage) GetButtons() []*tui.Button {
-	return []*tui.Button{p.Login, p.Register}
-}
-
 func (p LoginRegisterPage) OnActivated(fn func(b *tui.Button)) {
+	loginService := p.serviceRegistry.GetLoginService()
+	userService := p.serviceRegistry.GetUserService()
+
 	p.Login.OnActivated(func(b *tui.Button) {
 		if p.user.Text() == "" || p.password.Text() == "" {
 			return
 		}
+
+		p.status.SetText("Загрузка...")
+		user, err := loginService.Login(p.user.Text(), p.password.Text())
+		if err != nil {
+			p.status.SetText(err.Error())
+			return
+		}
+
+		userService.SaveUser(user)
 
 		fn(b)
 	})
@@ -37,11 +53,22 @@ func (p LoginRegisterPage) OnActivated(fn func(b *tui.Button)) {
 			return
 		}
 
+		p.status.SetText("Загрузка...")
+		user, err := loginService.Register(p.user.Text(), p.password.Text())
+		if err != nil {
+			p.status.SetText(err.Error())
+			return
+		}
+
+		userService.SaveUser(user)
+
 		fn(b)
 	})
 }
 
-func NewLoginRegisterPage() *LoginRegisterPage {
+func NewLoginRegisterPage(serviceRegistry registry.ServiceRegistry) *LoginRegisterPage {
+	page := &LoginRegisterPage{serviceRegistry: serviceRegistry}
+
 	user := tui.NewEntry()
 	user.SetFocused(true)
 	formUser := tui.NewGrid(0, 0)
@@ -49,6 +76,7 @@ func NewLoginRegisterPage() *LoginRegisterPage {
 	formUser.AppendRow(user)
 	formUserBox := tui.NewHBox(formUser)
 	formUserBox.SetBorder(true)
+	page.user = user
 
 	password := tui.NewEntry()
 	password.SetEchoMode(tui.EchoModePassword)
@@ -57,17 +85,18 @@ func NewLoginRegisterPage() *LoginRegisterPage {
 	formPassword.AppendRow(password)
 	formPasswordBox := tui.NewHBox(formPassword)
 	formPasswordBox.SetBorder(true)
+	page.password = password
 
 	form := tui.NewGrid(0, 0)
 	form.AppendRow(formUserBox, formPasswordBox)
 
-	login := tui.NewButton("[Вход]")
-	register := tui.NewButton("[Регистрация]")
+	page.Login = tui.NewButton("[Вход]")
+	page.Register = tui.NewButton("[Регистрация]")
 
 	buttons := tui.NewHBox(
 		tui.NewSpacer(),
-		tui.NewPadder(1, 0, login),
-		tui.NewPadder(1, 0, register),
+		tui.NewPadder(1, 0, page.Login),
+		tui.NewPadder(1, 0, page.Register),
 	)
 
 	window := tui.NewVBox(
@@ -85,14 +114,8 @@ func NewLoginRegisterPage() *LoginRegisterPage {
 	)
 	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
 
-	root := tui.NewVBox(content)
+	page.status = tui.NewStatusBar("Введите логин и пароль")
+	page.Root = tui.NewVBox(content, page.status)
 
-	return &LoginRegisterPage{
-		Root: root,
-
-		Register: register,
-		Login:    login,
-		password: password,
-		user:     user,
-	}
+	return page
 }

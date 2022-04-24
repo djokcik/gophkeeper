@@ -5,15 +5,9 @@ import (
 	"log"
 )
 
-type Page interface {
-	GetFocusChain() []tui.Widget
-	GetRoot() *tui.Box
-	OnActivated(fn func(b *tui.Button))
-	GetButtons() []*tui.Button
-}
-
 type UIClient struct {
-	UI tui.UI
+	UI     tui.UI
+	widget Page
 }
 
 func NewUiClient() *UIClient {
@@ -28,11 +22,16 @@ func NewUiClient() *UIClient {
 }
 
 func (c *UIClient) Start() {
-	c.UI.SetKeybinding("Esc", func() { c.UI.Quit() })
+	c.ResetKeybinding()
 
 	if err := c.UI.Run(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (c *UIClient) ResetKeybinding() {
+	c.UI.ClearKeybindings()
+	c.UI.SetKeybinding("Esc", func() { c.UI.Quit() })
 }
 
 func (c *UIClient) SetWidget(widget Page) {
@@ -40,5 +39,13 @@ func (c *UIClient) SetWidget(widget Page) {
 	focusChain.Set(widget.GetFocusChain()...)
 
 	c.UI.SetFocusChain(focusChain)
+
+	if c.widget != nil {
+		c.widget.After()
+	}
+
+	c.ResetKeybinding()
+	widget.Before()
 	c.UI.SetWidget(widget.GetRoot())
+	c.widget = widget
 }
