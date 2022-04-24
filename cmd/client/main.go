@@ -2,19 +2,28 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base32"
 	"encoding/binary"
 	"fmt"
 	"gophkeeper/client/controller"
+	"gophkeeper/client/registry"
+	"os/signal"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 )
 
 func main() {
-	controller.Start()
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
+	defer cancel()
+
+	serviceRegistry := registry.NewServiceRegistry()
+
+	controller.Start(ctx, serviceRegistry)
 
 	//secret := strings.ToUpper("dummySECRETdummy")
 	//_, err := base32.StdEncoding.WithPadding(base32.NoPadding).DecodeString(secret)

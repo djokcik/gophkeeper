@@ -15,7 +15,16 @@ func GenerateRouter(ctr *UIController) Route {
 	m[ctr.MainPage.SaveData] = ctr.SavePage
 	m[ctr.MainPage.LoadData] = ctr.LoadPage
 
+	m[ctr.SavePage.LoginPassword] = ctr.LoginPasswordSavePage
+	m[ctr.SavePage.BinButton] = ctr.BinaryDataSavePage
+	m[ctr.SavePage.TextButton] = ctr.TextDataSavePage
+	m[ctr.SavePage.CardButton] = ctr.CardSavePage
 	m[ctr.SavePage.Back] = ctr.MainPage
+
+	m[ctr.LoginPasswordSavePage.Back] = ctr.SavePage
+	m[ctr.BinaryDataSavePage.Back] = ctr.SavePage
+	m[ctr.TextDataSavePage.Back] = ctr.SavePage
+	m[ctr.CardSavePage.Back] = ctr.SavePage
 
 	m[ctr.LoadPage.Back] = ctr.MainPage
 
