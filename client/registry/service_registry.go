@@ -1,18 +1,21 @@
 package registry
 
-import "gophkeeper/client/service"
+import (
+	"gophkeeper/client"
+	"gophkeeper/client/service"
+)
 
 type ServiceRegistry interface {
-	GetLoginService() service.LoginService
+	GetAuthService() service.AuthService
 	GetUserService() service.UserService
 }
 
 type serviceRegistry struct {
-	loginService service.LoginService
+	loginService service.AuthService
 	userService  service.UserService
 }
 
-func (r serviceRegistry) GetLoginService() service.LoginService {
+func (r serviceRegistry) GetAuthService() service.AuthService {
 	return r.loginService
 }
 
@@ -20,9 +23,11 @@ func (r serviceRegistry) GetUserService() service.UserService {
 	return r.userService
 }
 
-func NewServiceRegistry() ServiceRegistry {
+func NewServiceRegistry(cfg client.Config) ServiceRegistry {
+	api := service.NewRpcService(cfg)
+
 	return &serviceRegistry{
-		loginService: service.NewLoginService(),
+		loginService: service.NewAuthService(api),
 		userService:  service.NewUserService(),
 	}
 }

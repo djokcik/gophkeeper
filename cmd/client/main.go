@@ -8,6 +8,7 @@ import (
 	"encoding/base32"
 	"encoding/binary"
 	"fmt"
+	"gophkeeper/client"
 	"gophkeeper/client/controller"
 	"gophkeeper/client/registry"
 	"os/signal"
@@ -17,14 +18,21 @@ import (
 	"time"
 )
 
+// TODO: не забыть добавить версию
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 	defer cancel()
 
-	serviceRegistry := registry.NewServiceRegistry()
+	cfg := client.NewConfig()
 
-	controller.Start(ctx, serviceRegistry)
+	serviceRegistry := registry.NewServiceRegistry(cfg)
 
+	go func() {
+		controller.Start(ctx, serviceRegistry)
+		cancel()
+	}()
+
+	<-ctx.Done()
 	//secret := strings.ToUpper("dummySECRETdummy")
 	//_, err := base32.StdEncoding.WithPadding(base32.NoPadding).DecodeString(secret)
 	//if err != nil {

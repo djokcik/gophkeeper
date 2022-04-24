@@ -1,6 +1,7 @@
 package view
 
 import (
+	"context"
 	"github.com/marcusolsson/tui-go"
 	"gophkeeper/client/registry"
 )
@@ -28,16 +29,18 @@ func (p LoginRegisterPage) GetRoot() tui.Widget {
 }
 
 func (p LoginRegisterPage) OnActivated(fn func(b *tui.Button)) {
-	loginService := p.serviceRegistry.GetLoginService()
+	loginService := p.serviceRegistry.GetAuthService()
 	userService := p.serviceRegistry.GetUserService()
 
 	p.Login.OnActivated(func(b *tui.Button) {
+		ctx := context.Background()
+
 		if p.user.Text() == "" || p.password.Text() == "" {
 			return
 		}
 
 		p.status.SetText("Загрузка...")
-		user, err := loginService.Login(p.user.Text(), p.password.Text())
+		user, err := loginService.Login(ctx, p.user.Text(), p.password.Text())
 		if err != nil {
 			p.status.SetText(err.Error())
 			return
@@ -49,12 +52,14 @@ func (p LoginRegisterPage) OnActivated(fn func(b *tui.Button)) {
 	})
 
 	p.Register.OnActivated(func(b *tui.Button) {
+		ctx := context.Background()
+
 		if p.user.Text() == "" || p.password.Text() == "" {
 			return
 		}
 
 		p.status.SetText("Загрузка...")
-		user, err := loginService.Register(p.user.Text(), p.password.Text())
+		user, err := loginService.Register(ctx, p.user.Text(), p.password.Text())
 		if err != nil {
 			p.status.SetText(err.Error())
 			return

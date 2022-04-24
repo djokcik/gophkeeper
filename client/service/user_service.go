@@ -1,6 +1,8 @@
 package service
 
-import "gophkeeper/client/repo/models"
+import (
+	"gophkeeper/models"
+)
 
 type UserService interface {
 	GetUser() models.GophUser
