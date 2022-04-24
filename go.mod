@@ -3,8 +3,11 @@ module gophkeeper
 go 1.18
 
 require (
+	github.com/caarlos0/env/v6 v6.9.1
+	github.com/google/uuid v1.3.0
 	github.com/lizebang/qrcode-terminal v0.0.0-20180928100242-57607785510a
 	github.com/marcusolsson/tui-go v0.4.0
+	github.com/rs/zerolog v1.26.1
 )
 
 require (
@@ -14,5 +17,5 @@ require (
 	github.com/mattn/go-runewidth v0.0.3 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
-	golang.org/x/text v0.3.0 // indirect
+	golang.org/x/text v0.3.7 // indirect
 )

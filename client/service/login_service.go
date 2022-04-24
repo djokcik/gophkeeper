@@ -1,34 +1,43 @@
 package service
 
-import "gophkeeper/client/repo/models"
+import (
+	"context"
+	"gophkeeper/models"
+	"gophkeeper/pkg/logging"
+)
 
-type LoginService interface {
-	Login(username string, password string) (models.GophUser, error)
-	Register(username string, password string) (models.GophUser, error)
+type AuthService interface {
+	Login(ctx context.Context, username string, password string) (models.GophUser, error)
+	Register(ctx context.Context, username string, password string) (models.GophUser, error)
 }
 
 // Ensure service implements interface
-var _ LoginService = (*loginService)(nil)
+var _ AuthService = (*authService)(nil)
 
-type loginService struct {
+type authService struct {
+	api RpcService
 }
 
-func (l loginService) Login(username string, password string) (models.GophUser, error) {
-	if username == "test" {
-		return models.GophUser{}, ErrInvalidPassword
+func NewAuthService(api RpcService) AuthService {
+	return &authService{
+		api: api,
+	}
+}
+
+func (s authService) Login(ctx context.Context, username string, password string) (models.GophUser, error) {
+	user, err := s.api.Login(ctx, username, password)
+	if err != nil {
+		logging.NewFileLogger().Warn().Err(err).Msg("invalid login")
 	}
 
-	return models.GophUser{Username: username, Password: password}, nil
+	return user, err
 }
 
-func (l loginService) Register(username string, password string) (models.GophUser, error) {
-	if username == "test" {
-		return models.GophUser{}, ErrDuplicateName
+func (s authService) Register(ctx context.Context, username string, password string) (models.GophUser, error) {
+	user, err := s.api.Register(ctx, username, password)
+	if err != nil {
+		logging.NewFileLogger().Warn().Err(err).Msg("invalid login")
 	}
 
-	return models.GophUser{Username: username, Password: password}, nil
-}
-
-func NewLoginService() LoginService {
-	return &loginService{}
+	return user, err
 }

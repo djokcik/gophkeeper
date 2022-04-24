@@ -17,11 +17,10 @@ type MainPage struct {
 	Table    *tui.Table
 
 	welcomeLabel *tui.Label
-	Back         *tui.Button
 }
 
 func (p MainPage) GetFocusChain() []tui.Widget {
-	return []tui.Widget{p.SaveData, p.LoadData, p.Back}
+	return []tui.Widget{p.SaveData, p.LoadData}
 }
 
 func (p MainPage) GetRoot() tui.Widget {
@@ -40,7 +39,7 @@ func (p *MainPage) Before() {
 }
 
 func NewMainPage(serviceRegistry registry.ServiceRegistry) *MainPage {
-	p := &MainPage{serviceRegistry: serviceRegistry, Back: NewBackButton()}
+	p := &MainPage{serviceRegistry: serviceRegistry}
 
 	p.SaveData = tui.NewButton("[Сохранить данные]")
 	p.LoadData = tui.NewButton("[Получить данные]")
@@ -59,10 +58,6 @@ func NewMainPage(serviceRegistry registry.ServiceRegistry) *MainPage {
 		tui.NewLabel(""),
 		box,
 		tui.NewLabel(""),
-		tui.NewHBox(
-			tui.NewSpacer(),
-			tui.NewPadder(1, 0, p.Back),
-		),
 	)
 	window.SetBorder(true)
 
