@@ -5,7 +5,7 @@ import (
 	"gophkeeper/client/view"
 )
 
-type LoginPasswordSagePage struct {
+type LoginPasswordSavePage struct {
 	view.PageHooks
 	Root *tui.Box
 
@@ -16,15 +16,15 @@ type LoginPasswordSagePage struct {
 	Back   *tui.Button
 }
 
-func (p LoginPasswordSagePage) GetFocusChain() []tui.Widget {
+func (p LoginPasswordSavePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.loginField, p.passwordField, p.Submit, p.Back}
 }
 
-func (p LoginPasswordSagePage) GetRoot() tui.Widget {
+func (p LoginPasswordSavePage) GetRoot() tui.Widget {
 	return p.Root
 }
 
-func (p LoginPasswordSagePage) OnActivated(fn func(b *tui.Button)) {
+func (p LoginPasswordSavePage) OnActivated(fn func(b *tui.Button)) {
 	for _, button := range []*tui.Button{p.Back, p.Submit} {
 		if button == p.Submit {
 			if p.loginField.Text() == "" || p.passwordField.Text() == "" {
@@ -38,24 +38,16 @@ func (p LoginPasswordSagePage) OnActivated(fn func(b *tui.Button)) {
 	}
 }
 
-func NewLoginPasswordSagePage() *LoginPasswordSagePage {
-	p := &LoginPasswordSagePage{Back: view.NewBackButton()}
+func NewLoginPasswordSagePage() *LoginPasswordSavePage {
+	p := &LoginPasswordSavePage{Back: view.NewBackButton()}
 
-	p.loginField = tui.NewEntry()
+	loginField, loginBlock := view.NewEditBlock("Логин")
+	p.loginField = loginField
 	p.loginField.SetFocused(true)
-	formKey := tui.NewGrid(0, 0)
-	formKey.AppendRow(p.loginField)
-	loginBlock := tui.NewHBox(formKey)
-	loginBlock.SetTitle("Логин")
-	loginBlock.SetBorder(true)
 
-	p.passwordField = tui.NewEntry()
+	passwordField, passwordBlock := view.NewEditBlock("Пароль")
+	p.passwordField = passwordField
 	p.passwordField.SetEchoMode(tui.EchoModePassword)
-	formKey = tui.NewGrid(0, 0)
-	formKey.AppendRow(p.passwordField)
-	passwordBlock := tui.NewHBox(formKey)
-	passwordBlock.SetTitle("Пароль")
-	passwordBlock.SetBorder(true)
 
 	submit := tui.NewButton("[Сохранить]")
 	p.Submit = submit

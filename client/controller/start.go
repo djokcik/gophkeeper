@@ -21,6 +21,10 @@ func Start(_ context.Context, serviceRegistry registry.ServiceRegistry) {
 	ctr.BinaryDataSavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.TextDataSavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.CardSavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
+	ctr.LoginPasswordLoadPage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
+	ctr.TextDataLoadPage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
+	ctr.BinaryDataLoadPage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
+	ctr.BankCardLoadPage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 
 	client.SetWidget(ctr.RegisterLoginPage)
 

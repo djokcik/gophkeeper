@@ -9,15 +9,16 @@ type LoadPage struct {
 	view.PageHooks
 	Root *tui.Box
 
-	keyField  *tui.Entry
-	listField *tui.List
+	LoginPassword *tui.Button
+	TextButton    *tui.Button
+	BinButton     *tui.Button
+	CardButton    *tui.Button
 
-	Submit *tui.Button
-	Back   *tui.Button
+	Back *tui.Button
 }
 
 func (p LoadPage) GetFocusChain() []tui.Widget {
-	return []tui.Widget{p.keyField, p.Submit, p.Back}
+	return []tui.Widget{p.LoginPassword, p.TextButton, p.BinButton, p.CardButton, p.Back}
 }
 
 func (p LoadPage) GetRoot() tui.Widget {
@@ -25,60 +26,40 @@ func (p LoadPage) GetRoot() tui.Widget {
 }
 
 func (p LoadPage) OnActivated(fn func(b *tui.Button)) {
-	for _, button := range []*tui.Button{p.Back, p.Submit} {
-		if button == p.Submit {
-			if p.keyField.Text() == "" {
-				return
-			}
+	buttons := []*tui.Button{p.LoginPassword, p.TextButton, p.BinButton, p.CardButton, p.Back}
 
-			continue
-		}
-
+	for _, button := range buttons {
 		button.OnActivated(func(b *tui.Button) { fn(b) })
 	}
 }
 
 func NewLoadPage() *LoadPage {
-	p := &LoadPage{}
+	p := &LoadPage{Back: view.NewBackButton()}
 
-	p.keyField = tui.NewEntry()
-	p.keyField.SetFocused(true)
-	formKey := tui.NewGrid(0, 0)
-	formKey.AppendRow(p.keyField)
-	keyBlock := tui.NewHBox(formKey)
-	keyBlock.SetTitle("Ключ")
-	keyBlock.SetBorder(true)
+	p.LoginPassword = tui.NewButton("[Пара логин/пароль]")
+	p.TextButton = tui.NewButton("[Текстовые данные]")
+	p.BinButton = tui.NewButton("[Бинарные данные]")
+	p.CardButton = tui.NewButton("[Банковская карта]")
 
-	p.listField = tui.NewList()
-	p.listField.AddItems("Пара логин/пароль")
-	p.listField.AddItems("Текстовые данные")
-	p.listField.AddItems("Бинарные данные")
-	p.listField.AddItems("Банковская карта")
-	p.listField.Select(0)
-	p.listField.SetFocused(true)
-	typeBlock := tui.NewVBox(p.listField)
-	typeBlock.SetTitle("Тип")
-	typeBlock.SetBorder(true)
-
-	submit := tui.NewButton("[Получить]")
-	p.Submit = submit
-	p.Back = view.NewBackButton()
-
-	buttons := tui.NewHBox(
-		tui.NewPadder(1, 0, p.Back),
-		tui.NewSpacer(),
-		tui.NewPadder(1, 0, p.Submit),
+	box := tui.NewVBox(
+		p.LoginPassword,
+		p.TextButton,
+		p.BinButton,
+		p.CardButton,
 	)
+	box.SetFocused(true)
 
 	window := tui.NewVBox(
 		tui.NewPadder(10, 0, tui.NewLabel(view.Logo)),
 		tui.NewSpacer(),
-		tui.NewLabel("Выберите тип и ключ"),
-		keyBlock,
-		tui.NewSpacer(),
-		typeBlock,
+		tui.NewLabel("Какой формат данных хотите загрущить? (Используйте TAB для навигации)"),
 		tui.NewLabel(""),
-		buttons,
+		box,
+		tui.NewLabel(""),
+		tui.NewHBox(
+			tui.NewSpacer(),
+			tui.NewPadder(1, 0, p.Back),
+		),
 	)
 	window.SetBorder(true)
 
