@@ -41,20 +41,12 @@ func (p TextDataSavePage) OnActivated(fn func(b *tui.Button)) {
 func NewTextDataSavePage() *TextDataSavePage {
 	p := &TextDataSavePage{Back: view.NewBackButton()}
 
-	p.keyField = tui.NewEntry()
+	keyField, keyBlock := view.NewEditBlock("Ключ")
+	p.keyField = keyField
 	p.keyField.SetFocused(true)
-	formKey := tui.NewGrid(0, 0)
-	formKey.AppendRow(p.keyField)
-	keyBlock := tui.NewHBox(formKey)
-	keyBlock.SetTitle("Ключ")
-	keyBlock.SetBorder(true)
 
-	p.textDataField = tui.NewEntry()
-	formKey = tui.NewGrid(0, 0)
-	formKey.AppendRow(p.textDataField)
-	textDataBlock := tui.NewHBox(formKey)
-	textDataBlock.SetTitle("Текст")
-	textDataBlock.SetBorder(true)
+	textDataField, textDataBlock := view.NewEditBlock("Текст")
+	p.textDataField = textDataField
 
 	submit := tui.NewButton("[Сохранить]")
 	p.Submit = submit

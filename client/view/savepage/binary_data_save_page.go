@@ -41,20 +41,12 @@ func (p BinaryDataSavePage) OnActivated(fn func(b *tui.Button)) {
 func NewBinaryDataSavePage() *BinaryDataSavePage {
 	p := &BinaryDataSavePage{Back: view.NewBackButton()}
 
-	p.keyField = tui.NewEntry()
+	keyField, keyBlock := view.NewEditBlock("Ключ")
+	p.keyField = keyField
 	p.keyField.SetFocused(true)
-	formKey := tui.NewGrid(0, 0)
-	formKey.AppendRow(p.keyField)
-	keyBlock := tui.NewHBox(formKey)
-	keyBlock.SetTitle("Ключ")
-	keyBlock.SetBorder(true)
 
-	p.pathToFileField = tui.NewEntry()
-	formKey = tui.NewGrid(0, 0)
-	formKey.AppendRow(p.pathToFileField)
-	textDataBlock := tui.NewHBox(formKey)
-	textDataBlock.SetTitle("Путь до файла")
-	textDataBlock.SetBorder(true)
+	pathToFileField, pathToFileBlock := view.NewEditBlock("Путь до файла")
+	p.pathToFileField = pathToFileField
 
 	submit := tui.NewButton("[Сохранить]")
 	p.Submit = submit
@@ -72,7 +64,7 @@ func NewBinaryDataSavePage() *BinaryDataSavePage {
 		tui.NewLabel("Выберите ключ и путь до файла"),
 		keyBlock,
 		tui.NewSpacer(),
-		textDataBlock,
+		pathToFileBlock,
 		tui.NewLabel(""),
 		buttons,
 	)

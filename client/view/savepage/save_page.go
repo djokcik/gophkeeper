@@ -33,7 +33,7 @@ func (p SavePage) OnActivated(fn func(b *tui.Button)) {
 	}
 }
 
-func NewSagePage() *SavePage {
+func NewSavePage() *SavePage {
 	p := &SavePage{Back: view.NewBackButton()}
 
 	p.LoginPassword = tui.NewButton("[Пара логин/пароль]")

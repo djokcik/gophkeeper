@@ -9,6 +9,7 @@ type CardSavePage struct {
 	view.PageHooks
 	Root *tui.Box
 
+	keyField        *tui.Entry
 	cardNumberField *tui.Entry
 	yearField       *tui.Entry
 	cvvField        *tui.Entry
@@ -18,7 +19,7 @@ type CardSavePage struct {
 }
 
 func (p CardSavePage) GetFocusChain() []tui.Widget {
-	return []tui.Widget{p.cardNumberField, p.yearField, p.cvvField, p.Submit, p.Back}
+	return []tui.Widget{p.keyField, p.cardNumberField, p.yearField, p.cvvField, p.Submit, p.Back}
 }
 
 func (p CardSavePage) GetRoot() tui.Widget {
@@ -42,28 +43,19 @@ func (p CardSavePage) OnActivated(fn func(b *tui.Button)) {
 func NewCardSavePage() *CardSavePage {
 	p := &CardSavePage{Back: view.NewBackButton()}
 
-	p.cardNumberField = tui.NewEntry()
-	p.cardNumberField.SetFocused(true)
-	formKey := tui.NewGrid(0, 0)
-	formKey.AppendRow(p.cardNumberField)
-	cardNumberBlock := tui.NewHBox(formKey)
-	cardNumberBlock.SetTitle("Номер карты")
-	cardNumberBlock.SetBorder(true)
+	keyField, keyBlock := view.NewEditBlock("Ключ")
+	p.keyField = keyField
+	p.keyField.SetFocused(true)
 
-	p.yearField = tui.NewEntry()
-	formKey = tui.NewGrid(0, 0)
-	formKey.AppendRow(p.yearField)
-	yearBlock := tui.NewHBox(formKey)
-	yearBlock.SetTitle("Год выпуска")
-	yearBlock.SetBorder(true)
+	cardNumberField, cardNumberBlock := view.NewEditBlock("Номер карты")
+	p.cardNumberField = cardNumberField
 
-	p.cvvField = tui.NewEntry()
+	yearField, yearBlock := view.NewEditBlock("Год выпуска")
+	p.yearField = yearField
+
+	cvvField, cvvBlock := view.NewEditBlock("cvv")
+	p.cvvField = cvvField
 	p.cvvField.SetEchoMode(tui.EchoModePassword)
-	formKey = tui.NewGrid(0, 0)
-	formKey.AppendRow(p.cvvField)
-	cvvBlock := tui.NewHBox(formKey)
-	cvvBlock.SetTitle("cvv")
-	cvvBlock.SetBorder(true)
 
 	submit := tui.NewButton("[Сохранить]")
 	p.Submit = submit
@@ -80,6 +72,8 @@ func NewCardSavePage() *CardSavePage {
 		tui.NewSpacer(),
 		tui.NewPadder(1, 0, tui.NewLabel("Укажите номер карты, год выпуска и cvv код")),
 		tui.NewLabel(""),
+		keyBlock,
+		tui.NewSpacer(),
 		cardNumberBlock,
 		tui.NewSpacer(),
 		yearBlock,
