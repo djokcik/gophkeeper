@@ -1,16 +1,23 @@
 package savepage
 
 import (
+	"context"
+	"fmt"
 	"github.com/marcusolsson/tui-go"
+	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
+	"gophkeeper/pkg/logging"
 )
 
 type LoginPasswordSavePage struct {
 	view.PageHooks
+	serviceRegistry registry.ClientServiceRegistry
+
 	Root *tui.Box
 
 	loginField    *tui.Entry
 	passwordField *tui.Entry
+	status        *tui.StatusBar
 
 	Submit *tui.Button
 	Back   *tui.Button
@@ -25,21 +32,35 @@ func (p LoginPasswordSavePage) GetRoot() tui.Widget {
 }
 
 func (p LoginPasswordSavePage) OnActivated(fn func(b *tui.Button)) {
-	for _, button := range []*tui.Button{p.Back, p.Submit} {
-		if button == p.Submit {
-			if p.loginField.Text() == "" || p.passwordField.Text() == "" {
-				return
-			}
+	loginPasswordService := p.serviceRegistry.GetLoginPasswordService()
 
-			continue
+	p.Back.OnActivated(fn)
+	p.Submit.OnActivated(func(b *tui.Button) {
+		ctx := context.Background()
+		log := logging.NewFileLogger()
+
+		if p.loginField.Text() == "" || p.passwordField.Text() == "" {
+			return
 		}
 
-		button.OnActivated(func(b *tui.Button) { fn(b) })
-	}
+		err := loginPasswordService.SaveLoginPassword(ctx, p.loginField.Text(), p.passwordField.Text())
+		if err != nil {
+			p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
+			log.Error().Err(err).Msg("Submit: invalid SaveLoginPassword")
+
+			return
+		}
+
+		p.status.SetText("Данные успешно сохранены")
+	})
 }
 
-func NewLoginPasswordSagePage() *LoginPasswordSavePage {
-	p := &LoginPasswordSavePage{Back: view.NewBackButton()}
+func NewLoginPasswordSagePage(serviceRegistry registry.ClientServiceRegistry) *LoginPasswordSavePage {
+	p := &LoginPasswordSavePage{
+		Back:            view.NewBackButton(),
+		status:          tui.NewStatusBar(""),
+		serviceRegistry: serviceRegistry,
+	}
 
 	loginField, loginBlock := view.NewEditBlock("Логин")
 	p.loginField = loginField
@@ -78,7 +99,7 @@ func NewLoginPasswordSagePage() *LoginPasswordSavePage {
 	)
 	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
 
-	p.Root = tui.NewVBox(content)
+	p.Root = tui.NewVBox(content, p.status)
 
 	return p
 }

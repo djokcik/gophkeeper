@@ -25,7 +25,7 @@ func main() {
 
 	cfg := client.NewConfig()
 
-	serviceRegistry := registry.NewServiceRegistry(cfg)
+	serviceRegistry := registry.NewClientServiceRegistry(cfg)
 
 	go func() {
 		controller.Start(ctx, serviceRegistry)

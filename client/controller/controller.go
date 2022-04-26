@@ -24,19 +24,19 @@ type UIController struct {
 	BankCardLoadPage      *loadpage.BankCardLoadPage
 }
 
-func NewUIController(serviceRegistry registry.ServiceRegistry) *UIController {
+func NewUIController(serviceRegistry registry.ClientServiceRegistry) *UIController {
 	return &UIController{
 		RegisterLoginPage: view.NewLoginRegisterPage(serviceRegistry),
 		MainPage:          view.NewMainPage(serviceRegistry),
 
 		SavePage:              savepage.NewSavePage(),
-		LoginPasswordSavePage: savepage.NewLoginPasswordSagePage(),
+		LoginPasswordSavePage: savepage.NewLoginPasswordSagePage(serviceRegistry),
 		TextDataSavePage:      savepage.NewTextDataSavePage(),
 		BinaryDataSavePage:    savepage.NewBinaryDataSavePage(),
 		CardSavePage:          savepage.NewCardSavePage(),
 
 		LoadPage:              loadpage.NewLoadPage(),
-		LoginPasswordLoadPage: loadpage.NewLoginPasswordLoadPage(),
+		LoginPasswordLoadPage: loadpage.NewLoginPasswordLoadPage(serviceRegistry),
 		TextDataLoadPage:      loadpage.NewTextDataLoadPage(),
 		BinaryDataLoadPage:    loadpage.NewBinaryDataLoadPage(),
 		BankCardLoadPage:      loadpage.NewBankCardLoadPage(),

@@ -2,26 +2,23 @@ package rpchandler
 
 import (
 	"context"
-	"errors"
 	"gophkeeper/models"
 	"gophkeeper/models/rpcdto"
 )
 
-func (h *RpcHandler) Login(loginDto rpcdto.LoginDto, Reply *models.GophUser) error {
+func (h *RpcHandler) LoginHandler(loginDto rpcdto.LoginDto, Reply *models.GophUser) error {
 	ctx := context.Background()
 
-	if loginDto.Login == "test" {
-		h.Log(ctx).Warn().Msg("invalid login")
-		return errors.New("invalid login")
-	}
-
-	if loginDto.Password == "test" {
-		return errors.New("invalid password")
+	authService := h.serviceRegistry.GetAuthService()
+	user, err := authService.Login(ctx, loginDto.Login, loginDto.Password)
+	if err != nil {
+		h.Log(ctx).Error().Err(err).Msg("Login: invalid login")
+		return err
 	}
 
 	*Reply = models.GophUser{
-		Username: loginDto.Login,
-		Password: loginDto.Password,
+		Username: user.Username,
+		Password: user.Password,
 	}
 
 	h.Log(ctx).Info().Msgf("success login - %v", Reply)
@@ -29,21 +26,19 @@ func (h *RpcHandler) Login(loginDto rpcdto.LoginDto, Reply *models.GophUser) err
 	return nil
 }
 
-func (h *RpcHandler) Register(registerDto rpcdto.RegisterDto, Reply *models.GophUser) error {
+func (h *RpcHandler) RegisterHandler(registerDto rpcdto.RegisterDto, Reply *models.GophUser) error {
 	ctx := context.Background()
 
-	if registerDto.Login == "test" {
-		h.Log(ctx).Warn().Msg("invalid login")
-		return errors.New("invalid login")
-	}
-
-	if registerDto.Password == "test" {
-		return errors.New("invalid password")
+	authService := h.serviceRegistry.GetAuthService()
+	user, err := authService.Register(ctx, registerDto.Login, registerDto.Password)
+	if err != nil {
+		h.Log(ctx).Error().Err(err).Msg("Login: invalid register")
+		return err
 	}
 
 	*Reply = models.GophUser{
-		Username: registerDto.Login,
-		Password: registerDto.Password,
+		Username: user.Username,
+		Password: user.Password,
 	}
 
 	h.Log(ctx).Info().Msgf("success register - %v", Reply)

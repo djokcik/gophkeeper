@@ -1,11 +1,28 @@
 package rpcdto
 
-type LoginDto struct {
-	Login    string
-	Password string
-}
+import "gophkeeper/models"
 
-type RegisterDto struct {
-	Login    string
-	Password string
-}
+type (
+	LoginDto struct {
+		Login    string
+		Password string
+	}
+
+	RegisterDto struct {
+		Login    string
+		Password string
+	}
+)
+
+type (
+	SaveLoginPasswordDto struct {
+		User     models.GophUser
+		Login    string
+		Password string
+	}
+
+	LoadLoginPasswordDto struct {
+		User  models.GophUser
+		Login string
+	}
+)
