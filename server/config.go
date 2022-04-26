@@ -7,13 +7,13 @@ import (
 
 type Config struct {
 	Address   string `env:"ADDRESS"`
-	StoreFile string `env:"STORE_FILE"`
+	StorePath string `env:"STORE_FILE"`
 }
 
 func NewConfig() Config {
 	cfg := Config{
 		Address:   "127.0.0.1:8080",
-		StoreFile: "/tmp/gophkeeper-db.json",
+		StorePath: "/tmp",
 	}
 
 	cfg.parseEnv()

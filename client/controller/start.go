@@ -7,7 +7,7 @@ import (
 	"gophkeeper/client/view"
 )
 
-func Start(_ context.Context, serviceRegistry registry.ServiceRegistry) {
+func Start(_ context.Context, serviceRegistry registry.ClientServiceRegistry) {
 	client := view.NewUiClient()
 
 	ctr := NewUIController(serviceRegistry)

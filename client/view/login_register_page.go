@@ -8,7 +8,7 @@ import (
 
 type LoginRegisterPage struct {
 	PageHooks
-	serviceRegistry registry.ServiceRegistry
+	serviceRegistry registry.ClientServiceRegistry
 
 	Root *tui.Box
 
@@ -71,7 +71,7 @@ func (p LoginRegisterPage) OnActivated(fn func(b *tui.Button)) {
 	})
 }
 
-func NewLoginRegisterPage(serviceRegistry registry.ServiceRegistry) *LoginRegisterPage {
+func NewLoginRegisterPage(serviceRegistry registry.ClientServiceRegistry) *LoginRegisterPage {
 	page := &LoginRegisterPage{serviceRegistry: serviceRegistry}
 
 	user := tui.NewEntry()

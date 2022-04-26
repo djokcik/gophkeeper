@@ -1,17 +1,23 @@
 package loadpage
 
 import (
+	"context"
 	"fmt"
 	"github.com/marcusolsson/tui-go"
+	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
+	"gophkeeper/pkg/logging"
 )
 
 type LoginPasswordLoadPage struct {
 	view.PageHooks
+	serviceRegistry registry.ClientServiceRegistry
+
 	Root *tui.Box
 
 	loginField *tui.Entry
 	result     *tui.Label
+	status     *tui.StatusBar
 
 	Submit *tui.Button
 	Back   *tui.Button
@@ -26,20 +32,30 @@ func (p LoginPasswordLoadPage) GetRoot() tui.Widget {
 }
 
 func (p LoginPasswordLoadPage) OnActivated(fn func(b *tui.Button)) {
+	service := p.serviceRegistry.GetLoginPasswordService()
+
 	for _, button := range []*tui.Button{p.Submit, p.Back} {
 		button.OnActivated(func(b *tui.Button) {
+			p.status.SetText("Загрузка...")
+
+			ctx := context.Background()
+			log := logging.NewFileLogger()
+
 			if b == p.Submit {
 				if p.loginField.Text() == "" {
 					return
 				}
 
-				if p.loginField.Text() == "test" {
-					p.result.SetText(fmt.Sprintf("Не удалось найти пароль по логину - %s", p.loginField.Text()))
+				data, err := service.LoadPasswordByLogin(ctx, p.loginField.Text())
+				if err != nil {
+					p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
+					log.Error().Err(err).Msg("Submit: invalid LoadPasswordByLogin")
 
 					return
 				}
 
-				p.result.SetText(fmt.Sprintf("Пароль: %s", p.loginField.Text()))
+				p.status.SetText("Пароль успешно получен")
+				p.result.SetText(fmt.Sprintf("Пароль: %s", data.Password))
 
 				return
 			}
@@ -49,8 +65,12 @@ func (p LoginPasswordLoadPage) OnActivated(fn func(b *tui.Button)) {
 	}
 }
 
-func NewLoginPasswordLoadPage() *LoginPasswordLoadPage {
-	p := &LoginPasswordLoadPage{Back: view.NewBackButton()}
+func NewLoginPasswordLoadPage(serviceRegistry registry.ClientServiceRegistry) *LoginPasswordLoadPage {
+	p := &LoginPasswordLoadPage{
+		Back:            view.NewBackButton(),
+		serviceRegistry: serviceRegistry,
+		status:          tui.NewStatusBar(""),
+	}
 
 	loginField, loginBlock := view.NewEditBlock("Логин")
 	p.loginField = loginField
@@ -88,7 +108,7 @@ func NewLoginPasswordLoadPage() *LoginPasswordLoadPage {
 	)
 	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
 
-	p.Root = tui.NewVBox(content)
+	p.Root = tui.NewVBox(content, p.status)
 
 	return p
 }

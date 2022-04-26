@@ -8,7 +8,7 @@ import (
 
 type MainPage struct {
 	PageHooks
-	serviceRegistry registry.ServiceRegistry
+	serviceRegistry registry.ClientServiceRegistry
 
 	Root *tui.Box
 
@@ -38,7 +38,7 @@ func (p *MainPage) Before() {
 	p.welcomeLabel.SetText(fmt.Sprintf("\nДобрый день, %s. (Используйте TAB для навигации)", name))
 }
 
-func NewMainPage(serviceRegistry registry.ServiceRegistry) *MainPage {
+func NewMainPage(serviceRegistry registry.ClientServiceRegistry) *MainPage {
 	p := &MainPage{serviceRegistry: serviceRegistry}
 
 	p.SaveData = tui.NewButton("[Сохранить данные]")
