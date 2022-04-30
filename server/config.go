@@ -8,11 +8,14 @@ import (
 type Config struct {
 	Address   string `env:"ADDRESS"`
 	StorePath string `env:"STORE_FILE"`
+
+	SSLCert string `env:"SSL_CERT" envDefault:"cert/localhost.crt"`
+	SSLKey  string `env:"SSL_KEY" envDefault:"cert/localhost.key"`
 }
 
 func NewConfig() Config {
 	cfg := Config{
-		Address:   "127.0.0.1:8080",
+		Address:   "localhost:8080",
 		StorePath: "/tmp",
 	}
 

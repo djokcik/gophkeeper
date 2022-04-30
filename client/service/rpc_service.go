@@ -2,50 +2,88 @@ package service
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"github.com/rs/zerolog"
 	"gophkeeper/client"
 	"gophkeeper/models"
 	"gophkeeper/models/rpcdto"
+	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
 	"net/rpc"
+)
+
+const (
+	CallSaveRecordPersonalDataHandler     = "RpcHandler.SaveRecordPersonalDataHandler"
+	CallLoadRecordPrivateDataByKeyHandler = "RpcHandler.LoadRecordPrivateDataByKeyHandler"
+	CallRegisterHandler                   = "RpcHandler.RegisterHandler"
+	CallLoginHandler                      = "RpcHandler.LoginHandler"
 )
 
 type RpcService interface {
 	Login(ctx context.Context, username string, password string) (models.GophUser, error)
 	Register(ctx context.Context, username string, password string) (models.GophUser, error)
 
-	SaveLoginPassword(ctx context.Context, user models.GophUser, username string, password string) error
-	LoadPasswordByLogin(ctx context.Context, user models.GophUser, username string) (models.LoginPasswordResponseDto, error)
+	SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error
+	LoadRecordPrivateDataByKey(ctx context.Context, token string, key string) (string, error)
 }
 
 type rpcService struct {
-	cfg  client.Config
-	call *rpc.Client
+	cfg    client.Config
+	api    *rpc.Client
+	crypto common.CryptoService
+
+	sslConfig common.SSLConfigService
 }
 
-func NewRpcService(cfg client.Config) RpcService {
-	service := rpcService{cfg: cfg}
+func NewRpcService(cfg client.Config, crypto common.CryptoService, sslConfig common.SSLConfigService) RpcService {
+	ctx := context.Background()
+	service := rpcService{
+		cfg:       cfg,
+		crypto:    crypto,
+		sslConfig: sslConfig,
+	}
 
-	service.Reconnect()
+	err := service.Reconnect(ctx)
+	if err != nil {
+		service.Log(ctx).Error().Err(err).Msg("unable to connect to server")
+	}
 
 	return &service
 }
 
-func (s *rpcService) Reconnect() {
-	rpcClient, err := rpc.Dial("tcp", s.cfg.Address)
+func (s *rpcService) Reconnect(ctx context.Context) error {
+	conf, err := s.sslConfig.LoadClientCertificate(s.cfg)
 	if err != nil {
-		logging.NewFileLogger().Fatal().Err(err).Msgf("invalid to connect tcp server - %s", s.cfg.Address)
+		s.api = nil
+
+		s.Log(ctx).Error().Err(err).Msg("Reconnect: err load certificate")
+		return ErrUnableConnectServer
 	}
 
-	s.call = rpcClient
+	conn, err := tls.Dial("tcp", s.cfg.Address, conf)
+	if err != nil {
+		s.api = nil
+
+		s.Log(ctx).Error().Err(err).Msgf("Reconnect: invalid to connect tcp server - %s", s.cfg.Address)
+		return ErrUnableConnectServer
+	}
+
+	s.api = rpc.NewClient(conn)
+
+	return nil
 }
 
-func (s *rpcService) Call(serviceMethod string, args any, reply any) error {
-	err := s.call.Call(serviceMethod, args, reply)
+func (s *rpcService) Call(ctx context.Context, serviceMethod string, args any, reply any) error {
+	err := s.api.Call(serviceMethod, args, reply)
 	if errors.Is(err, rpc.ErrShutdown) {
-		s.Reconnect()
-		err = s.call.Call(serviceMethod, args, reply)
+		err = s.Reconnect(ctx)
+		if err != nil {
+			s.Log(ctx).Warn().Err(err).Msg("Call: error reconnect")
+			return err
+		}
+
+		err = s.api.Call(serviceMethod, args, reply)
 	}
 
 	return err
@@ -56,43 +94,50 @@ func (s rpcService) Login(ctx context.Context, username string, password string)
 
 	var user models.GophUser
 
-	err := s.Call("RpcHandler.LoginHandler", loginDto, &user)
+	err := s.Call(ctx, CallLoginHandler, loginDto, &user)
 
 	s.Log(ctx).Trace().Msgf("Login: user - %v", user)
 
 	return user, err
 }
 
-func (s rpcService) Register(_ context.Context, username string, password string) (models.GophUser, error) {
+func (s rpcService) Register(ctx context.Context, username string, password string) (models.GophUser, error) {
 	registerDto := rpcdto.RegisterDto{Login: username, Password: password}
 
 	var user models.GophUser
 
-	err := s.Call("RpcHandler.RegisterHandler", registerDto, &user)
+	err := s.Call(ctx, CallRegisterHandler, registerDto, &user)
 
 	return user, err
 }
 
-func (s rpcService) SaveLoginPassword(ctx context.Context, user models.GophUser, username string, password string) error {
-	loginDto := rpcdto.SaveLoginPasswordDto{Login: username, Password: password, User: user}
-
-	err := s.Call("RpcHandler.SaveLoginPasswordHandler", loginDto, &struct{}{})
-
-	s.Log(ctx).Trace().Msg("SaveLoginPassword: data")
-
-	return err
+func (s rpcService) SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error {
+	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordPersonalDataHandler)
 }
 
-func (s rpcService) LoadPasswordByLogin(ctx context.Context, user models.GophUser, username string) (models.LoginPasswordResponseDto, error) {
-	loadDto := rpcdto.LoadLoginPasswordDto{Login: username, User: user}
+func (s rpcService) LoadRecordPrivateDataByKey(ctx context.Context, token string, key string) (string, error) {
+	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordPrivateDataByKeyHandler)
+}
 
-	var data models.LoginPasswordResponseDto
+func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRecordRequestDto, serviceMethod string) (string, error) {
+	var encryptedData string
+	err := s.Call(ctx, serviceMethod, recordDto, &encryptedData)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msgf("loadRecordByKey: error call %s", serviceMethod)
+		return "", err
+	}
 
-	err := s.Call("RpcHandler.LoadPasswordByLoginHandler", loadDto, &data)
+	return encryptedData, nil
+}
 
-	s.Log(ctx).Trace().Msg("SaveLoginPassword: data")
+func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordRequestDto, serviceMethod string) error {
+	err := s.Call(ctx, serviceMethod, recordDto, struct{}{})
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msgf("saveRecord: error call %s", serviceMethod)
+		return err
+	}
 
-	return data, err
+	return nil
 }
 
 func (s rpcService) Log(ctx context.Context) *zerolog.Logger {
