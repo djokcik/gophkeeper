@@ -6,7 +6,7 @@ import (
 	"gophkeeper/models/rpcdto"
 )
 
-func (h *RpcHandler) LoadPasswordByLoginHandler(dto rpcdto.LoadLoginPasswordDto, Reply *models.LoginPasswordResponseDto) error {
+func (h *RpcHandler) LoadPasswordByLoginHandler(dto rpcdto.LoadRecordRequestDto, Reply *models.LoginPasswordResponseDto) error {
 	ctx := context.Background()
 
 	authService := h.serviceRegistry.GetAuthService()
@@ -19,7 +19,7 @@ func (h *RpcHandler) LoadPasswordByLoginHandler(dto rpcdto.LoadLoginPasswordDto,
 
 	data, err := loginPasswordService.LoadPasswordByLogin(ctx, dto.User, dto.Login)
 	if err != nil {
-		h.Log(ctx).Error().Err(err).Msg("LoadPasswordByLoginHandler: error LoadPasswordByLogin")
+		h.Log(ctx).Error().Err(err).Msg("LoadPasswordByLoginHandler: error LoadRecordPersonalDataByKey")
 		return err
 	}
 
@@ -30,7 +30,7 @@ func (h *RpcHandler) LoadPasswordByLoginHandler(dto rpcdto.LoadLoginPasswordDto,
 	return nil
 }
 
-func (h *RpcHandler) SaveLoginPasswordHandler(dto rpcdto.SaveLoginPasswordDto, Reply *struct{}) error {
+func (h *RpcHandler) SaveLoginPasswordHandler(dto rpcdto.SaveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 
 	authService := h.serviceRegistry.GetAuthService()
@@ -43,7 +43,7 @@ func (h *RpcHandler) SaveLoginPasswordHandler(dto rpcdto.SaveLoginPasswordDto, R
 
 	err := loginPasswordService.SaveLoginPassword(ctx, dto.User, dto.Login, dto.Password)
 	if err != nil {
-		h.Log(ctx).Error().Err(err).Msg("SaveLoginPasswordHandler: error in SaveLoginPassword")
+		h.Log(ctx).Error().Err(err).Msg("SaveLoginPasswordHandler: error in SaveRecord")
 		return err
 	}
 

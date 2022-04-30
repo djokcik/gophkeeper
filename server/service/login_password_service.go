@@ -38,7 +38,7 @@ func (s loginPasswordService) SaveLoginPassword(ctx context.Context, user models
 
 	_, err := os.Stat(filename)
 	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("SaveLoginPassword: error in os.Stat")
+		s.Log(ctx).Error().Err(err).Msg("SaveRecord: error in os.Stat")
 		return err
 	}
 
@@ -67,7 +67,7 @@ func (s loginPasswordService) LoadPasswordByLogin(ctx context.Context, user mode
 
 	_, err := os.Stat(filename)
 	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("SaveLoginPassword: error in os.Stat")
+		s.Log(ctx).Error().Err(err).Msg("SaveRecord: error in os.Stat")
 		return models.LoginPasswordResponseDto{}, err
 	}
 

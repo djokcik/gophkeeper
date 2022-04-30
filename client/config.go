@@ -6,7 +6,8 @@ import (
 )
 
 type Config struct {
-	Address string `env:"SERVER_ADDRESS" envDefault:"127.0.0.1:8080"`
+	Address string `env:"SERVER_ADDRESS" envDefault:"localhost:8080"`
+	SSLCert string `env:"SSL_CERT" envDefault:"cert/localhost.crt"`
 }
 
 func NewConfig() Config {

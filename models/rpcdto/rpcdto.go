@@ -1,7 +1,5 @@
 package rpcdto
 
-import "gophkeeper/models"
-
 type (
 	LoginDto struct {
 		Login    string
@@ -15,14 +13,14 @@ type (
 )
 
 type (
-	SaveLoginPasswordDto struct {
-		User     models.GophUser
-		Login    string
-		Password string
+	SaveRecordRequestDto struct {
+		Token string
+		Key   string
+		Data  string
 	}
 
-	LoadLoginPasswordDto struct {
-		User  models.GophUser
-		Login string
+	LoadRecordRequestDto struct {
+		Token string
+		Key   string
 	}
 )

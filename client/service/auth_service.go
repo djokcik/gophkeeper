@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"gophkeeper/models"
+	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
 )
 
@@ -15,12 +16,14 @@ type AuthService interface {
 var _ AuthService = (*authService)(nil)
 
 type authService struct {
-	api RpcService
+	api    RpcService
+	crypto common.CryptoService
 }
 
-func NewAuthService(api RpcService) AuthService {
+func NewAuthService(api RpcService, crypto common.CryptoService) AuthService {
 	return &authService{
-		api: api,
+		api:    api,
+		crypto: crypto,
 	}
 }
 
@@ -30,6 +33,8 @@ func (s authService) Login(ctx context.Context, username string, password string
 		logging.NewFileLogger().Warn().Err(err).Msg("invalid login")
 	}
 
+	user.Password = s.crypto.GenerateHash(user.Password)
+
 	return user, err
 }
 
@@ -38,6 +43,8 @@ func (s authService) Register(ctx context.Context, username string, password str
 	if err != nil {
 		logging.NewFileLogger().Warn().Err(err).Msg("invalid login")
 	}
+
+	user.Password = s.crypto.GenerateHash(user.Password)
 
 	return user, err
 }

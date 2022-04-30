@@ -9,7 +9,7 @@ type UserService interface {
 	SaveUser(user models.GophUser) error
 }
 
-// Ensure service implements interface
+// Ensure common implements interface
 var _ UserService = (*userService)(nil)
 
 type userService struct {

@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"gophkeeper/pkg/logging"
 	"gophkeeper/server"
 	"gophkeeper/server/rpchandler"
-	"net"
 	"net/rpc"
 	"os/signal"
 	"syscall"
@@ -20,21 +20,18 @@ func main() {
 
 	log.Info().Msgf("config: %+v", cfg)
 
-	addr, err := net.ResolveTCPAddr("tcp", cfg.Address)
+	cert, _ := tls.LoadX509KeyPair("cert/localhost.crt", "cert/localhost.key")
+	conn, err := tls.Listen("tcp", cfg.Address, &tls.Config{Certificates: []tls.Certificate{cert}})
+
 	if err != nil {
 		log.Fatal().Err(err).Msg("error ResolveTCPAddr")
-	}
-	// слушаем протокол TCP на объявленном адресе
-	listener, err := net.ListenTCP("tcp", addr)
-	if err != nil {
-		log.Fatal().Err(err).Msg("error ListenTCP")
 	}
 
 	rpcServer := rpc.NewServer()
 	rpcServer.Register(rpchandler.NewRpcHandler(cfg))
 
 	go func() {
-		rpcServer.Accept(listener)
+		rpcServer.Accept(conn)
 	}()
 
 	<-ctx.Done()
