@@ -15,12 +15,12 @@ type RecordPersonalDataService interface {
 }
 
 type loginPasswordService struct {
-	api    service.RpcService
-	user   service.UserService
+	api    service.ClientRpcService
+	user   service.ClientUserService
 	crypto common.CryptoService
 }
 
-func NewLoginPasswordService(api service.RpcService, user service.UserService, crypto common.CryptoService) RecordPersonalDataService {
+func NewLoginPasswordService(api service.ClientRpcService, user service.ClientUserService, crypto common.CryptoService) RecordPersonalDataService {
 	return &loginPasswordService{
 		api:    api,
 		user:   user,

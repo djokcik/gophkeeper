@@ -6,7 +6,6 @@ import (
 	"github.com/rs/zerolog"
 	"gophkeeper/pkg/logging"
 	"gophkeeper/server"
-	"io"
 	"os"
 )
 
@@ -30,15 +29,9 @@ func (s fileStorage) Read(ctx context.Context, filepath string, in interface{}) 
 		return err
 	}
 
-	bytes, err := io.ReadAll(file)
+	err = json.NewDecoder(file).Decode(in)
 	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("Read: err ReadAll")
-		return err
-	}
-
-	err = json.Unmarshal(bytes, in)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("err unmarshal")
+		s.Log(ctx).Error().Err(err).Msg("err decode json in file")
 		return err
 	}
 
@@ -52,13 +45,7 @@ func (s fileStorage) Write(ctx context.Context, filepath string, out interface{}
 		return err
 	}
 
-	bytes, err := json.Marshal(out)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("Write: err marshal")
-		return err
-	}
-
-	_, err = file.Write(bytes)
+	err = json.NewEncoder(file).Encode(out)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msg("Write: err write to file")
 		return err

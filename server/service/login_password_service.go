@@ -13,8 +13,8 @@ import (
 )
 
 type LoginPasswordService interface {
-	SaveLoginPassword(ctx context.Context, user models.GophUser, username string, password string) error
-	LoadPasswordByLogin(ctx context.Context, user models.GophUser, username string) (models.LoginPasswordResponseDto, error)
+	SaveLoginPassword(ctx context.Context, username string, key string, data string) error
+	LoadPasswordByLogin(ctx context.Context, username string, key string) (string, error)
 }
 
 type loginPasswordService struct {
@@ -29,10 +29,10 @@ func NewLoginPasswordService(cfg server.Config, fileStorage storage.FileStorage)
 	}
 }
 
-func (s loginPasswordService) SaveLoginPassword(ctx context.Context, user models.GophUser, username string, password string) error {
-	filename := fmt.Sprintf("%s/%s.txt", s.Cfg.StorePath, user.Username)
+func (s loginPasswordService) SaveLoginPassword(ctx context.Context, username string, key string, dataStr string) error {
+	filename := fmt.Sprintf("%s/%s.txt", s.Cfg.StorePath, username)
 
-	if username == "" || password == "" {
+	if username == "" || key == "" {
 		return errors.New("invalid validate: username или password неверный")
 	}
 
@@ -53,7 +53,7 @@ func (s loginPasswordService) SaveLoginPassword(ctx context.Context, user models
 		data.LoginPasswordMap = make(map[string]string)
 	}
 
-	data.LoginPasswordMap[username] = password
+	data.LoginPasswordMap[key] = dataStr
 	err = s.FileStorage.Write(ctx, filename, data)
 	if err != nil {
 		return err
@@ -62,28 +62,28 @@ func (s loginPasswordService) SaveLoginPassword(ctx context.Context, user models
 	return nil
 }
 
-func (s loginPasswordService) LoadPasswordByLogin(ctx context.Context, user models.GophUser, username string) (models.LoginPasswordResponseDto, error) {
-	filename := fmt.Sprintf("%s/%s.txt", s.Cfg.StorePath, user.Username)
+func (s loginPasswordService) LoadPasswordByLogin(ctx context.Context, username string, key string) (string, error) {
+	filename := fmt.Sprintf("%s/%s.txt", s.Cfg.StorePath, username)
 
 	_, err := os.Stat(filename)
 	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("SaveRecord: error in os.Stat")
-		return models.LoginPasswordResponseDto{}, err
+		s.Log(ctx).Error().Err(err).Msg("LoadPasswordByLogin: error in os.Stat")
+		return "", err
 	}
 
 	var data models.StorageData
 
 	err = s.FileStorage.Read(ctx, filename, &data)
 	if err != nil {
-		return models.LoginPasswordResponseDto{}, err
+		return "", err
 	}
 
-	password, ok := data.LoginPasswordMap[username]
+	value, ok := data.LoginPasswordMap[key]
 	if !ok {
-		return models.LoginPasswordResponseDto{}, errors.New(fmt.Sprintf("не найден пароль для %s", username))
+		return "", errors.New(fmt.Sprintf("не найден пароль для %s", username))
 	}
 
-	return models.LoginPasswordResponseDto{Username: username, Password: password}, nil
+	return value, nil
 }
 
 func (s *loginPasswordService) Log(ctx context.Context) *zerolog.Logger {
