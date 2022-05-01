@@ -16,11 +16,11 @@ type AuthService interface {
 var _ AuthService = (*authService)(nil)
 
 type authService struct {
-	api    RpcService
+	api    ClientRpcService
 	crypto common.CryptoService
 }
 
-func NewAuthService(api RpcService, crypto common.CryptoService) AuthService {
+func NewAuthService(api ClientRpcService, crypto common.CryptoService) AuthService {
 	return &authService{
 		api:    api,
 		crypto: crypto,

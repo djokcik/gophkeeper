@@ -20,7 +20,7 @@ const (
 	CallLoginHandler                      = "RpcHandler.LoginHandler"
 )
 
-type RpcService interface {
+type ClientRpcService interface {
 	Login(ctx context.Context, username string, password string) (models.GophUser, error)
 	Register(ctx context.Context, username string, password string) (models.GophUser, error)
 
@@ -36,7 +36,7 @@ type rpcService struct {
 	sslConfig common.SSLConfigService
 }
 
-func NewRpcService(cfg client.Config, crypto common.CryptoService, sslConfig common.SSLConfigService) RpcService {
+func NewRpcService(cfg client.Config, crypto common.CryptoService, sslConfig common.SSLConfigService) ClientRpcService {
 	ctx := context.Background()
 	service := rpcService{
 		cfg:       cfg,
@@ -131,7 +131,8 @@ func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRe
 }
 
 func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordRequestDto, serviceMethod string) error {
-	err := s.Call(ctx, serviceMethod, recordDto, struct{}{})
+	var reply struct{}
+	err := s.Call(ctx, serviceMethod, recordDto, &reply)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msgf("saveRecord: error call %s", serviceMethod)
 		return err

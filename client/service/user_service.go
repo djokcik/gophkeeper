@@ -4,13 +4,13 @@ import (
 	"gophkeeper/models"
 )
 
-type UserService interface {
+type ClientUserService interface {
 	GetUser() models.GophUser
 	SaveUser(user models.GophUser) error
 }
 
 // Ensure common implements interface
-var _ UserService = (*userService)(nil)
+var _ ClientUserService = (*userService)(nil)
 
 type userService struct {
 	user models.GophUser
@@ -25,6 +25,6 @@ func (s *userService) SaveUser(user models.GophUser) error {
 	return nil
 }
 
-func NewUserService() UserService {
+func NewUserService() ClientUserService {
 	return &userService{}
 }

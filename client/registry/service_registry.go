@@ -12,7 +12,7 @@ type ClientServiceRegistry interface {
 	GetSSLConfigService() common.SSLConfigService
 
 	GetAuthService() service.AuthService
-	GetUserService() service.UserService
+	GetUserService() service.ClientUserService
 	GetRecordPersonalDataService() recordservice.RecordPersonalDataService
 }
 
@@ -21,7 +21,7 @@ type clientServiceRegistry struct {
 	sslConfigService common.SSLConfigService
 
 	loginService         service.AuthService
-	userService          service.UserService
+	userService          service.ClientUserService
 	loginPasswordService recordservice.RecordPersonalDataService
 }
 
@@ -37,7 +37,7 @@ func (r clientServiceRegistry) GetAuthService() service.AuthService {
 	return r.loginService
 }
 
-func (r clientServiceRegistry) GetUserService() service.UserService {
+func (r clientServiceRegistry) GetUserService() service.ClientUserService {
 	return r.userService
 }
 
