@@ -2,49 +2,55 @@ package service
 
 import (
 	"context"
+	"github.com/rs/zerolog"
 	"gophkeeper/models"
 	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
 )
 
-type AuthService interface {
-	Login(ctx context.Context, username string, password string) (models.GophUser, error)
-	Register(ctx context.Context, username string, password string) (models.GophUser, error)
+type ClientAuthService interface {
+	SignIn(ctx context.Context, username string, password string) (models.ClientUser, error)
+	Register(ctx context.Context, username string, password string) (models.ClientUser, error)
 }
 
 // Ensure service implements interface
-var _ AuthService = (*authService)(nil)
+var _ ClientAuthService = (*authService)(nil)
 
 type authService struct {
 	api    ClientRpcService
 	crypto common.CryptoService
 }
 
-func NewAuthService(api ClientRpcService, crypto common.CryptoService) AuthService {
+func NewClientAuthService(api ClientRpcService, crypto common.CryptoService) ClientAuthService {
 	return &authService{
 		api:    api,
 		crypto: crypto,
 	}
 }
 
-func (s authService) Login(ctx context.Context, username string, password string) (models.GophUser, error) {
-	user, err := s.api.Login(ctx, username, password)
+func (s authService) SignIn(ctx context.Context, username string, password string) (models.ClientUser, error) {
+	token, err := s.api.Login(ctx, username, password)
 	if err != nil {
-		logging.NewFileLogger().Warn().Err(err).Msg("invalid login")
+		s.Log(ctx).Warn().Err(err).Msg("SignIn:")
+		return models.ClientUser{}, err
 	}
 
-	user.Password = s.crypto.GenerateHash(user.Password)
-
-	return user, err
+	return models.ClientUser{Username: username, Password: password, Token: token}, err
 }
 
-func (s authService) Register(ctx context.Context, username string, password string) (models.GophUser, error) {
-	user, err := s.api.Register(ctx, username, password)
+func (s authService) Register(ctx context.Context, username string, password string) (models.ClientUser, error) {
+	token, err := s.api.Register(ctx, username, password)
 	if err != nil {
-		logging.NewFileLogger().Warn().Err(err).Msg("invalid login")
+		s.Log(ctx).Warn().Err(err).Msg("CreateUser:")
+		return models.ClientUser{}, err
 	}
 
-	user.Password = s.crypto.GenerateHash(user.Password)
+	return models.ClientUser{Username: username, Password: password, Token: token}, err
+}
 
-	return user, err
+func (s authService) Log(ctx context.Context) *zerolog.Logger {
+	_, logger := logging.GetCtxFileLogger(ctx)
+	logger = logger.With().Str(logging.ServiceKey, "ClientAuthService").Logger()
+
+	return &logger
 }

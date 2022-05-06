@@ -8,7 +8,7 @@ import (
 )
 
 type UIController struct {
-	RegisterLoginPage *view.LoginRegisterPage
+	RegisterLoginPage *view.AuthPage
 	MainPage          *view.MainPage
 
 	SavePage              *savepage.SavePage

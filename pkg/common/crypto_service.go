@@ -10,18 +10,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog"
-	"gophkeeper/models"
 	"gophkeeper/pkg/logging"
 	"io"
 )
 
 type CryptoService interface {
-	GenerateHash(password string) string
+	GenerateHash(value string) string
 	Encrypt(ctx context.Context, data []byte, key string) (string, error)
 	Decrypt(ctx context.Context, encryptedString string, key string) ([]byte, error)
 
-	EncryptData(ctx context.Context, user models.GophUser, data interface{}) (string, error)
-	DecryptData(ctx context.Context, user models.GophUser, encryptedData string, response interface{}) error
+	EncryptData(ctx context.Context, userPassword string, data interface{}) (string, error)
+	DecryptData(ctx context.Context, userPassword string, encryptedData string, response interface{}) error
 }
 
 type cryptoService struct {
@@ -103,14 +102,16 @@ func (s cryptoService) Decrypt(ctx context.Context, encryptedString string, keyS
 	return plaintext, nil
 }
 
-func (s cryptoService) EncryptData(ctx context.Context, user models.GophUser, data interface{}) (string, error) {
+func (s cryptoService) EncryptData(ctx context.Context, userPassword string, data interface{}) (string, error) {
+	key := s.GenerateHash(userPassword)
+
 	bytes, err := json.Marshal(data)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msg("EncryptData: invalid Marshal")
 		return "", err
 	}
 
-	encryptedData, err := s.Encrypt(ctx, bytes, user.Password)
+	encryptedData, err := s.Encrypt(ctx, bytes, key)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msg("EncryptData: invalid Encrypt")
 		return "", err
@@ -119,8 +120,10 @@ func (s cryptoService) EncryptData(ctx context.Context, user models.GophUser, da
 	return encryptedData, nil
 }
 
-func (s cryptoService) DecryptData(ctx context.Context, user models.GophUser, encryptedData string, response interface{}) error {
-	bytes, err := s.Decrypt(ctx, encryptedData, user.Password)
+func (s cryptoService) DecryptData(ctx context.Context, userPassword string, encryptedData string, response interface{}) error {
+	key := s.GenerateHash(userPassword)
+
+	bytes, err := s.Decrypt(ctx, encryptedData, key)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msg("DecryptData: invalid decrypt data")
 		return err

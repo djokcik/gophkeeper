@@ -39,11 +39,12 @@ func (p *MainPage) Before() {
 }
 
 func NewMainPage(serviceRegistry registry.ClientServiceRegistry) *MainPage {
-	p := &MainPage{serviceRegistry: serviceRegistry}
-
-	p.SaveData = tui.NewButton("[Сохранить данные]")
-	p.LoadData = tui.NewButton("[Получить данные]")
-	p.welcomeLabel = tui.NewLabel("")
+	p := &MainPage{
+		serviceRegistry: serviceRegistry,
+		SaveData:        tui.NewButton("[Сохранить данные]"),
+		LoadData:        tui.NewButton("[Получить данные]"),
+		welcomeLabel:    tui.NewLabel(""),
+	}
 
 	box := tui.NewVBox(
 		p.SaveData,
@@ -51,24 +52,12 @@ func NewMainPage(serviceRegistry registry.ClientServiceRegistry) *MainPage {
 	)
 	box.SetFocused(true)
 
-	window := tui.NewVBox(
-		tui.NewPadder(10, 0, tui.NewLabel(Logo)),
-		tui.NewSpacer(),
-		p.welcomeLabel,
-		tui.NewLabel(""),
-		box,
-		tui.NewLabel(""),
-	)
-	window.SetBorder(true)
+	wBlock := NewWindowBlockLabel(p.welcomeLabel)
+	wBlock.Append(tui.NewSpacer())
+	wBlock.Append(box)
+	wBlock.Append(tui.NewSpacer())
 
-	wrapper := tui.NewVBox(
-		tui.NewSpacer(),
-		window,
-		tui.NewSpacer(),
-	)
-	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
-
-	p.Root = tui.NewVBox(content)
+	p.Root = tui.NewVBox(NewContent(wBlock))
 
 	return p
 }

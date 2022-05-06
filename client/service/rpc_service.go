@@ -6,7 +6,6 @@ import (
 	"errors"
 	"github.com/rs/zerolog"
 	"gophkeeper/client"
-	"gophkeeper/models"
 	"gophkeeper/models/rpcdto"
 	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
@@ -17,12 +16,12 @@ const (
 	CallSaveRecordPersonalDataHandler     = "RpcHandler.SaveRecordPersonalDataHandler"
 	CallLoadRecordPrivateDataByKeyHandler = "RpcHandler.LoadRecordPrivateDataByKeyHandler"
 	CallRegisterHandler                   = "RpcHandler.RegisterHandler"
-	CallLoginHandler                      = "RpcHandler.LoginHandler"
+	CallSignInHandler                     = "RpcHandler.SignInHandler"
 )
 
 type ClientRpcService interface {
-	Login(ctx context.Context, username string, password string) (models.GophUser, error)
-	Register(ctx context.Context, username string, password string) (models.GophUser, error)
+	Login(ctx context.Context, username string, password string) (string, error)
+	Register(ctx context.Context, username string, password string) (string, error)
 
 	SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error
 	LoadRecordPrivateDataByKey(ctx context.Context, token string, key string) (string, error)
@@ -89,26 +88,34 @@ func (s *rpcService) Call(ctx context.Context, serviceMethod string, args any, r
 	return err
 }
 
-func (s rpcService) Login(ctx context.Context, username string, password string) (models.GophUser, error) {
+func (s rpcService) Login(ctx context.Context, username string, password string) (string, error) {
 	loginDto := rpcdto.LoginDto{Login: username, Password: password}
 
-	var user models.GophUser
+	var token string
 
-	err := s.Call(ctx, CallLoginHandler, loginDto, &user)
+	err := s.Call(ctx, CallSignInHandler, loginDto, &token)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msgf("SignIn: error call - %s", CallSignInHandler)
+		return "", err
+	}
 
-	s.Log(ctx).Trace().Msgf("Login: user - %v", user)
+	s.Log(ctx).Trace().Msgf("SignIn: user - %s", username)
 
-	return user, err
+	return token, nil
 }
 
-func (s rpcService) Register(ctx context.Context, username string, password string) (models.GophUser, error) {
+func (s rpcService) Register(ctx context.Context, username string, password string) (string, error) {
 	registerDto := rpcdto.RegisterDto{Login: username, Password: password}
 
-	var user models.GophUser
+	var token string
 
-	err := s.Call(ctx, CallRegisterHandler, registerDto, &user)
+	err := s.Call(ctx, CallRegisterHandler, registerDto, &token)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msgf("CreateUser: error call - %s", CallRegisterHandler)
+		return "", err
+	}
 
-	return user, err
+	return token, nil
 }
 
 func (s rpcService) SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error {

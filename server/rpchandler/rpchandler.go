@@ -4,25 +4,37 @@ package rpchandler
 import (
 	"context"
 	"github.com/rs/zerolog"
+	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
 	"gophkeeper/server"
 	"gophkeeper/server/registry"
+	"gophkeeper/server/service"
 	"gophkeeper/server/storage"
 )
 
 // RpcHandler struct for all rpc handlers and require DI dependencies
 type RpcHandler struct {
-	cfg             server.Config
-	serviceRegistry registry.ServerServiceRegistry
+	cfg server.Config
+
+	user service.ServerUserService
+	auth common.AuthService
+
+	recordPersonalData service.ServerRecordPersonalDataService
 }
 
 // NewRpcHandler constructor for RpcHandler
-func NewRpcHandler(cfg server.Config) *RpcHandler {
-	fileStorage := storage.NewFileStorage(cfg)
+func NewRpcHandler(cfg server.Config, store storage.Storage) *RpcHandler {
+	authUtils := common.NewAuthUtilsService()
+	auth := common.NewAuthService(store, cfg.JWTSecretKey, authUtils)
+	serviceRegistry := registry.NewServerServiceRegistry(cfg, store, authUtils)
 
 	return &RpcHandler{
-		cfg:             cfg,
-		serviceRegistry: registry.NewServerServiceRegistry(cfg, fileStorage),
+		cfg: cfg,
+
+		user: serviceRegistry.GetUserService(),
+		auth: auth,
+
+		recordPersonalData: serviceRegistry.GetRecordPersonalDataService(),
 	}
 }
 

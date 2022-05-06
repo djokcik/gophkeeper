@@ -5,22 +5,22 @@ import (
 )
 
 type ClientUserService interface {
-	GetUser() models.GophUser
-	SaveUser(user models.GophUser) error
+	GetUser() models.ClientUser
+	SaveUser(user models.ClientUser) error
 }
 
 // Ensure common implements interface
 var _ ClientUserService = (*userService)(nil)
 
 type userService struct {
-	user models.GophUser
+	user models.ClientUser
 }
 
-func (s userService) GetUser() models.GophUser {
+func (s userService) GetUser() models.ClientUser {
 	return s.user
 }
 
-func (s *userService) SaveUser(user models.GophUser) error {
+func (s *userService) SaveUser(user models.ClientUser) error {
 	s.user = user
 	return nil
 }
