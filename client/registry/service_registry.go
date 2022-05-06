@@ -11,7 +11,7 @@ type ClientServiceRegistry interface {
 	GetCryptoService() common.CryptoService
 	GetSSLConfigService() common.SSLConfigService
 
-	GetAuthService() service.AuthService
+	GetAuthService() service.ClientAuthService
 	GetUserService() service.ClientUserService
 	GetRecordPersonalDataService() recordservice.RecordPersonalDataService
 }
@@ -20,7 +20,7 @@ type clientServiceRegistry struct {
 	cryptoService    common.CryptoService
 	sslConfigService common.SSLConfigService
 
-	loginService         service.AuthService
+	loginService         service.ClientAuthService
 	userService          service.ClientUserService
 	loginPasswordService recordservice.RecordPersonalDataService
 }
@@ -33,7 +33,7 @@ func (r clientServiceRegistry) GetSSLConfigService() common.SSLConfigService {
 	return r.sslConfigService
 }
 
-func (r clientServiceRegistry) GetAuthService() service.AuthService {
+func (r clientServiceRegistry) GetAuthService() service.ClientAuthService {
 	return r.loginService
 }
 
@@ -51,7 +51,7 @@ func NewClientServiceRegistry(cfg client.Config) ClientServiceRegistry {
 
 	api := service.NewRpcService(cfg, crypto, sslConfig)
 	user := service.NewUserService()
-	login := service.NewAuthService(api, crypto)
+	login := service.NewClientAuthService(api, crypto)
 
 	return &clientServiceRegistry{
 		cryptoService:    crypto,

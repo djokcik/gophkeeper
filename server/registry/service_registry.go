@@ -1,32 +1,43 @@
 package registry
 
 import (
+	"gophkeeper/pkg/common"
 	"gophkeeper/server"
 	"gophkeeper/server/service"
 	"gophkeeper/server/storage"
 )
 
 type ServerServiceRegistry interface {
-	GetAuthService() service.AuthService
-	GetLoginPasswordService() service.LoginPasswordService
+	GetUserService() service.ServerUserService
+	GetKeyLockService() service.KeyLockService
+
+	GetRecordPersonalDataService() service.ServerRecordPersonalDataService
 }
 
 type serviceRegistry struct {
-	authService          service.AuthService
-	loginPasswordService service.LoginPasswordService
+	user               service.ServerUserService
+	recordPersonalData service.ServerRecordPersonalDataService
+	keyLock            service.KeyLockService
 }
 
-func NewServerServiceRegistry(cfg server.Config, fileStorage storage.FileStorage) ServerServiceRegistry {
+func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth common.AuthUtilsService) ServerServiceRegistry {
+	keyLockService := service.NewStringKeyLock()
+
 	return &serviceRegistry{
-		authService:          service.NewAuthService(cfg, fileStorage),
-		loginPasswordService: service.NewLoginPasswordService(cfg, fileStorage),
+		user:               service.NewAuthService(cfg, store, auth),
+		recordPersonalData: service.NewServerRecordPersonalDataService(cfg, store, keyLockService),
+		keyLock:            keyLockService,
 	}
 }
 
-func (r serviceRegistry) GetAuthService() service.AuthService {
-	return r.authService
+func (r serviceRegistry) GetUserService() service.ServerUserService {
+	return r.user
 }
 
-func (r serviceRegistry) GetLoginPasswordService() service.LoginPasswordService {
-	return r.loginPasswordService
+func (r serviceRegistry) GetKeyLockService() service.KeyLockService {
+	return r.keyLock
+}
+
+func (r serviceRegistry) GetRecordPersonalDataService() service.ServerRecordPersonalDataService {
+	return r.recordPersonalData
 }

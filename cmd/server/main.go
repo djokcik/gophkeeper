@@ -6,6 +6,7 @@ import (
 	"gophkeeper/pkg/logging"
 	"gophkeeper/server"
 	"gophkeeper/server/rpchandler"
+	"gophkeeper/server/storage/filestorage"
 	"net/rpc"
 	"os/signal"
 	"syscall"
@@ -28,7 +29,7 @@ func main() {
 	}
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(rpchandler.NewRpcHandler(cfg))
+	rpcServer.Register(rpchandler.NewRpcHandler(cfg, filestorage.NewFileStorage(cfg)))
 
 	go func() {
 		rpcServer.Accept(conn)

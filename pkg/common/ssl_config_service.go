@@ -36,7 +36,7 @@ func (s sslConfigService) LoadClientCertificate(cfg client.Config) (*tls.Config,
 }
 
 func (s sslConfigService) LoadServerCertificate(cfg server.Config) (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(cfg.SSLCert, cfg.SSLKey)
+	cert, err := tls.LoadX509KeyPair(cfg.SSLCertPath, cfg.SSLKeyPath)
 	if err != nil {
 		logging.NewLogger().Err(err).Msgf("Couldn't load ssl certificate *.crt, *.key: %v", cfg)
 		return nil, err

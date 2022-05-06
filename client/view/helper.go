@@ -52,10 +52,14 @@ func NewButtons(back *tui.Button, submit *tui.Button) *tui.Box {
 }
 
 func NewWindowBlock(label string) *tui.Box {
+	return NewWindowBlockLabel(tui.NewLabel(fmt.Sprintf("\n%s\n", label)))
+}
+
+func NewWindowBlockLabel(label *tui.Label) *tui.Box {
 	block := tui.NewVBox(
 		tui.NewPadder(10, 0, tui.NewLabel(Logo)),
 		tui.NewSpacer(),
-		tui.NewLabel(fmt.Sprintf("\n%s\n", label)),
+		label,
 	)
 
 	block.SetBorder(true)

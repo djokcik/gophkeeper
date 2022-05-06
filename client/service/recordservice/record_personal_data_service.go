@@ -33,11 +33,17 @@ func (s loginPasswordService) LoadRecordByKey(ctx context.Context, key string) (
 
 	encryptedData, err := s.api.LoadRecordPrivateDataByKey(ctx, user.Token, key)
 	if err != nil {
+		s.Log(ctx).Warn().Err(err).Msg("LoadRecordByKey: invalid load data")
 		return clientmodels.RecordPersonalData{}, err
 	}
 
+	if encryptedData == "" {
+		s.Log(ctx).Trace().Msgf("LoadRecordByKey: data by key - %s not found", key)
+		return clientmodels.RecordPersonalData{}, service.ErrNotFoundLoadData
+	}
+
 	var response clientmodels.RecordPersonalData
-	err = s.crypto.DecryptData(ctx, user, encryptedData, &response)
+	err = s.crypto.DecryptData(ctx, user.Password, encryptedData, &response)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msgf("LoadRecordByKey: invalid decrypt data")
 		return clientmodels.RecordPersonalData{}, err
@@ -51,7 +57,7 @@ func (s loginPasswordService) LoadRecordByKey(ctx context.Context, key string) (
 func (s loginPasswordService) SaveRecord(ctx context.Context, key string, data clientmodels.RecordPersonalData) error {
 	user := s.user.GetUser()
 
-	encryptedData, err := s.crypto.EncryptData(ctx, user, data)
+	encryptedData, err := s.crypto.EncryptData(ctx, user.Password, data)
 	if err != nil {
 		return err
 	}
@@ -67,7 +73,7 @@ func (s loginPasswordService) SaveRecord(ctx context.Context, key string, data c
 
 func (s loginPasswordService) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxFileLogger(ctx)
-	logger = logger.With().Str(logging.ServiceKey, "RecordPersonalDataService").Logger()
+	logger = logger.With().Str(logging.ServiceKey, "ServerRecordPersonalDataService").Logger()
 
 	return &logger
 }

@@ -6,17 +6,25 @@ import (
 )
 
 type Config struct {
-	Address   string `env:"ADDRESS"`
-	StorePath string `env:"STORE_FILE"`
+	Address        string `env:"ADDRESS"`
+	StorePath      string `env:"STORE_FILE"`
+	PasswordPepper string `env:"PASSWORD_PEPPER"`
 
-	SSLCert string `env:"SSL_CERT" envDefault:"cert/localhost.crt"`
-	SSLKey  string `env:"SSL_KEY" envDefault:"cert/localhost.key"`
+	JWTSecretKey string `env:"JWT_SECRET_KEY"`
+	DBSecretKey  string `env:"DB_SECRET_KEY"`
+
+	SSLCertPath string `env:"SSL_CERT_PATH" envDefault:"cert/localhost.crt"`
+	SSLKeyPath  string `env:"SSL_KEY_PATH" envDefault:"cert/localhost.key"`
 }
 
 func NewConfig() Config {
 	cfg := Config{
-		Address:   "localhost:8080",
-		StorePath: "/tmp",
+		Address:        "localhost:8080",
+		StorePath:      "/tmp",
+		PasswordPepper: "pepper",
+
+		DBSecretKey:  "DBSecretKey",
+		JWTSecretKey: "JWTSecretKey",
 	}
 
 	cfg.parseEnv()
