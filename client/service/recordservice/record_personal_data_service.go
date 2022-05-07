@@ -38,7 +38,7 @@ func (s loginPasswordService) LoadRecordByKey(ctx context.Context, key string) (
 	}
 
 	if encryptedData == "" {
-		s.Log(ctx).Trace().Msgf("LoadRecordByKey: data by key - %s not found", key)
+		s.Log(ctx).Trace().Msgf("LoadRecordByKey: data by key not found. Key - %s ", key)
 		return clientmodels.RecordPersonalData{}, service.ErrNotFoundLoadData
 	}
 

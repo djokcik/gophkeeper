@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/rs/zerolog"
 	"gophkeeper/models"
 	"gophkeeper/pkg/common"
@@ -30,22 +31,22 @@ func NewClientAuthService(api ClientRpcService, crypto common.CryptoService) Cli
 
 func (s authService) SignIn(ctx context.Context, username string, password string) (models.ClientUser, error) {
 	token, err := s.api.Login(ctx, username, password)
-	if err != nil {
+	if err != nil && !errors.Is(err, ErrAnonymousUser) {
 		s.Log(ctx).Warn().Err(err).Msg("SignIn:")
 		return models.ClientUser{}, err
 	}
 
-	return models.ClientUser{Username: username, Password: password, Token: token}, err
+	return models.ClientUser{Username: username, Password: password, Token: token}, nil
 }
 
 func (s authService) Register(ctx context.Context, username string, password string) (models.ClientUser, error) {
 	token, err := s.api.Register(ctx, username, password)
-	if err != nil {
+	if err != nil && !errors.Is(err, ErrAnonymousUser) {
 		s.Log(ctx).Warn().Err(err).Msg("CreateUser:")
 		return models.ClientUser{}, err
 	}
 
-	return models.ClientUser{Username: username, Password: password, Token: token}, err
+	return models.ClientUser{Username: username, Password: password, Token: token}, nil
 }
 
 func (s authService) Log(ctx context.Context) *zerolog.Logger {
