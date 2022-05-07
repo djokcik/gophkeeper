@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/rs/zerolog"
 	"gophkeeper/client"
+	"gophkeeper/client/storage"
 	"gophkeeper/models/rpcdto"
 	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
@@ -25,22 +26,32 @@ type ClientRpcService interface {
 
 	SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error
 	LoadRecordPrivateDataByKey(ctx context.Context, token string, key string) (string, error)
+
+	CheckOnline() bool
+	Call(ctx context.Context, serviceMethod string, args any, reply any) error
 }
 
 type rpcService struct {
-	cfg    client.Config
-	api    *rpc.Client
-	crypto common.CryptoService
-
+	cfg       client.Config
+	api       *rpc.Client
+	crypto    common.CryptoService
 	sslConfig common.SSLConfigService
+
+	localStorage storage.ClientLocalStorage
 }
 
-func NewRpcService(cfg client.Config, crypto common.CryptoService, sslConfig common.SSLConfigService) ClientRpcService {
+func NewRpcService(
+	cfg client.Config,
+	crypto common.CryptoService,
+	sslConfig common.SSLConfigService,
+	localStorage storage.ClientLocalStorage,
+) ClientRpcService {
 	ctx := context.Background()
 	service := rpcService{
-		cfg:       cfg,
-		crypto:    crypto,
-		sslConfig: sslConfig,
+		cfg:          cfg,
+		crypto:       crypto,
+		sslConfig:    sslConfig,
+		localStorage: localStorage,
 	}
 
 	err := service.Reconnect(ctx)
@@ -73,7 +84,13 @@ func (s *rpcService) Reconnect(ctx context.Context) error {
 	return nil
 }
 
-func (s *rpcService) Call(ctx context.Context, serviceMethod string, args any, reply any) error {
+func (s rpcService) CheckOnline() bool {
+	return s.api != nil
+}
+
+func (s *rpcService) Call(ctx context.Context, serviceMethod string, args interface{}, reply interface{}) error {
+	s.Log(ctx).Trace().Msgf("Call: start method - %s, args - %s", serviceMethod, args)
+
 	err := s.api.Call(serviceMethod, args, reply)
 	if errors.Is(err, rpc.ErrShutdown) {
 		err = s.Reconnect(ctx)
@@ -89,6 +106,10 @@ func (s *rpcService) Call(ctx context.Context, serviceMethod string, args any, r
 }
 
 func (s rpcService) Login(ctx context.Context, username string, password string) (string, error) {
+	if !s.CheckOnline() {
+		return "", ErrAnonymousUser
+	}
+
 	loginDto := rpcdto.LoginDto{Login: username, Password: password}
 
 	var token string
@@ -105,6 +126,10 @@ func (s rpcService) Login(ctx context.Context, username string, password string)
 }
 
 func (s rpcService) Register(ctx context.Context, username string, password string) (string, error) {
+	if !s.CheckOnline() {
+		return "", ErrAnonymousUser
+	}
+
 	registerDto := rpcdto.RegisterDto{Login: username, Password: password}
 
 	var token string
@@ -127,6 +152,10 @@ func (s rpcService) LoadRecordPrivateDataByKey(ctx context.Context, token string
 }
 
 func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRecordRequestDto, serviceMethod string) (string, error) {
+	if recordDto.Token == "" {
+		return "", ErrAnonymousUser
+	}
+
 	var encryptedData string
 	err := s.Call(ctx, serviceMethod, recordDto, &encryptedData)
 	if err != nil {
@@ -138,14 +167,32 @@ func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRe
 }
 
 func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordRequestDto, serviceMethod string) error {
+	if recordDto.Token == "" {
+		return s.SaveAction(ctx, recordDto.Key, recordDto.Data, serviceMethod)
+	}
+
 	var reply struct{}
 	err := s.Call(ctx, serviceMethod, recordDto, &reply)
 	if err != nil {
+		if errors.Is(err, ErrUnableConnectServer) {
+			return s.SaveAction(ctx, recordDto.Key, recordDto.Data, serviceMethod)
+		}
+
 		s.Log(ctx).Error().Err(err).Msgf("saveRecord: error call %s", serviceMethod)
 		return err
 	}
 
 	return nil
+}
+
+func (s rpcService) SaveAction(ctx context.Context, key string, data string, method string) error {
+	err := s.localStorage.SaveRecord(ctx, key, data, method)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msg("saveRecord: invalid SaveRecord in localStorage")
+		return err
+	}
+
+	return ErrSaveLocalStorage
 }
 
 func (s rpcService) Log(ctx context.Context) *zerolog.Logger {
