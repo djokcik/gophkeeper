@@ -13,6 +13,7 @@ type ServerServiceRegistry interface {
 
 	GetRecordPersonalDataService() service.ServerRecordPersonalDataService
 	GetRecordBankCardService() service.ServerRecordBankCardDataService
+	GetRecordTextDataService() service.ServerRecordTextDataService
 }
 
 type serviceRegistry struct {
@@ -21,6 +22,7 @@ type serviceRegistry struct {
 
 	recordPersonalData service.ServerRecordPersonalDataService
 	recordBankCard     service.ServerRecordBankCardDataService
+	recordTextData     service.ServerRecordTextDataService
 }
 
 func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth common.AuthUtilsService) ServerServiceRegistry {
@@ -30,6 +32,7 @@ func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth com
 		user:               service.NewAuthService(cfg, store, auth),
 		recordPersonalData: service.NewServerRecordPersonalDataService(cfg, store, keyLockService),
 		recordBankCard:     service.NewServerRecordBankCardDataService(cfg, store, keyLockService),
+		recordTextData:     service.NewServerRecordTextDataService(cfg, store, keyLockService),
 		keyLock:            keyLockService,
 	}
 }
@@ -48,4 +51,8 @@ func (r serviceRegistry) GetRecordPersonalDataService() service.ServerRecordPers
 
 func (r serviceRegistry) GetRecordBankCardService() service.ServerRecordBankCardDataService {
 	return r.recordBankCard
+}
+
+func (r serviceRegistry) GetRecordTextDataService() service.ServerRecordTextDataService {
+	return r.recordTextData
 }

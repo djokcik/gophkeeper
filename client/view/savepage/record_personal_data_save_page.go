@@ -40,8 +40,7 @@ func (p RecordPersonalDataSavePage) OnActivated(fn func(b *tui.Button)) {
 
 	p.Back.OnActivated(fn)
 	p.Submit.OnActivated(func(b *tui.Button) {
-		ctx := context.Background()
-		log := logging.NewFileLogger()
+		ctx, log := logging.GetCtxFileLogger(context.Background())
 
 		if p.keyField.Text() == "" || p.loginField.Text() == "" || p.passwordField.Text() == "" {
 			p.status.SetText("Не все поля заполнены")
@@ -89,7 +88,6 @@ func NewRecordPersonalDataSavePage(serviceRegistry registry.ClientServiceRegistr
 	p.commentField = view.NewEditBlockWithWindow("Примечания", window)
 
 	window.Append(view.NewButtons(p.Back, p.Submit))
-
 	p.Root = tui.NewVBox(view.NewContent(window), p.status)
 
 	return p

@@ -22,6 +22,10 @@ const (
 	CallLoadRecordBankCardByKeyHandler   = "RpcHandler.LoadRecordBankCardByKeyHandler"
 	CallRemoveRecordBankCardByKeyHandler = "RpcHandler.RemoveRecordBankCardByKeyHandler"
 
+	CallSaveRecordTextDataHandler        = "RpcHandler.SaveRecordTextDataHandler"
+	CallLoadRecordTextDataByKeyHandler   = "RpcHandler.LoadRecordTextDataByKeyHandler"
+	CallRemoveRecordTextDataByKeyHandler = "RpcHandler.RemoveRecordTextDataByKeyHandler"
+
 	CallRegisterHandler = "RpcHandler.RegisterHandler"
 	CallSignInHandler   = "RpcHandler.SignInHandler"
 )
@@ -37,6 +41,10 @@ type ClientRpcService interface {
 	RemoveRecordBankCardByKey(ctx context.Context, token string, key string) error
 	LoadRecordBankCardByKey(ctx context.Context, token string, key string) (string, error)
 	SaveRecordBankCard(ctx context.Context, token string, key string, data string) error
+
+	RemoveRecordTextDataByKey(ctx context.Context, token string, key string) error
+	LoadRecordTextDataByKey(ctx context.Context, token string, key string) (string, error)
+	SaveRecordTextData(ctx context.Context, token string, key string, data string) error
 
 	CheckOnline() bool
 	Call(ctx context.Context, serviceMethod string, args any, reply any) error
@@ -176,6 +184,18 @@ func (s rpcService) LoadRecordBankCardByKey(ctx context.Context, token string, k
 
 func (s rpcService) RemoveRecordBankCardByKey(ctx context.Context, token string, key string) error {
 	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordBankCardByKeyHandler)
+}
+
+func (s rpcService) SaveRecordTextData(ctx context.Context, token string, key string, data string) error {
+	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordTextDataHandler)
+}
+
+func (s rpcService) LoadRecordTextDataByKey(ctx context.Context, token string, key string) (string, error) {
+	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordTextDataByKeyHandler)
+}
+
+func (s rpcService) RemoveRecordTextDataByKey(ctx context.Context, token string, key string) error {
+	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordTextDataByKeyHandler)
 }
 
 func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRecordRequestDto, serviceMethod string) (string, error) {
