@@ -5,7 +5,6 @@ import (
 	"github.com/rs/zerolog"
 	"gophkeeper/client/clientmodels"
 	"gophkeeper/client/service"
-	"gophkeeper/pkg/common"
 	"gophkeeper/pkg/logging"
 )
 
@@ -18,14 +17,14 @@ type RecordPersonalDataService interface {
 type recordPersonalDataService struct {
 	api    service.ClientRpcService
 	user   service.ClientUserService
-	crypto common.CryptoService
+	record ClientRecordService
 }
 
-func NewRecordPersonalDataService(api service.ClientRpcService, user service.ClientUserService, crypto common.CryptoService) RecordPersonalDataService {
+func NewRecordPersonalDataService(api service.ClientRpcService, user service.ClientUserService, record ClientRecordService) RecordPersonalDataService {
 	return &recordPersonalDataService{
 		api:    api,
 		user:   user,
-		crypto: crypto,
+		record: record,
 	}
 }
 
@@ -44,44 +43,29 @@ func (s recordPersonalDataService) RemoveRecordByKey(ctx context.Context, key st
 func (s recordPersonalDataService) LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordPersonalData, error) {
 	user := s.user.GetUser()
 
-	encryptedData, err := s.api.LoadRecordPersonalDataByKey(ctx, user.Token, key)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("LoadRecordByKey: invalid load data")
-		return clientmodels.RecordPersonalData{}, err
-	}
-
-	if encryptedData == "" {
-		s.Log(ctx).Trace().Msgf("LoadRecordByKey: data by key not found. Key - %s ", key)
-		return clientmodels.RecordPersonalData{}, service.ErrNotFoundLoadData
-	}
-
 	var response clientmodels.RecordPersonalData
-	err = s.crypto.DecryptData(ctx, user.Password, encryptedData, &response)
+	err := s.record.LoadRecordByKey(ctx, user, &response, func() (string, error) {
+		return s.api.LoadRecordPersonalDataByKey(ctx, user.Token, key)
+	})
 	if err != nil {
-		s.Log(ctx).Error().Err(err).Msgf("LoadRecordByKey: invalid decrypt data")
+		s.Log(ctx).Error().Err(err).Msg("LoadRecordByKey:")
 		return clientmodels.RecordPersonalData{}, err
 	}
 
-	s.Log(ctx).Trace().Msg("LoadRecordByKey: success to load")
-
-	return response, err
+	return response, nil
 }
 
 func (s recordPersonalDataService) SaveRecord(ctx context.Context, key string, data clientmodels.RecordPersonalData) error {
 	user := s.user.GetUser()
 
-	encryptedData, err := s.crypto.EncryptData(ctx, user.Password, data)
+	err := s.record.SaveRecord(ctx, user, data, func(encryptedData string) error {
+		return s.api.SaveRecordPersonalData(ctx, user.Token, key, encryptedData)
+	})
 	if err != nil {
 		return err
 	}
 
-	err = s.api.SaveRecordPersonalData(ctx, user.Token, key, encryptedData)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("SaveRecord: invalid SaveRecordPersonalData")
-		return err
-	}
-
-	return err
+	return nil
 }
 
 func (s recordPersonalDataService) Log(ctx context.Context) *zerolog.Logger {

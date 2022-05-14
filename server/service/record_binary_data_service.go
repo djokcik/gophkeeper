@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"github.com/rs/zerolog"
+	"gophkeeper/models"
 	"gophkeeper/pkg/logging"
 	"gophkeeper/server"
-	"gophkeeper/server/storage"
 )
 
 type ServerRecordBinaryDataService interface {
@@ -15,78 +15,49 @@ type ServerRecordBinaryDataService interface {
 }
 
 type recordBinaryDataService struct {
-	cfg     server.Config
-	storage storage.Storage
-	keyLock KeyLockService
+	cfg    server.Config
+	record ServerRecordService
 }
 
-func NewServerRecordBinaryDataService(cfg server.Config, store storage.Storage, keyLock KeyLockService) ServerRecordBinaryDataService {
+func NewServerRecordBinaryDataService(cfg server.Config, record ServerRecordService) ServerRecordBinaryDataService {
 	return &recordBinaryDataService{
-		cfg:     cfg,
-		storage: store,
-		keyLock: keyLock,
+		cfg:    cfg,
+		record: record,
 	}
 }
 
 func (s recordBinaryDataService) Save(ctx context.Context, key string, username string, data string) error {
-	s.keyLock.Lock(username)
-	defer s.keyLock.Unlock(username)
+	return s.record.Save(ctx, username, func(store models.StorageData) error {
+		if store.BinaryData == nil {
+			store.BinaryData = make(map[string]string)
+		}
 
-	store, err := s.storage.Read(ctx, username)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("Save: invalid read storage")
-		return err
-	}
+		store.BinaryData[key] = data
 
-	if store.BinaryData == nil {
-		store.BinaryData = make(map[string]string)
-	}
-
-	store.BinaryData[key] = data
-
-	err = s.storage.Save(ctx, store)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("Save: invalid save data")
-		return err
-	}
-
-	return nil
+		return nil
+	})
 }
 
 func (s recordBinaryDataService) Load(ctx context.Context, key string, username string) (string, error) {
-	store, err := s.storage.Read(ctx, username)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("Load: invalid read storage")
-		return "", err
-	}
-
-	return store.BinaryData[key], nil
+	return s.record.Load(ctx, username, func(store models.StorageData) string {
+		return store.BinaryData[key]
+	})
 }
 
 func (s recordBinaryDataService) Remove(ctx context.Context, key string, username string) error {
-	store, err := s.storage.Read(ctx, username)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("Remove: invalid read storage")
-		return err
-	}
+	return s.record.Remove(ctx, username, func(store models.StorageData) error {
+		if store.BinaryData == nil {
+			return ErrNotFoundRecord
+		}
 
-	if store.BinaryData == nil {
-		return ErrNotFoundRecord
-	}
+		if _, ok := store.BinaryData[key]; !ok {
+			return ErrNotFoundRecord
+		}
 
-	if _, ok := store.BinaryData[key]; !ok {
-		return ErrNotFoundRecord
-	}
+		delete(store.BinaryData, key)
 
-	delete(store.BinaryData, key)
-
-	err = s.storage.Save(ctx, store)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("Remove: invalid save storage")
-		return err
-	}
-
-	return nil
+		return nil
+	})
 }
 
 func (s *recordBinaryDataService) Log(ctx context.Context) *zerolog.Logger {

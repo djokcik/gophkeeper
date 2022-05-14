@@ -29,12 +29,13 @@ type serviceRegistry struct {
 
 func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth common.AuthUtilsService) ServerServiceRegistry {
 	keyLockService := service.NewStringKeyLock()
+	recordService := service.NewRecordService(keyLockService, store)
 
 	return &serviceRegistry{
 		user:               service.NewAuthService(cfg, store, auth),
 		recordPersonalData: service.NewServerRecordPersonalDataService(cfg, store, keyLockService),
 		recordBankCard:     service.NewServerRecordBankCardDataService(cfg, store, keyLockService),
-		recordTextData:     service.NewServerRecordTextDataService(cfg, store, keyLockService),
+		recordTextData:     service.NewServerRecordTextDataService(cfg, store, keyLockService, recordService),
 		recordBinaryData:   service.NewServerRecordBinaryDataService(cfg, store, keyLockService),
 		keyLock:            keyLockService,
 	}

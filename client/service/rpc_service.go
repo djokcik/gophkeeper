@@ -293,7 +293,7 @@ func (s rpcService) ActionSave(ctx context.Context, key string, data string, met
 
 func (s rpcService) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxFileLogger(ctx)
-	logger = logger.With().Str(logging.ServiceKey, "rpcService").Logger()
+	logger = logger.With().Str(logging.ServiceKey, "RpcService").Logger()
 
 	return &logger
 }

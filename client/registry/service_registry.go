@@ -88,6 +88,7 @@ func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServ
 	api := service.NewRpcService(cfg, crypto, sslConfig, localStorage)
 	clientStorage := service.NewClientStorageService(api, localStorage, user)
 	auth := service.NewClientAuthService(api, crypto)
+	record := recordservice.NewClientRecordService(crypto)
 
 	return &clientServiceRegistry{
 		apiService: api,
@@ -99,9 +100,9 @@ func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServ
 		authService: auth,
 		userService: user,
 
-		recordPersonalDataService: recordservice.NewRecordPersonalDataService(api, user, crypto),
-		recordBankCardService:     recordservice.NewBankCardService(api, user, crypto),
-		recordTextDataService:     recordservice.NewTextDataService(api, user, crypto),
-		recordBinaryDataService:   recordservice.NewBinaryDataService(api, user, crypto),
+		recordPersonalDataService: recordservice.NewRecordPersonalDataService(api, user, record),
+		recordBankCardService:     recordservice.NewBankCardService(api, user, record),
+		recordTextDataService:     recordservice.NewTextDataService(api, user, record),
+		recordBinaryDataService:   recordservice.NewBinaryDataService(api, user, record),
 	}
 }
