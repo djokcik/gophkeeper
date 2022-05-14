@@ -8,4 +8,5 @@ var (
 	ErrSaveLocalStorage    = errors.New("ClientRpcService: save to local data because server isn`t connect")
 
 	ErrNotFoundLoadData = errors.New("service: err not found load data")
+	ErrInvalidLoadData  = errors.New("service: err invalid load data")
 )

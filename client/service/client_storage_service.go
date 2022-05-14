@@ -55,7 +55,14 @@ func (s storageService) SyncServer(ctx context.Context) error {
 			reply := struct{}{}
 			err = s.api.Call(ctx, action.Method, rpcdto.SaveRecordRequestDto{Key: action.Key, Data: action.Data, Token: user.Token}, &reply)
 			if err != nil {
-				s.Log(ctx).Warn().Err(err).Msgf("SyncServer: invalid call action - %+v", action)
+				s.Log(ctx).Warn().Err(err).Msgf("SyncServer: invalid call save action - %+v", action)
+				return err
+			}
+		case clientmodels.RemoveMethod:
+			reply := struct{}{}
+			err = s.api.Call(ctx, action.Method, rpcdto.RemoveRecordRequestDto{Key: action.Key, Token: user.Token}, &reply)
+			if err != nil {
+				s.Log(ctx).Warn().Err(err).Msgf("SyncServer: invalid call remove action - %+v", action)
 				return err
 			}
 		default:

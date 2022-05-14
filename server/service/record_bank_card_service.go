@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"github.com/rs/zerolog"
+	"gophkeeper/models"
 	"gophkeeper/pkg/logging"
 	"gophkeeper/server"
-	"gophkeeper/server/storage"
 )
 
 type ServerRecordBankCardDataService interface {
@@ -15,78 +15,49 @@ type ServerRecordBankCardDataService interface {
 }
 
 type recordBankCardDataService struct {
-	cfg     server.Config
-	storage storage.Storage
-	keyLock KeyLockService
+	cfg    server.Config
+	record ServerRecordService
 }
 
-func NewServerRecordBankCardDataService(cfg server.Config, store storage.Storage, keyLock KeyLockService) ServerRecordBankCardDataService {
+func NewServerRecordBankCardDataService(cfg server.Config, record ServerRecordService) ServerRecordBankCardDataService {
 	return &recordBankCardDataService{
-		cfg:     cfg,
-		storage: store,
-		keyLock: keyLock,
+		cfg:    cfg,
+		record: record,
 	}
 }
 
 func (s recordBankCardDataService) Save(ctx context.Context, key string, username string, data string) error {
-	s.keyLock.Lock(username)
-	defer s.keyLock.Unlock(username)
+	return s.record.Save(ctx, username, func(store models.StorageData) error {
+		if store.BankCardData == nil {
+			store.BankCardData = make(map[string]string)
+		}
 
-	store, err := s.storage.Read(ctx, username)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("Save: invalid read storage")
-		return err
-	}
+		store.BankCardData[key] = data
 
-	if store.BankCardData == nil {
-		store.BankCardData = make(map[string]string)
-	}
-
-	store.BankCardData[key] = data
-
-	err = s.storage.Save(ctx, store)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("Save: invalid save data")
-		return err
-	}
-
-	return nil
+		return nil
+	})
 }
 
 func (s recordBankCardDataService) Load(ctx context.Context, key string, username string) (string, error) {
-	store, err := s.storage.Read(ctx, username)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("Load: invalid read storage")
-		return "", err
-	}
-
-	return store.BankCardData[key], nil
+	return s.record.Load(ctx, username, func(store models.StorageData) string {
+		return store.BankCardData[key]
+	})
 }
 
 func (s recordBankCardDataService) Remove(ctx context.Context, key string, username string) error {
-	store, err := s.storage.Read(ctx, username)
-	if err != nil {
-		s.Log(ctx).Warn().Err(err).Msg("Remove: invalid read storage")
-		return err
-	}
+	return s.record.Remove(ctx, username, func(store models.StorageData) error {
+		if store.BankCardData == nil {
+			return ErrNotFoundRecord
+		}
 
-	if store.BankCardData == nil {
-		return ErrNotFoundRecord
-	}
+		if _, ok := store.BankCardData[key]; !ok {
+			return ErrNotFoundRecord
+		}
 
-	if _, ok := store.BankCardData[key]; !ok {
-		return ErrNotFoundRecord
-	}
+		delete(store.BankCardData, key)
 
-	delete(store.BankCardData, key)
-
-	err = s.storage.Save(ctx, store)
-	if err != nil {
-		s.Log(ctx).Error().Err(err).Msg("Remove: invalid save storage")
-		return err
-	}
-
-	return nil
+		return nil
+	})
 }
 
 func (s *recordBankCardDataService) Log(ctx context.Context) *zerolog.Logger {
