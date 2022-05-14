@@ -44,6 +44,7 @@ func (p RecordPersonalDataSavePage) OnActivated(fn func(b *tui.Button)) {
 		log := logging.NewFileLogger()
 
 		if p.keyField.Text() == "" || p.loginField.Text() == "" || p.passwordField.Text() == "" {
+			p.status.SetText("Не все поля заполнены")
 			return
 		}
 

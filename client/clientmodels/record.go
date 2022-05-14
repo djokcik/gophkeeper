@@ -7,4 +7,11 @@ type (
 		URL      string
 		Comment  string
 	}
+
+	RecordBankCardData struct {
+		CardNumber string
+		Year       string
+		CVV        string
+		Comment    string
+	}
 )

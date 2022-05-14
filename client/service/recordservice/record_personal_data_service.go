@@ -15,21 +15,21 @@ type RecordPersonalDataService interface {
 	SaveRecord(ctx context.Context, key string, data clientmodels.RecordPersonalData) error
 }
 
-type loginPasswordService struct {
+type recordPersonalDataService struct {
 	api    service.ClientRpcService
 	user   service.ClientUserService
 	crypto common.CryptoService
 }
 
-func NewLoginPasswordService(api service.ClientRpcService, user service.ClientUserService, crypto common.CryptoService) RecordPersonalDataService {
-	return &loginPasswordService{
+func NewRecordPersonalDataService(api service.ClientRpcService, user service.ClientUserService, crypto common.CryptoService) RecordPersonalDataService {
+	return &recordPersonalDataService{
 		api:    api,
 		user:   user,
 		crypto: crypto,
 	}
 }
 
-func (s loginPasswordService) RemoveRecordByKey(ctx context.Context, key string) error {
+func (s recordPersonalDataService) RemoveRecordByKey(ctx context.Context, key string) error {
 	user := s.user.GetUser()
 
 	err := s.api.RemoveRecordPersonalDataByKey(ctx, user.Token, key)
@@ -41,7 +41,7 @@ func (s loginPasswordService) RemoveRecordByKey(ctx context.Context, key string)
 	return nil
 }
 
-func (s loginPasswordService) LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordPersonalData, error) {
+func (s recordPersonalDataService) LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordPersonalData, error) {
 	user := s.user.GetUser()
 
 	encryptedData, err := s.api.LoadRecordPersonalDataByKey(ctx, user.Token, key)
@@ -67,7 +67,7 @@ func (s loginPasswordService) LoadRecordByKey(ctx context.Context, key string) (
 	return response, err
 }
 
-func (s loginPasswordService) SaveRecord(ctx context.Context, key string, data clientmodels.RecordPersonalData) error {
+func (s recordPersonalDataService) SaveRecord(ctx context.Context, key string, data clientmodels.RecordPersonalData) error {
 	user := s.user.GetUser()
 
 	encryptedData, err := s.crypto.EncryptData(ctx, user.Password, data)
@@ -84,7 +84,7 @@ func (s loginPasswordService) SaveRecord(ctx context.Context, key string, data c
 	return err
 }
 
-func (s loginPasswordService) Log(ctx context.Context) *zerolog.Logger {
+func (s recordPersonalDataService) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxFileLogger(ctx)
 	logger = logger.With().Str(logging.ServiceKey, "ServerRecordPersonalDataService").Logger()
 
