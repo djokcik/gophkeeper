@@ -23,4 +23,9 @@ type (
 		Token string
 		Key   string
 	}
+
+	RemoveRecordRequestDto struct {
+		Token string
+		Key   string
+	}
 )

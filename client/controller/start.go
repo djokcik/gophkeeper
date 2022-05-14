@@ -17,6 +17,7 @@ func Start(_ context.Context, serviceRegistry registry.ClientServiceRegistry) {
 	ctr.MainPage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.SavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.LoadPage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
+	ctr.RemovePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.LoginPasswordSavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.BinaryDataSavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })
 	ctr.TextDataSavePage.OnActivated(func(b *tui.Button) { client.SetWidget(router[b]) })

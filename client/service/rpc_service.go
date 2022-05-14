@@ -14,10 +14,12 @@ import (
 )
 
 const (
-	CallSaveRecordPersonalDataHandler     = "RpcHandler.SaveRecordPersonalDataHandler"
-	CallLoadRecordPrivateDataByKeyHandler = "RpcHandler.LoadRecordPrivateDataByKeyHandler"
-	CallRegisterHandler                   = "RpcHandler.RegisterHandler"
-	CallSignInHandler                     = "RpcHandler.SignInHandler"
+	CallSaveRecordPersonalDataHandler        = "RpcHandler.SaveRecordPersonalDataHandler"
+	CallLoadRecordPersonalDataByKeyHandler   = "RpcHandler.LoadRecordPersonalDataByKeyHandler"
+	CallRemoveRecordPersonalDataByKeyHandler = "RpcHandler.RemoveRecordPersonalDataByKeyHandler"
+
+	CallRegisterHandler = "RpcHandler.RegisterHandler"
+	CallSignInHandler   = "RpcHandler.SignInHandler"
 )
 
 type ClientRpcService interface {
@@ -25,7 +27,8 @@ type ClientRpcService interface {
 	Register(ctx context.Context, username string, password string) (string, error)
 
 	SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error
-	LoadRecordPrivateDataByKey(ctx context.Context, token string, key string) (string, error)
+	LoadRecordPersonalDataByKey(ctx context.Context, token string, key string) (string, error)
+	RemoveRecordPersonalDataByKey(ctx context.Context, token string, key string) error
 
 	CheckOnline() bool
 	Call(ctx context.Context, serviceMethod string, args any, reply any) error
@@ -147,8 +150,12 @@ func (s rpcService) SaveRecordPersonalData(ctx context.Context, token string, ke
 	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordPersonalDataHandler)
 }
 
-func (s rpcService) LoadRecordPrivateDataByKey(ctx context.Context, token string, key string) (string, error) {
-	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordPrivateDataByKeyHandler)
+func (s rpcService) LoadRecordPersonalDataByKey(ctx context.Context, token string, key string) (string, error) {
+	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordPersonalDataByKeyHandler)
+}
+
+func (s rpcService) RemoveRecordPersonalDataByKey(ctx context.Context, token string, key string) error {
+	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordPersonalDataByKeyHandler)
 }
 
 func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRecordRequestDto, serviceMethod string) (string, error) {
@@ -166,16 +173,35 @@ func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRe
 	return encryptedData, nil
 }
 
-func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordRequestDto, serviceMethod string) error {
+func (s rpcService) removeRecordByKey(ctx context.Context, recordDto rpcdto.RemoveRecordRequestDto, serviceMethod string) error {
 	if recordDto.Token == "" {
-		return s.SaveAction(ctx, recordDto.Key, recordDto.Data, serviceMethod)
+		return s.ActionRemove(ctx, recordDto.Key, serviceMethod)
 	}
 
 	var reply struct{}
 	err := s.Call(ctx, serviceMethod, recordDto, &reply)
 	if err != nil {
 		if errors.Is(err, ErrUnableConnectServer) {
-			return s.SaveAction(ctx, recordDto.Key, recordDto.Data, serviceMethod)
+			return s.ActionRemove(ctx, recordDto.Key, serviceMethod)
+		}
+
+		s.Log(ctx).Error().Err(err).Msgf("removeRecordByKey: error call %s", serviceMethod)
+		return err
+	}
+
+	return nil
+}
+
+func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordRequestDto, serviceMethod string) error {
+	if recordDto.Token == "" {
+		return s.ActionSave(ctx, recordDto.Key, recordDto.Data, serviceMethod)
+	}
+
+	var reply struct{}
+	err := s.Call(ctx, serviceMethod, recordDto, &reply)
+	if err != nil {
+		if errors.Is(err, ErrUnableConnectServer) {
+			return s.ActionSave(ctx, recordDto.Key, recordDto.Data, serviceMethod)
 		}
 
 		s.Log(ctx).Error().Err(err).Msgf("saveRecord: error call %s", serviceMethod)
@@ -185,7 +211,17 @@ func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordR
 	return nil
 }
 
-func (s rpcService) SaveAction(ctx context.Context, key string, data string, method string) error {
+func (s rpcService) ActionRemove(ctx context.Context, key string, method string) error {
+	err := s.localStorage.RemoveRecord(ctx, key, method)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msg("saveRecord: invalid SaveRecord in localStorage")
+		return err
+	}
+
+	return ErrSaveLocalStorage
+}
+
+func (s rpcService) ActionSave(ctx context.Context, key string, data string, method string) error {
 	err := s.localStorage.SaveRecord(ctx, key, data, method)
 	if err != nil {
 		s.Log(ctx).Error().Err(err).Msg("saveRecord: invalid SaveRecord in localStorage")

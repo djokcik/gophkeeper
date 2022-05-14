@@ -1,7 +1,8 @@
 package clientmodels
 
 var (
-	SaveMethod RecordActionType = "save"
+	SaveMethod   RecordActionType = "save"
+	RemoveMethod RecordActionType = "remove"
 )
 
 type (

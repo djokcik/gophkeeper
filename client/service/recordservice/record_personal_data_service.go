@@ -10,6 +10,7 @@ import (
 )
 
 type RecordPersonalDataService interface {
+	RemoveRecordByKey(ctx context.Context, key string) error
 	LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordPersonalData, error)
 	SaveRecord(ctx context.Context, key string, data clientmodels.RecordPersonalData) error
 }
@@ -28,10 +29,22 @@ func NewLoginPasswordService(api service.ClientRpcService, user service.ClientUs
 	}
 }
 
+func (s loginPasswordService) RemoveRecordByKey(ctx context.Context, key string) error {
+	user := s.user.GetUser()
+
+	err := s.api.RemoveRecordPersonalDataByKey(ctx, user.Token, key)
+	if err != nil {
+		s.Log(ctx).Warn().Err(err).Msg("RemoveRecordByKey: invalid load data")
+		return err
+	}
+
+	return nil
+}
+
 func (s loginPasswordService) LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordPersonalData, error) {
 	user := s.user.GetUser()
 
-	encryptedData, err := s.api.LoadRecordPrivateDataByKey(ctx, user.Token, key)
+	encryptedData, err := s.api.LoadRecordPersonalDataByKey(ctx, user.Token, key)
 	if err != nil {
 		s.Log(ctx).Warn().Err(err).Msg("LoadRecordByKey: invalid load data")
 		return clientmodels.RecordPersonalData{}, err

@@ -4,12 +4,14 @@ import (
 	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
 	"gophkeeper/client/view/loadpage"
+	"gophkeeper/client/view/removepage"
 	"gophkeeper/client/view/savepage"
 )
 
 type UIController struct {
 	RegisterLoginPage *view.AuthPage
 	MainPage          *view.MainPage
+	RemovePage        *removepage.RemovePage
 
 	SavePage              *savepage.SavePage
 	LoginPasswordSavePage *savepage.RecordPersonalDataSavePage
@@ -28,6 +30,7 @@ func NewUIController(serviceRegistry registry.ClientServiceRegistry) *UIControll
 	return &UIController{
 		RegisterLoginPage: view.NewLoginRegisterPage(serviceRegistry),
 		MainPage:          view.NewMainPage(serviceRegistry),
+		RemovePage:        removepage.NewRemovePage(serviceRegistry),
 
 		SavePage:              savepage.NewSavePage(),
 		LoginPasswordSavePage: savepage.NewRecordPersonalDataSavePage(serviceRegistry),
