@@ -17,7 +17,9 @@ type ClientServiceRegistry interface {
 	GetApiService() service.ClientRpcService
 	GetAuthService() service.ClientAuthService
 	GetUserService() service.ClientUserService
+
 	GetRecordPersonalDataService() recordservice.RecordPersonalDataService
+	GetRecordBankCardService() recordservice.RecordBankCardService
 }
 
 type clientServiceRegistry struct {
@@ -29,7 +31,12 @@ type clientServiceRegistry struct {
 	userService    service.ClientUserService
 	storageService service.ClientStorageService
 
-	loginPasswordService recordservice.RecordPersonalDataService
+	recordPersonalDataService recordservice.RecordPersonalDataService
+	recordBankCardService     recordservice.RecordBankCardService
+}
+
+func (r clientServiceRegistry) GetRecordBankCardService() recordservice.RecordBankCardService {
+	return r.recordBankCardService
 }
 
 func (r clientServiceRegistry) GetApiService() service.ClientRpcService {
@@ -57,7 +64,7 @@ func (r clientServiceRegistry) GetUserService() service.ClientUserService {
 }
 
 func (r clientServiceRegistry) GetRecordPersonalDataService() recordservice.RecordPersonalDataService {
-	return r.loginPasswordService
+	return r.recordPersonalDataService
 }
 
 func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServiceRegistry {
@@ -77,8 +84,10 @@ func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServ
 		sslConfigService: sslConfig,
 		storageService:   clientStorage,
 
-		authService:          auth,
-		userService:          user,
-		loginPasswordService: recordservice.NewLoginPasswordService(api, user, crypto),
+		authService: auth,
+		userService: user,
+
+		recordPersonalDataService: recordservice.NewRecordPersonalDataService(api, user, crypto),
+		recordBankCardService:     recordservice.NewBankCardService(api, user, crypto),
 	}
 }

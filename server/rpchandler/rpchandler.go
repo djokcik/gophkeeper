@@ -20,6 +20,7 @@ type RpcHandler struct {
 	auth common.AuthService
 
 	recordPersonalData service.ServerRecordPersonalDataService
+	recordBankCard     service.ServerRecordBankCardDataService
 }
 
 // NewRpcHandler constructor for RpcHandler
@@ -35,6 +36,7 @@ func NewRpcHandler(cfg server.Config, store storage.Storage) *RpcHandler {
 		auth: auth,
 
 		recordPersonalData: serviceRegistry.GetRecordPersonalDataService(),
+		recordBankCard:     serviceRegistry.GetRecordBankCardService(),
 	}
 }
 

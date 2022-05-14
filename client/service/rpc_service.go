@@ -18,6 +18,10 @@ const (
 	CallLoadRecordPersonalDataByKeyHandler   = "RpcHandler.LoadRecordPersonalDataByKeyHandler"
 	CallRemoveRecordPersonalDataByKeyHandler = "RpcHandler.RemoveRecordPersonalDataByKeyHandler"
 
+	CallSaveRecordBankCardHandler        = "RpcHandler.SaveRecordBankCardHandler"
+	CallLoadRecordBankCardByKeyHandler   = "RpcHandler.LoadRecordBankCardByKeyHandler"
+	CallRemoveRecordBankCardByKeyHandler = "RpcHandler.RemoveRecordBankCardByKeyHandler"
+
 	CallRegisterHandler = "RpcHandler.RegisterHandler"
 	CallSignInHandler   = "RpcHandler.SignInHandler"
 )
@@ -29,6 +33,10 @@ type ClientRpcService interface {
 	SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error
 	LoadRecordPersonalDataByKey(ctx context.Context, token string, key string) (string, error)
 	RemoveRecordPersonalDataByKey(ctx context.Context, token string, key string) error
+
+	RemoveRecordBankCardByKey(ctx context.Context, token string, key string) error
+	LoadRecordBankCardByKey(ctx context.Context, token string, key string) (string, error)
+	SaveRecordBankCard(ctx context.Context, token string, key string, data string) error
 
 	CheckOnline() bool
 	Call(ctx context.Context, serviceMethod string, args any, reply any) error
@@ -156,6 +164,18 @@ func (s rpcService) LoadRecordPersonalDataByKey(ctx context.Context, token strin
 
 func (s rpcService) RemoveRecordPersonalDataByKey(ctx context.Context, token string, key string) error {
 	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordPersonalDataByKeyHandler)
+}
+
+func (s rpcService) SaveRecordBankCard(ctx context.Context, token string, key string, data string) error {
+	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordBankCardHandler)
+}
+
+func (s rpcService) LoadRecordBankCardByKey(ctx context.Context, token string, key string) (string, error) {
+	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordBankCardByKeyHandler)
+}
+
+func (s rpcService) RemoveRecordBankCardByKey(ctx context.Context, token string, key string) error {
+	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordBankCardByKeyHandler)
 }
 
 func (s rpcService) loadRecordByKey(ctx context.Context, recordDto rpcdto.LoadRecordRequestDto, serviceMethod string) (string, error) {

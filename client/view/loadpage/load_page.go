@@ -52,7 +52,7 @@ func NewLoadPage() *LoadPage {
 	window := tui.NewVBox(
 		tui.NewPadder(10, 0, tui.NewLabel(view.Logo)),
 		tui.NewSpacer(),
-		tui.NewLabel("Какой формат данных хотите загрущить? (Используйте TAB для навигации)"),
+		tui.NewLabel("Какой формат данных хотите загрузить? (Используйте TAB для навигации)"),
 		tui.NewLabel(""),
 		box,
 		tui.NewLabel(""),

@@ -17,7 +17,7 @@ type UIController struct {
 	LoginPasswordSavePage *savepage.RecordPersonalDataSavePage
 	BinaryDataSavePage    *savepage.BinaryDataSavePage
 	TextDataSavePage      *savepage.TextDataSavePage
-	CardSavePage          *savepage.CardSavePage
+	CardSavePage          *savepage.BankCardSavePage
 
 	LoadPage              *loadpage.LoadPage
 	LoginPasswordLoadPage *loadpage.RecordPersonalDataLoadPage
@@ -36,12 +36,12 @@ func NewUIController(serviceRegistry registry.ClientServiceRegistry) *UIControll
 		LoginPasswordSavePage: savepage.NewRecordPersonalDataSavePage(serviceRegistry),
 		TextDataSavePage:      savepage.NewTextDataSavePage(),
 		BinaryDataSavePage:    savepage.NewBinaryDataSavePage(),
-		CardSavePage:          savepage.NewCardSavePage(),
+		CardSavePage:          savepage.NewBankCardSavePage(serviceRegistry),
 
 		LoadPage:              loadpage.NewLoadPage(),
 		LoginPasswordLoadPage: loadpage.NewRecordPersonalDataLoadPage(serviceRegistry),
 		TextDataLoadPage:      loadpage.NewTextDataLoadPage(),
 		BinaryDataLoadPage:    loadpage.NewBinaryDataLoadPage(),
-		BankCardLoadPage:      loadpage.NewBankCardLoadPage(),
+		BankCardLoadPage:      loadpage.NewBankCardLoadPage(serviceRegistry),
 	}
 }

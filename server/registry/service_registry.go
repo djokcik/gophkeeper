@@ -12,12 +12,15 @@ type ServerServiceRegistry interface {
 	GetKeyLockService() service.KeyLockService
 
 	GetRecordPersonalDataService() service.ServerRecordPersonalDataService
+	GetRecordBankCardService() service.ServerRecordBankCardDataService
 }
 
 type serviceRegistry struct {
-	user               service.ServerUserService
+	user    service.ServerUserService
+	keyLock service.KeyLockService
+
 	recordPersonalData service.ServerRecordPersonalDataService
-	keyLock            service.KeyLockService
+	recordBankCard     service.ServerRecordBankCardDataService
 }
 
 func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth common.AuthUtilsService) ServerServiceRegistry {
@@ -26,6 +29,7 @@ func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth com
 	return &serviceRegistry{
 		user:               service.NewAuthService(cfg, store, auth),
 		recordPersonalData: service.NewServerRecordPersonalDataService(cfg, store, keyLockService),
+		recordBankCard:     service.NewServerRecordBankCardDataService(cfg, store, keyLockService),
 		keyLock:            keyLockService,
 	}
 }
@@ -40,4 +44,8 @@ func (r serviceRegistry) GetKeyLockService() service.KeyLockService {
 
 func (r serviceRegistry) GetRecordPersonalDataService() service.ServerRecordPersonalDataService {
 	return r.recordPersonalData
+}
+
+func (r serviceRegistry) GetRecordBankCardService() service.ServerRecordBankCardDataService {
+	return r.recordBankCard
 }
