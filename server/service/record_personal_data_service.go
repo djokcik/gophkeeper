@@ -11,6 +11,7 @@ import (
 type ServerRecordPersonalDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)
+	Remove(ctx context.Context, key string, username string) error
 }
 
 type recordPersonalDataService struct {
@@ -60,6 +61,32 @@ func (s recordPersonalDataService) Load(ctx context.Context, key string, usernam
 	}
 
 	return store.PersonalData[key], nil
+}
+
+func (s recordPersonalDataService) Remove(ctx context.Context, key string, username string) error {
+	store, err := s.storage.Read(ctx, username)
+	if err != nil {
+		s.Log(ctx).Warn().Err(err).Msg("Remove: invalid read storage")
+		return err
+	}
+
+	if store.PersonalData == nil {
+		return ErrNotFoundRecord
+	}
+
+	if _, ok := store.PersonalData[key]; !ok {
+		return ErrNotFoundRecord
+	}
+
+	delete(store.PersonalData, key)
+
+	err = s.storage.Save(ctx, store)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msg("Remove: invalid save storage")
+		return err
+	}
+
+	return nil
 }
 
 func (s *recordPersonalDataService) Log(ctx context.Context) *zerolog.Logger {

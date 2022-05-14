@@ -12,6 +12,7 @@ import (
 type ClientLocalStorage interface {
 	ClearActions(ctx context.Context) error
 	SaveRecord(ctx context.Context, key string, data string, method string) error
+	RemoveRecord(ctx context.Context, key string, method string) error
 	LoadRecords(ctx context.Context) ([]clientmodels.RecordFileLine, error)
 	Close()
 }
@@ -63,6 +64,30 @@ func (s localStorage) ClearActions(_ context.Context) error {
 
 func (s localStorage) LoadRecords(_ context.Context) ([]clientmodels.RecordFileLine, error) {
 	return s.FileReader.ReadActions()
+}
+
+func (s localStorage) RemoveRecord(ctx context.Context, key string, method string) error {
+	fileLine := clientmodels.RecordFileLine{
+		Key:        key,
+		Method:     method,
+		ActionType: clientmodels.RemoveMethod,
+	}
+
+	actions, err := s.FileReader.ReadActions()
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msg("RemoveRecord: err read actions")
+		return err
+	}
+
+	actions = append(actions, fileLine)
+
+	err = s.FileWriter.SaveActions(actions)
+	if err != nil {
+		s.Log(ctx).Error().Err(err).Msg("RemoveRecord: err save actions")
+		return err
+	}
+
+	return nil
 }
 
 func (s localStorage) SaveRecord(ctx context.Context, key string, data string, method string) error {

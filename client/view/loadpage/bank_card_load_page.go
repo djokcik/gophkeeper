@@ -57,7 +57,6 @@ func NewBankCardLoadPage() *BankCardLoadPage {
 	p.keyField.SetFocused(true)
 
 	p.Submit = tui.NewButton("[Найти]")
-	p.Back = view.NewBackButton()
 	p.result = tui.NewLabel("")
 
 	box := tui.NewVBox(tui.NewLabel("Результат:\n"), p.result)

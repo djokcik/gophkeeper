@@ -14,17 +14,18 @@ type MainPage struct {
 
 	Root *tui.Box
 
-	SaveData *tui.Button
-	LoadData *tui.Button
-	SyncData *tui.Button
-	Table    *tui.Table
+	SaveData   *tui.Button
+	LoadData   *tui.Button
+	RemoveData *tui.Button
+	SyncData   *tui.Button
+	Table      *tui.Table
 
 	welcomeLabel *tui.Label
 	status       *tui.StatusBar
 }
 
 func (p MainPage) GetFocusChain() []tui.Widget {
-	return []tui.Widget{p.SaveData, p.LoadData, p.SyncData}
+	return []tui.Widget{p.SaveData, p.LoadData, p.RemoveData, p.SyncData}
 }
 
 func (p MainPage) GetRoot() tui.Widget {
@@ -32,7 +33,7 @@ func (p MainPage) GetRoot() tui.Widget {
 }
 
 func (p MainPage) OnActivated(fn func(*tui.Button)) {
-	for _, button := range []*tui.Button{p.SaveData, p.LoadData} {
+	for _, button := range []*tui.Button{p.SaveData, p.LoadData, p.RemoveData} {
 		button.OnActivated(func(b *tui.Button) { fn(b) })
 	}
 
@@ -78,6 +79,7 @@ func NewMainPage(serviceRegistry registry.ClientServiceRegistry) *MainPage {
 		serviceRegistry: serviceRegistry,
 		SaveData:        tui.NewButton("[Сохранить данные]"),
 		LoadData:        tui.NewButton("[Получить данные]"),
+		RemoveData:      tui.NewButton("[Удалить данные]"),
 		SyncData:        tui.NewButton("[Синхронизировать]"),
 		welcomeLabel:    tui.NewLabel(""),
 		status:          NewStatusLabel(),
@@ -86,6 +88,7 @@ func NewMainPage(serviceRegistry registry.ClientServiceRegistry) *MainPage {
 	box := tui.NewVBox(
 		p.SaveData,
 		p.LoadData,
+		p.RemoveData,
 		tui.NewLabel(""),
 		p.SyncData,
 	)
