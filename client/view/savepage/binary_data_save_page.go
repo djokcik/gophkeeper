@@ -1,23 +1,33 @@
 package savepage
 
 import (
+	"context"
+	"fmt"
 	"github.com/marcusolsson/tui-go"
+	"gophkeeper/client/clientmodels"
+	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
+	"gophkeeper/pkg/logging"
+	"os"
 )
 
 type BinaryDataSavePage struct {
 	view.PageHooks
-	Root *tui.Box
+
+	serviceRegistry registry.ClientServiceRegistry
+	Root            *tui.Box
 
 	keyField        *tui.Entry
 	pathToFileField *tui.Entry
+	commentField    *tui.Entry
+	status          *tui.StatusBar
 
 	Submit *tui.Button
 	Back   *tui.Button
 }
 
 func (p BinaryDataSavePage) GetFocusChain() []tui.Widget {
-	return []tui.Widget{p.keyField, p.pathToFileField, p.Submit, p.Back}
+	return []tui.Widget{p.keyField, p.pathToFileField, p.commentField, p.Submit, p.Back}
 }
 
 func (p BinaryDataSavePage) GetRoot() tui.Widget {
@@ -25,59 +35,60 @@ func (p BinaryDataSavePage) GetRoot() tui.Widget {
 }
 
 func (p BinaryDataSavePage) OnActivated(fn func(b *tui.Button)) {
-	for _, button := range []*tui.Button{p.Back, p.Submit} {
-		if button == p.Submit {
-			if p.keyField.Text() == "" || p.pathToFileField.Text() == "" {
-				return
-			}
+	service := p.serviceRegistry.GetRecordBinaryDataService()
 
-			continue
+	p.Back.OnActivated(fn)
+	p.Submit.OnActivated(func(b *tui.Button) {
+		ctx, log := logging.GetCtxFileLogger(context.Background())
+
+		if p.keyField.Text() == "" || p.pathToFileField.Text() == "" {
+			p.status.SetText("Не все поля заполнены")
+			return
 		}
 
-		button.OnActivated(func(b *tui.Button) { fn(b) })
-	}
+		bytes, err := os.ReadFile(p.pathToFileField.Text())
+		if err != nil {
+			p.status.SetText(fmt.Sprintf("Error ReadFile: %s", err.Error()))
+			log.Error().Err(err).Msg("Submit: invalid ReadFile")
+
+			return
+		}
+
+		data := clientmodels.RecordBinaryData{
+			Data:    bytes,
+			Comment: p.commentField.Text(),
+		}
+
+		err = service.SaveRecord(ctx, p.keyField.Text(), data)
+		if err != nil {
+			p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
+			log.Error().Err(err).Msg("Submit: invalid SaveRecord")
+
+			return
+		}
+
+		p.status.SetText("Данные успешно сохранены")
+	})
 }
 
-func NewBinaryDataSavePage() *BinaryDataSavePage {
-	p := &BinaryDataSavePage{Back: view.NewBackButton()}
+func NewBinaryDataSavePage(serviceRegistry registry.ClientServiceRegistry) *BinaryDataSavePage {
+	p := &BinaryDataSavePage{
+		Back:            view.NewBackButton(),
+		Submit:          view.NewSaveButton(),
+		status:          view.NewStatusLabel(),
+		serviceRegistry: serviceRegistry,
+	}
 
-	keyField, keyBlock := view.NewEditBlock("Ключ")
-	p.keyField = keyField
+	window := view.NewWindowBlock("Сохранить текст по ключу")
+
+	p.keyField = view.NewEditBlockWithWindow("Ключ", window)
 	p.keyField.SetFocused(true)
 
-	pathToFileField, pathToFileBlock := view.NewEditBlock("Путь до файла")
-	p.pathToFileField = pathToFileField
+	p.pathToFileField = view.NewEditBlockWithWindow("Путь до файла", window)
+	p.commentField = view.NewEditBlockWithWindow("Примечание", window)
 
-	submit := tui.NewButton("[Сохранить]")
-	p.Submit = submit
-	p.Back = view.NewBackButton()
-
-	buttons := tui.NewHBox(
-		tui.NewPadder(1, 0, p.Back),
-		tui.NewSpacer(),
-		tui.NewPadder(1, 0, p.Submit),
-	)
-
-	window := tui.NewVBox(
-		tui.NewPadder(10, 0, tui.NewLabel(view.Logo)),
-		tui.NewSpacer(),
-		tui.NewLabel("Выберите ключ и путь до файла"),
-		keyBlock,
-		tui.NewSpacer(),
-		pathToFileBlock,
-		tui.NewLabel(""),
-		buttons,
-	)
-	window.SetBorder(true)
-
-	wrapper := tui.NewVBox(
-		tui.NewSpacer(),
-		window,
-		tui.NewSpacer(),
-	)
-	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
-
-	p.Root = tui.NewVBox(content)
+	window.Append(view.NewButtons(p.Back, p.Submit))
+	p.Root = tui.NewVBox(view.NewContent(window), p.status)
 
 	return p
 }

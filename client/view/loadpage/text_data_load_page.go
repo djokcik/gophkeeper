@@ -47,7 +47,7 @@ func (p TextDataLoadPage) OnActivated(fn func(b *tui.Button)) {
 		data, err := service.LoadRecordByKey(ctx, p.keyField.Text())
 		if err != nil {
 			p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
-			log.Error().Err(err).Msg("Submit: invalid LoadRecordPersonalDataByKey")
+			log.Error().Err(err).Msg("Submit: invalid LoadRecordByKey")
 
 			return
 		}

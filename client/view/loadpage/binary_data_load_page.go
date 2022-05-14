@@ -1,18 +1,25 @@
 package loadpage
 
 import (
+	"context"
 	"fmt"
 	"github.com/marcusolsson/tui-go"
+	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
+	"gophkeeper/pkg/logging"
+	"os"
 )
 
 type BinaryDataLoadPage struct {
 	view.PageHooks
-	Root *tui.Box
+
+	serviceRegistry registry.ClientServiceRegistry
+	Root            *tui.Box
 
 	keyField        *tui.Entry
 	pathToFileField *tui.Entry
 	result          *tui.Label
+	status          *tui.StatusBar
 
 	Submit *tui.Button
 	Back   *tui.Button
@@ -27,75 +34,70 @@ func (p BinaryDataLoadPage) GetRoot() tui.Widget {
 }
 
 func (p BinaryDataLoadPage) OnActivated(fn func(b *tui.Button)) {
-	for _, button := range []*tui.Button{p.Submit, p.Back} {
-		button.OnActivated(func(b *tui.Button) {
-			if b == p.Submit {
-				if p.keyField.Text() == "" || p.pathToFileField.Text() == "" {
-					return
-				}
+	service := p.serviceRegistry.GetRecordBinaryDataService()
 
-				if p.keyField.Text() == "test" {
-					p.result.SetText(fmt.Sprintf("Не удалось найти бинарные данные по ключу - %s", p.keyField.Text()))
+	p.Back.OnActivated(fn)
+	p.Submit.OnActivated(func(b *tui.Button) {
+		p.status.SetText("Загрузка...")
+		ctx, log := logging.GetCtxFileLogger(context.Background())
 
-					return
-				}
+		if p.keyField.Text() == "" || p.pathToFileField.Text() == "" {
+			p.status.SetText("Не введен ключ")
+			return
+		}
 
-				p.result.SetText(fmt.Sprintf("Данные успешно сохранены в файл: %s", p.pathToFileField.Text()))
+		data, err := service.LoadRecordByKey(ctx, p.keyField.Text())
+		if err != nil {
+			p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
+			log.Error().Err(err).Msg("Submit: invalid LoadRecordByKey")
 
-				return
-			}
+			return
+		}
 
-			fn(b)
-		})
-	}
+		filepath := p.pathToFileField.Text()
+
+		err = os.WriteFile(filepath, data.Data, 0777)
+		if err != nil {
+			p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
+			log.Error().Err(err).Msg("Submit: invalid WriteFile")
+
+			return
+		}
+
+		p.status.SetText("Запись успешно получена")
+		p.result.SetText(fmt.Sprintf(
+			"Данные сохранены в файл: %s\nПримечания: %s\n",
+			filepath,
+			data.Comment,
+		))
+	})
 }
 
-func NewBinaryDataLoadPage() *BinaryDataLoadPage {
-	p := &BinaryDataLoadPage{Back: view.NewBackButton()}
+func NewBinaryDataLoadPage(serviceRegistry registry.ClientServiceRegistry) *BinaryDataLoadPage {
+	p := &BinaryDataLoadPage{
+		serviceRegistry: serviceRegistry,
+		Back:            view.NewBackButton(),
+		Submit:          view.NewLoadButton(),
+		status:          view.NewStatusLabel(),
+		result:          view.NewResultLabel(),
+	}
 
-	keyField, keyBlock := view.NewEditBlock("Ключ")
-	p.keyField = keyField
+	window := view.NewWindowBlock("Найти файл")
+
+	p.keyField = view.NewEditBlockWithWindow("Ключ", window)
 	p.keyField.SetFocused(true)
 
-	pathToFileField, pathToFileBlock := view.NewEditBlock("Путь до файлу куда сохранить результат")
-	p.pathToFileField = pathToFileField
+	p.pathToFileField = view.NewEditBlockWithWindow("Путь до файлу куда сохранить результат", window)
 	p.pathToFileField.SetText("/tmp/temp.txt")
-
-	p.Submit = tui.NewButton("[Найти]")
-	p.Back = view.NewBackButton()
-	p.result = tui.NewLabel("")
 
 	box := tui.NewVBox(tui.NewLabel("Результат:\n"), p.result)
 	box.SetBorder(true)
 
-	window := tui.NewVBox(
-		tui.NewPadder(10, 0, tui.NewLabel(view.Logo)),
-		tui.NewSpacer(),
-		tui.NewLabel("\nНайти бинарные данные\n"),
-		keyBlock,
-		tui.NewLabel(""),
-		pathToFileBlock,
-		tui.NewLabel(""),
-		tui.NewHBox(
-			tui.NewSpacer(),
-			tui.NewPadder(1, 0, p.Submit),
-		),
-		box,
-		tui.NewHBox(
-			tui.NewPadder(1, 0, p.Back),
-			tui.NewSpacer(),
-		),
-	)
-	window.SetBorder(true)
+	window.Append(view.NewButtons(nil, p.Submit))
+	window.Append(box)
+	window.Append(view.NewButtons(p.Back, nil))
 
-	wrapper := tui.NewVBox(
-		tui.NewSpacer(),
-		window,
-		tui.NewSpacer(),
-	)
-	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
-
-	p.Root = tui.NewVBox(content)
+	p.Root = tui.NewVBox(view.NewContent(window), p.status)
 
 	return p
 }

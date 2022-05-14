@@ -19,4 +19,9 @@ type (
 		Text    string
 		Comment string
 	}
+
+	RecordBinaryData struct {
+		Data    []byte
+		Comment string
+	}
 )
