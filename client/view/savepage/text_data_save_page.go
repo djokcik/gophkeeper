@@ -60,18 +60,6 @@ func (p TextDataSavePage) OnActivated(fn func(b *tui.Button)) {
 
 		p.status.SetText("Данные успешно сохранены")
 	})
-
-	for _, button := range []*tui.Button{p.Back, p.Submit} {
-		if button == p.Submit {
-			if p.keyField.Text() == "" || p.textDataField.Text() == "" {
-				return
-			}
-
-			continue
-		}
-
-		button.OnActivated(func(b *tui.Button) { fn(b) })
-	}
 }
 
 func NewTextDataSavePage(serviceRegistry registry.ClientServiceRegistry) *TextDataSavePage {

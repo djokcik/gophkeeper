@@ -22,6 +22,7 @@ type RpcHandler struct {
 	recordPersonalData service.ServerRecordPersonalDataService
 	recordBankCard     service.ServerRecordBankCardDataService
 	recordTextData     service.ServerRecordTextDataService
+	recordBinaryData   service.ServerRecordBinaryDataService
 }
 
 // NewRpcHandler constructor for RpcHandler
@@ -39,6 +40,7 @@ func NewRpcHandler(cfg server.Config, store storage.Storage) *RpcHandler {
 		recordPersonalData: serviceRegistry.GetRecordPersonalDataService(),
 		recordBankCard:     serviceRegistry.GetRecordBankCardService(),
 		recordTextData:     serviceRegistry.GetRecordTextDataService(),
+		recordBinaryData:   serviceRegistry.GetRecordBinaryDataService(),
 	}
 }
 

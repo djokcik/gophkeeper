@@ -35,13 +35,13 @@ func NewUIController(serviceRegistry registry.ClientServiceRegistry) *UIControll
 		SavePage:              savepage.NewSavePage(),
 		LoginPasswordSavePage: savepage.NewRecordPersonalDataSavePage(serviceRegistry),
 		TextDataSavePage:      savepage.NewTextDataSavePage(serviceRegistry),
-		BinaryDataSavePage:    savepage.NewBinaryDataSavePage(),
+		BinaryDataSavePage:    savepage.NewBinaryDataSavePage(serviceRegistry),
 		CardSavePage:          savepage.NewBankCardSavePage(serviceRegistry),
 
 		LoadPage:              loadpage.NewLoadPage(),
 		LoginPasswordLoadPage: loadpage.NewRecordPersonalDataLoadPage(serviceRegistry),
 		TextDataLoadPage:      loadpage.NewTextDataLoadPage(serviceRegistry),
-		BinaryDataLoadPage:    loadpage.NewBinaryDataLoadPage(),
+		BinaryDataLoadPage:    loadpage.NewBinaryDataLoadPage(serviceRegistry),
 		BankCardLoadPage:      loadpage.NewBankCardLoadPage(serviceRegistry),
 	}
 }
