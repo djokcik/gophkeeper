@@ -1,23 +1,32 @@
 package savepage
 
 import (
+	"context"
+	"fmt"
 	"github.com/marcusolsson/tui-go"
+	"gophkeeper/client/clientmodels"
+	"gophkeeper/client/registry"
 	"gophkeeper/client/view"
+	"gophkeeper/pkg/logging"
 )
 
 type TextDataSavePage struct {
 	view.PageHooks
-	Root *tui.Box
+
+	serviceRegistry registry.ClientServiceRegistry
+	Root            *tui.Box
 
 	keyField      *tui.Entry
 	textDataField *tui.Entry
+	commentField  *tui.Entry
+	status        *tui.StatusBar
 
 	Submit *tui.Button
 	Back   *tui.Button
 }
 
 func (p TextDataSavePage) GetFocusChain() []tui.Widget {
-	return []tui.Widget{p.keyField, p.textDataField, p.Submit, p.Back}
+	return []tui.Widget{p.keyField, p.textDataField, p.commentField, p.Submit, p.Back}
 }
 
 func (p TextDataSavePage) GetRoot() tui.Widget {
@@ -25,6 +34,33 @@ func (p TextDataSavePage) GetRoot() tui.Widget {
 }
 
 func (p TextDataSavePage) OnActivated(fn func(b *tui.Button)) {
+	service := p.serviceRegistry.GetRecordTextDataService()
+
+	p.Back.OnActivated(fn)
+	p.Submit.OnActivated(func(b *tui.Button) {
+		ctx, log := logging.GetCtxFileLogger(context.Background())
+
+		if p.keyField.Text() == "" || p.textDataField.Text() == "" {
+			p.status.SetText("Не все поля заполнены")
+			return
+		}
+
+		data := clientmodels.RecordTextData{
+			Text:    p.textDataField.Text(),
+			Comment: p.commentField.Text(),
+		}
+
+		err := service.SaveRecord(ctx, p.keyField.Text(), data)
+		if err != nil {
+			p.status.SetText(fmt.Sprintf("Error: %s", err.Error()))
+			log.Error().Err(err).Msg("Submit: invalid SaveRecord")
+
+			return
+		}
+
+		p.status.SetText("Данные успешно сохранены")
+	})
+
 	for _, button := range []*tui.Button{p.Back, p.Submit} {
 		if button == p.Submit {
 			if p.keyField.Text() == "" || p.textDataField.Text() == "" {
@@ -38,46 +74,24 @@ func (p TextDataSavePage) OnActivated(fn func(b *tui.Button)) {
 	}
 }
 
-func NewTextDataSavePage() *TextDataSavePage {
-	p := &TextDataSavePage{Back: view.NewBackButton()}
+func NewTextDataSavePage(serviceRegistry registry.ClientServiceRegistry) *TextDataSavePage {
+	p := &TextDataSavePage{
+		Back:            view.NewBackButton(),
+		Submit:          view.NewSaveButton(),
+		status:          view.NewStatusLabel(),
+		serviceRegistry: serviceRegistry,
+	}
 
-	keyField, keyBlock := view.NewEditBlock("Ключ")
-	p.keyField = keyField
+	window := view.NewWindowBlock("Сохранить текст по ключу")
+
+	p.keyField = view.NewEditBlockWithWindow("Ключ", window)
 	p.keyField.SetFocused(true)
 
-	textDataField, textDataBlock := view.NewEditBlock("Текст")
-	p.textDataField = textDataField
+	p.textDataField = view.NewEditBlockWithWindow("Текст", window)
+	p.commentField = view.NewEditBlockWithWindow("Примечание", window)
 
-	submit := tui.NewButton("[Сохранить]")
-	p.Submit = submit
-	p.Back = view.NewBackButton()
-
-	buttons := tui.NewHBox(
-		tui.NewPadder(1, 0, p.Back),
-		tui.NewSpacer(),
-		tui.NewPadder(1, 0, p.Submit),
-	)
-
-	window := tui.NewVBox(
-		tui.NewPadder(10, 0, tui.NewLabel(view.Logo)),
-		tui.NewSpacer(),
-		tui.NewLabel("Выберите ключ и текстовую информацию"),
-		keyBlock,
-		tui.NewSpacer(),
-		textDataBlock,
-		tui.NewLabel(""),
-		buttons,
-	)
-	window.SetBorder(true)
-
-	wrapper := tui.NewVBox(
-		tui.NewSpacer(),
-		window,
-		tui.NewSpacer(),
-	)
-	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
-
-	p.Root = tui.NewVBox(content)
+	window.Append(view.NewButtons(p.Back, p.Submit))
+	p.Root = tui.NewVBox(view.NewContent(window), p.status)
 
 	return p
 }

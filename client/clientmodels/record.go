@@ -14,4 +14,9 @@ type (
 		CVV        string
 		Comment    string
 	}
+
+	RecordTextData struct {
+		Text    string
+		Comment string
+	}
 )

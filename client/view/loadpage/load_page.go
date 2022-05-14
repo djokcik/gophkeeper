@@ -36,6 +36,8 @@ func (p LoadPage) OnActivated(fn func(b *tui.Button)) {
 func NewLoadPage() *LoadPage {
 	p := &LoadPage{Back: view.NewBackButton()}
 
+	window := view.NewWindowBlock("Выберите формат данных? (Используйте TAB для навигации)")
+
 	p.LoginPassword = tui.NewButton("[Пара логин/пароль]")
 	p.TextButton = tui.NewButton("[Текстовые данные]")
 	p.BinButton = tui.NewButton("[Бинарные данные]")
@@ -49,28 +51,10 @@ func NewLoadPage() *LoadPage {
 	)
 	box.SetFocused(true)
 
-	window := tui.NewVBox(
-		tui.NewPadder(10, 0, tui.NewLabel(view.Logo)),
-		tui.NewSpacer(),
-		tui.NewLabel("Какой формат данных хотите загрузить? (Используйте TAB для навигации)"),
-		tui.NewLabel(""),
-		box,
-		tui.NewLabel(""),
-		tui.NewHBox(
-			tui.NewSpacer(),
-			tui.NewPadder(1, 0, p.Back),
-		),
-	)
-	window.SetBorder(true)
-
-	wrapper := tui.NewVBox(
-		tui.NewSpacer(),
-		window,
-		tui.NewSpacer(),
-	)
-	content := tui.NewHBox(tui.NewSpacer(), wrapper, tui.NewSpacer())
-
-	p.Root = tui.NewVBox(content)
+	window.Append(box)
+	window.Append(tui.NewLabel(""))
+	window.Append(p.Back)
+	p.Root = tui.NewVBox(view.NewContent(window))
 
 	return p
 }

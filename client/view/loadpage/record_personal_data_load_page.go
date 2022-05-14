@@ -75,19 +75,19 @@ func NewRecordPersonalDataLoadPage(serviceRegistry registry.ClientServiceRegistr
 		result:          view.NewResultLabel(),
 	}
 
-	wBlock := view.NewWindowBlock("Найти запись по ключу")
+	window := view.NewWindowBlock("Найти запись по ключу")
 
-	p.keyField = view.NewEditBlockWithWindow("Ключ", wBlock)
+	p.keyField = view.NewEditBlockWithWindow("Ключ", window)
 	p.keyField.SetFocused(true)
 
 	box := tui.NewVBox(tui.NewLabel("Результат:\n"), p.result)
 	box.SetBorder(true)
 
-	wBlock.Append(view.NewButtons(nil, p.Submit))
-	wBlock.Append(box)
-	wBlock.Append(view.NewButtons(p.Back, nil))
+	window.Append(view.NewButtons(nil, p.Submit))
+	window.Append(box)
+	window.Append(view.NewButtons(p.Back, nil))
 
-	p.Root = tui.NewVBox(view.NewContent(wBlock), p.status)
+	p.Root = tui.NewVBox(view.NewContent(window), p.status)
 
 	return p
 }
