@@ -1,0 +1,41 @@
+version: '3'
+
+tasks:
+  build_bin:
+    cmds:
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -o bin/gophkeeper_{{.GOOS}}_{{.GOARCH}} -ldflags "-X gophkeeper/client/view.BuildDate=`date -u +%Y-%m-%d.%H:%M:%S` -X gophkeeper/client/view.BuildVersion=1.0.0" cmd/client/main.go
+
+  build_linux_amd64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: linux
+          GOARCH: amd64
+
+  build_windows_amd64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: windows
+          GOARCH: amd64
+
+  build_darwin_amd64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: darwin
+          GOARCH: amd64
+
+  build_darwin_arm64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: darwin
+          GOARCH: arm64
+
+  build:
+    cmds:
+      - task: build_linux_amd64
+      - task: build_windows_amd64
+      - task: build_darwin_arm64
+      - task: build_darwin_amd64

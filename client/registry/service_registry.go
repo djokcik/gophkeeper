@@ -39,6 +39,34 @@ type clientServiceRegistry struct {
 	recordBinaryDataService   recordservice.RecordBinaryDataService
 }
 
+func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServiceRegistry {
+	crypto := common.NewCryptoService()
+	sslConfig := common.NewSSLConfigService()
+	localStorage := storage.NewClientLocalStorage(ctx)
+
+	user := service.NewUserService()
+	api := service.NewRpcService(cfg, crypto, sslConfig, localStorage)
+	clientStorage := service.NewClientStorageService(api, localStorage, user)
+	auth := service.NewClientAuthService(api, crypto)
+	record := recordservice.NewClientRecordService(crypto)
+
+	return &clientServiceRegistry{
+		apiService: api,
+
+		cryptoService:    crypto,
+		sslConfigService: sslConfig,
+		storageService:   clientStorage,
+
+		authService: auth,
+		userService: user,
+
+		recordPersonalDataService: recordservice.NewRecordPersonalDataService(api, user, record),
+		recordBankCardService:     recordservice.NewBankCardService(api, user, record),
+		recordTextDataService:     recordservice.NewTextDataService(api, user, record),
+		recordBinaryDataService:   recordservice.NewBinaryDataService(api, user, record),
+	}
+}
+
 func (r clientServiceRegistry) GetRecordBankCardService() recordservice.RecordBankCardService {
 	return r.recordBankCardService
 }
@@ -77,32 +105,4 @@ func (r clientServiceRegistry) GetRecordTextDataService() recordservice.RecordTe
 
 func (r clientServiceRegistry) GetRecordBinaryDataService() recordservice.RecordBinaryDataService {
 	return r.recordBinaryDataService
-}
-
-func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServiceRegistry {
-	crypto := common.NewCryptoService()
-	sslConfig := common.NewSSLConfigService()
-	localStorage := storage.NewClientLocalStorage(ctx)
-
-	user := service.NewUserService()
-	api := service.NewRpcService(cfg, crypto, sslConfig, localStorage)
-	clientStorage := service.NewClientStorageService(api, localStorage, user)
-	auth := service.NewClientAuthService(api, crypto)
-	record := recordservice.NewClientRecordService(crypto)
-
-	return &clientServiceRegistry{
-		apiService: api,
-
-		cryptoService:    crypto,
-		sslConfigService: sslConfig,
-		storageService:   clientStorage,
-
-		authService: auth,
-		userService: user,
-
-		recordPersonalDataService: recordservice.NewRecordPersonalDataService(api, user, record),
-		recordBankCardService:     recordservice.NewBankCardService(api, user, record),
-		recordTextDataService:     recordservice.NewTextDataService(api, user, record),
-		recordBinaryDataService:   recordservice.NewBinaryDataService(api, user, record),
-	}
 }
