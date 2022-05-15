@@ -8,6 +8,8 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
+//go:generate mockery --name=RecordBankCardService
+
 type RecordBankCardService interface {
 	RemoveRecordByKey(ctx context.Context, key string) error
 	LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordBankCardData, error)

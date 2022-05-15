@@ -39,3 +39,7 @@ tasks:
       - task: build_windows_amd64
       - task: build_darwin_arm64
       - task: build_darwin_amd64
+
+  generate:
+    cmds:
+      - go generate ./...

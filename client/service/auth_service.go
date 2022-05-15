@@ -9,6 +9,7 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
+//go:generate mockery --name=ClientAuthService
 type ClientAuthService interface {
 	SignIn(ctx context.Context, username string, password string) (models.ClientUser, error)
 	Register(ctx context.Context, username string, password string) (models.ClientUser, error)

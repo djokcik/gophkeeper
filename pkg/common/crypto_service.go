@@ -14,6 +14,7 @@ import (
 	"io"
 )
 
+//go:generate mockery --name=CryptoService
 type CryptoService interface {
 	GenerateHash(value string) string
 	Encrypt(ctx context.Context, data []byte, key string) (string, error)

@@ -34,6 +34,7 @@ const (
 	CallSignInHandler   = "RpcHandler.SignInHandler"
 )
 
+//go:generate mockery --name=ClientRpcService
 type ClientRpcService interface {
 	Login(ctx context.Context, username string, password string) (string, error)
 	Register(ctx context.Context, username string, password string) (string, error)

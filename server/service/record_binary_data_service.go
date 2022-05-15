@@ -8,6 +8,7 @@ import (
 	"gophkeeper/server"
 )
 
+//go:generate mockery --name=ServerRecordBinaryDataService
 type ServerRecordBinaryDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)

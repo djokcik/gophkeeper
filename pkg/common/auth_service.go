@@ -9,6 +9,7 @@ import (
 	"gophkeeper/server/storage"
 )
 
+//go:generate mockery --name=AuthService
 type AuthService interface {
 	GetUserByToken(ctx context.Context, token string) (models.User, error)
 }

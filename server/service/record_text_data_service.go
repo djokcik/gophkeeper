@@ -8,6 +8,7 @@ import (
 	"gophkeeper/server"
 )
 
+//go:generate mockery --name=ServerRecordTextDataService
 type ServerRecordTextDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)

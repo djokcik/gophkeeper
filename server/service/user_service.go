@@ -12,6 +12,7 @@ import (
 	"gophkeeper/server/storage"
 )
 
+//go:generate mockery --name=ServerUserService
 type ServerUserService interface {
 	Authenticate(ctx context.Context, login string, password string) (string, error)
 	CreateUser(ctx context.Context, username string, password string) error
