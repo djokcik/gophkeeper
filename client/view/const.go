@@ -1,5 +1,10 @@
 package view
 
+var (
+	BuildVersion = "N/A"
+	BuildDate    = "N/A"
+)
+
 var Logo = `  _____          __   __ __                    
  / ___/__  ___  / /  / //_/__ ___ ___  ___ ____
 / (_ / _ \/ _ \/ _ \/ ,< / -_) -_) _ \/ -_) __/

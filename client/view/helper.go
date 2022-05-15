@@ -57,6 +57,7 @@ func NewWindowBlock(label string) *tui.Box {
 
 func NewWindowBlockLabel(label *tui.Label) *tui.Box {
 	block := tui.NewVBox(
+		tui.NewLabel(fmt.Sprintf("Дата сборки: %s. Версия: %s", BuildDate, BuildVersion)),
 		tui.NewPadder(10, 0, tui.NewLabel(Logo)),
 		tui.NewSpacer(),
 		label,
