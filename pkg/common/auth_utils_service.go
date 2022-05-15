@@ -9,7 +9,6 @@ import (
 )
 
 //go:generate mockery --name=AuthUtilsService
-
 type AuthUtilsService interface {
 	CreateToken(secretKey string, username string) (string, error)
 	ParseToken(accessToken string, secretKey string) (string, error)

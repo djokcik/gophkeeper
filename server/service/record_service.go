@@ -8,6 +8,7 @@ import (
 	"gophkeeper/server/storage"
 )
 
+//go:generate mockery --name=ServerRecordService
 type ServerRecordService interface {
 	Save(ctx context.Context, username string, updateFn func(store models.StorageData) error) error
 	Load(ctx context.Context, username string, loadFn func(store models.StorageData) string) (string, error)

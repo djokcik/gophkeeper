@@ -9,6 +9,7 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
+//go:generate mockery --name=ClientStorageService
 type ClientStorageService interface {
 	LoadRecords(ctx context.Context) ([]clientmodels.RecordFileLine, error)
 	SyncServer(ctx context.Context) error

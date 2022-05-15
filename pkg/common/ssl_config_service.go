@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 )
 
+//go:generate mockery --name=SSLConfigService
 type SSLConfigService interface {
 	LoadClientCertificate(cfg client.Config) (*tls.Config, error)
 	LoadServerCertificate(cfg server.Config) (*tls.Config, error)

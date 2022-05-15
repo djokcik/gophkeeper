@@ -9,6 +9,7 @@ import (
 	"path"
 )
 
+//go:generate mockery --name=ClientLocalStorage
 type ClientLocalStorage interface {
 	ClearActions(ctx context.Context) error
 	SaveRecord(ctx context.Context, key string, data string, method string) error
