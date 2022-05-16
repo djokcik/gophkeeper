@@ -33,10 +33,10 @@ func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth com
 
 	return &serviceRegistry{
 		user:               service.NewAuthService(cfg, store, auth),
-		recordPersonalData: service.NewServerRecordPersonalDataService(cfg, store, keyLockService),
-		recordBankCard:     service.NewServerRecordBankCardDataService(cfg, store, keyLockService),
-		recordTextData:     service.NewServerRecordTextDataService(cfg, store, keyLockService, recordService),
-		recordBinaryData:   service.NewServerRecordBinaryDataService(cfg, store, keyLockService),
+		recordPersonalData: service.NewServerRecordPersonalDataService(cfg, recordService),
+		recordBankCard:     service.NewServerRecordBankCardDataService(cfg, recordService),
+		recordTextData:     service.NewServerRecordTextDataService(cfg, recordService),
+		recordBinaryData:   service.NewServerRecordBinaryDataService(cfg, recordService),
 		keyLock:            keyLockService,
 	}
 }

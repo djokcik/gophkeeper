@@ -8,11 +8,11 @@ import (
 	"gophkeeper/server/storage"
 )
 
-//go:generate mockery --name=ServerRecordService
+//go:generate mockery --name=ServerRecordService --with-expecter
 type ServerRecordService interface {
-	Save(ctx context.Context, username string, updateFn func(store models.StorageData) error) error
+	Save(ctx context.Context, username string, updateFn func(store *models.StorageData) error) error
 	Load(ctx context.Context, username string, loadFn func(store models.StorageData) string) (string, error)
-	Remove(ctx context.Context, username string, removeFn func(store models.StorageData) error) error
+	Remove(ctx context.Context, username string, removeFn func(store *models.StorageData) error) error
 }
 
 type recordService struct {
@@ -27,7 +27,7 @@ func NewRecordService(keyLock KeyLockService, storage storage.Storage) ServerRec
 	}
 }
 
-func (s recordService) Save(ctx context.Context, username string, updateFn func(store models.StorageData) error) error {
+func (s recordService) Save(ctx context.Context, username string, updateFn func(store *models.StorageData) error) error {
 	s.keyLock.Lock(username)
 	defer s.keyLock.Unlock(username)
 
@@ -37,7 +37,7 @@ func (s recordService) Save(ctx context.Context, username string, updateFn func(
 		return err
 	}
 
-	err = updateFn(store)
+	err = updateFn(&store)
 	if err != nil {
 		s.Log(ctx).Error().Msg("Save: failed to update store")
 		return err
@@ -62,14 +62,17 @@ func (s recordService) Load(ctx context.Context, username string, loadFn func(st
 	return loadFn(store), nil
 }
 
-func (s recordService) Remove(ctx context.Context, username string, removeFn func(store models.StorageData) error) error {
+func (s recordService) Remove(ctx context.Context, username string, removeFn func(store *models.StorageData) error) error {
+	s.keyLock.Lock(username)
+	defer s.keyLock.Unlock(username)
+
 	store, err := s.storage.Read(ctx, username)
 	if err != nil {
 		s.Log(ctx).Warn().Err(err).Msg("Remove: invalid read storage")
 		return err
 	}
 
-	err = removeFn(store)
+	err = removeFn(&store)
 	if err != nil {
 		return err
 	}

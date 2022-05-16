@@ -16,6 +16,14 @@ type ServerUserService struct {
 	mock.Mock
 }
 
+type ServerUserService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ServerUserService) EXPECT() *ServerUserService_Expecter {
+	return &ServerUserService_Expecter{mock: &_m.Mock}
+}
+
 // Authenticate provides a mock function with given fields: ctx, login, password
 func (_m *ServerUserService) Authenticate(ctx context.Context, login string, password string) (string, error) {
 	ret := _m.Called(ctx, login, password)
@@ -37,6 +45,31 @@ func (_m *ServerUserService) Authenticate(ctx context.Context, login string, pas
 	return r0, r1
 }
 
+// ServerUserService_Authenticate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Authenticate'
+type ServerUserService_Authenticate_Call struct {
+	*mock.Call
+}
+
+// Authenticate is a helper method to define mock.On call
+//  - ctx context.Context
+//  - login string
+//  - password string
+func (_e *ServerUserService_Expecter) Authenticate(ctx interface{}, login interface{}, password interface{}) *ServerUserService_Authenticate_Call {
+	return &ServerUserService_Authenticate_Call{Call: _e.mock.On("Authenticate", ctx, login, password)}
+}
+
+func (_c *ServerUserService_Authenticate_Call) Run(run func(ctx context.Context, login string, password string)) *ServerUserService_Authenticate_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *ServerUserService_Authenticate_Call) Return(_a0 string, _a1 error) *ServerUserService_Authenticate_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // CreateUser provides a mock function with given fields: ctx, username, password
 func (_m *ServerUserService) CreateUser(ctx context.Context, username string, password string) error {
 	ret := _m.Called(ctx, username, password)
@@ -49,6 +82,31 @@ func (_m *ServerUserService) CreateUser(ctx context.Context, username string, pa
 	}
 
 	return r0
+}
+
+// ServerUserService_CreateUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateUser'
+type ServerUserService_CreateUser_Call struct {
+	*mock.Call
+}
+
+// CreateUser is a helper method to define mock.On call
+//  - ctx context.Context
+//  - username string
+//  - password string
+func (_e *ServerUserService_Expecter) CreateUser(ctx interface{}, username interface{}, password interface{}) *ServerUserService_CreateUser_Call {
+	return &ServerUserService_CreateUser_Call{Call: _e.mock.On("CreateUser", ctx, username, password)}
+}
+
+func (_c *ServerUserService_CreateUser_Call) Run(run func(ctx context.Context, username string, password string)) *ServerUserService_CreateUser_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *ServerUserService_CreateUser_Call) Return(_a0 error) *ServerUserService_CreateUser_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // GenerateToken provides a mock function with given fields: ctx, user
@@ -72,6 +130,30 @@ func (_m *ServerUserService) GenerateToken(ctx context.Context, user models.User
 	return r0, r1
 }
 
+// ServerUserService_GenerateToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GenerateToken'
+type ServerUserService_GenerateToken_Call struct {
+	*mock.Call
+}
+
+// GenerateToken is a helper method to define mock.On call
+//  - ctx context.Context
+//  - user models.User
+func (_e *ServerUserService_Expecter) GenerateToken(ctx interface{}, user interface{}) *ServerUserService_GenerateToken_Call {
+	return &ServerUserService_GenerateToken_Call{Call: _e.mock.On("GenerateToken", ctx, user)}
+}
+
+func (_c *ServerUserService_GenerateToken_Call) Run(run func(ctx context.Context, user models.User)) *ServerUserService_GenerateToken_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(models.User))
+	})
+	return _c
+}
+
+func (_c *ServerUserService_GenerateToken_Call) Return(_a0 string, _a1 error) *ServerUserService_GenerateToken_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // GetUserByUsername provides a mock function with given fields: ctx, username
 func (_m *ServerUserService) GetUserByUsername(ctx context.Context, username string) (models.User, error) {
 	ret := _m.Called(ctx, username)
@@ -91,6 +173,30 @@ func (_m *ServerUserService) GetUserByUsername(ctx context.Context, username str
 	}
 
 	return r0, r1
+}
+
+// ServerUserService_GetUserByUsername_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUserByUsername'
+type ServerUserService_GetUserByUsername_Call struct {
+	*mock.Call
+}
+
+// GetUserByUsername is a helper method to define mock.On call
+//  - ctx context.Context
+//  - username string
+func (_e *ServerUserService_Expecter) GetUserByUsername(ctx interface{}, username interface{}) *ServerUserService_GetUserByUsername_Call {
+	return &ServerUserService_GetUserByUsername_Call{Call: _e.mock.On("GetUserByUsername", ctx, username)}
+}
+
+func (_c *ServerUserService_GetUserByUsername_Call) Run(run func(ctx context.Context, username string)) *ServerUserService_GetUserByUsername_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *ServerUserService_GetUserByUsername_Call) Return(_a0 models.User, _a1 error) *ServerUserService_GetUserByUsername_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
 }
 
 // NewServerUserService creates a new instance of ServerUserService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

@@ -15,6 +15,14 @@ type ServerRecordBinaryDataService struct {
 	mock.Mock
 }
 
+type ServerRecordBinaryDataService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ServerRecordBinaryDataService) EXPECT() *ServerRecordBinaryDataService_Expecter {
+	return &ServerRecordBinaryDataService_Expecter{mock: &_m.Mock}
+}
+
 // Load provides a mock function with given fields: ctx, key, username
 func (_m *ServerRecordBinaryDataService) Load(ctx context.Context, key string, username string) (string, error) {
 	ret := _m.Called(ctx, key, username)
@@ -36,6 +44,31 @@ func (_m *ServerRecordBinaryDataService) Load(ctx context.Context, key string, u
 	return r0, r1
 }
 
+// ServerRecordBinaryDataService_Load_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Load'
+type ServerRecordBinaryDataService_Load_Call struct {
+	*mock.Call
+}
+
+// Load is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - username string
+func (_e *ServerRecordBinaryDataService_Expecter) Load(ctx interface{}, key interface{}, username interface{}) *ServerRecordBinaryDataService_Load_Call {
+	return &ServerRecordBinaryDataService_Load_Call{Call: _e.mock.On("Load", ctx, key, username)}
+}
+
+func (_c *ServerRecordBinaryDataService_Load_Call) Run(run func(ctx context.Context, key string, username string)) *ServerRecordBinaryDataService_Load_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordBinaryDataService_Load_Call) Return(_a0 string, _a1 error) *ServerRecordBinaryDataService_Load_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // Remove provides a mock function with given fields: ctx, key, username
 func (_m *ServerRecordBinaryDataService) Remove(ctx context.Context, key string, username string) error {
 	ret := _m.Called(ctx, key, username)
@@ -50,6 +83,31 @@ func (_m *ServerRecordBinaryDataService) Remove(ctx context.Context, key string,
 	return r0
 }
 
+// ServerRecordBinaryDataService_Remove_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Remove'
+type ServerRecordBinaryDataService_Remove_Call struct {
+	*mock.Call
+}
+
+// Remove is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - username string
+func (_e *ServerRecordBinaryDataService_Expecter) Remove(ctx interface{}, key interface{}, username interface{}) *ServerRecordBinaryDataService_Remove_Call {
+	return &ServerRecordBinaryDataService_Remove_Call{Call: _e.mock.On("Remove", ctx, key, username)}
+}
+
+func (_c *ServerRecordBinaryDataService_Remove_Call) Run(run func(ctx context.Context, key string, username string)) *ServerRecordBinaryDataService_Remove_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordBinaryDataService_Remove_Call) Return(_a0 error) *ServerRecordBinaryDataService_Remove_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 // Save provides a mock function with given fields: ctx, key, username, data
 func (_m *ServerRecordBinaryDataService) Save(ctx context.Context, key string, username string, data string) error {
 	ret := _m.Called(ctx, key, username, data)
@@ -62,6 +120,32 @@ func (_m *ServerRecordBinaryDataService) Save(ctx context.Context, key string, u
 	}
 
 	return r0
+}
+
+// ServerRecordBinaryDataService_Save_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Save'
+type ServerRecordBinaryDataService_Save_Call struct {
+	*mock.Call
+}
+
+// Save is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - username string
+//  - data string
+func (_e *ServerRecordBinaryDataService_Expecter) Save(ctx interface{}, key interface{}, username interface{}, data interface{}) *ServerRecordBinaryDataService_Save_Call {
+	return &ServerRecordBinaryDataService_Save_Call{Call: _e.mock.On("Save", ctx, key, username, data)}
+}
+
+func (_c *ServerRecordBinaryDataService_Save_Call) Run(run func(ctx context.Context, key string, username string, data string)) *ServerRecordBinaryDataService_Save_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].(string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordBinaryDataService_Save_Call) Return(_a0 error) *ServerRecordBinaryDataService_Save_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewServerRecordBinaryDataService creates a new instance of ServerRecordBinaryDataService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-//go:generate mockery --name=AuthUtilsService
+//go:generate mockery --name=AuthUtilsService --with-expecter
 type AuthUtilsService interface {
 	CreateToken(secretKey string, username string) (string, error)
 	ParseToken(accessToken string, secretKey string) (string, error)

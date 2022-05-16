@@ -25,6 +25,7 @@ const (
 	lenBeforeData          = lenVersionAndAlgorithm
 )
 
+//go:generate mockery --name=FileBinder --with-expecter
 type FileBinder interface {
 	CheckFileExist(ctx context.Context, username string) (bool, error)
 	SaveStorage(ctx context.Context, data models.StorageData) error
