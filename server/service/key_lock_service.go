@@ -2,8 +2,9 @@ package service
 
 import "sync"
 
+//go:generate mockery --name=KeyLockService
 type KeyLockService interface {
-	getLockBy(key string) *sync.Mutex
+	GetLockBy(key string) *sync.Mutex
 	Lock(key string)
 	Unlock(key string)
 }
@@ -17,7 +18,7 @@ func NewStringKeyLock() *stringKeyLock {
 	return &stringKeyLock{locks: make(map[string]*sync.Mutex)}
 }
 
-func (l *stringKeyLock) getLockBy(key string) *sync.Mutex {
+func (l *stringKeyLock) GetLockBy(key string) *sync.Mutex {
 	l.mapLock.Lock()
 	defer l.mapLock.Unlock()
 
@@ -32,9 +33,9 @@ func (l *stringKeyLock) getLockBy(key string) *sync.Mutex {
 }
 
 func (l *stringKeyLock) Lock(key string) {
-	l.getLockBy(key).Lock()
+	l.GetLockBy(key).Lock()
 }
 
 func (l *stringKeyLock) Unlock(key string) {
-	l.getLockBy(key).Unlock()
+	l.GetLockBy(key).Unlock()
 }

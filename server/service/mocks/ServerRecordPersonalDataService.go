@@ -15,6 +15,14 @@ type ServerRecordPersonalDataService struct {
 	mock.Mock
 }
 
+type ServerRecordPersonalDataService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ServerRecordPersonalDataService) EXPECT() *ServerRecordPersonalDataService_Expecter {
+	return &ServerRecordPersonalDataService_Expecter{mock: &_m.Mock}
+}
+
 // Load provides a mock function with given fields: ctx, key, username
 func (_m *ServerRecordPersonalDataService) Load(ctx context.Context, key string, username string) (string, error) {
 	ret := _m.Called(ctx, key, username)
@@ -36,6 +44,31 @@ func (_m *ServerRecordPersonalDataService) Load(ctx context.Context, key string,
 	return r0, r1
 }
 
+// ServerRecordPersonalDataService_Load_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Load'
+type ServerRecordPersonalDataService_Load_Call struct {
+	*mock.Call
+}
+
+// Load is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - username string
+func (_e *ServerRecordPersonalDataService_Expecter) Load(ctx interface{}, key interface{}, username interface{}) *ServerRecordPersonalDataService_Load_Call {
+	return &ServerRecordPersonalDataService_Load_Call{Call: _e.mock.On("Load", ctx, key, username)}
+}
+
+func (_c *ServerRecordPersonalDataService_Load_Call) Run(run func(ctx context.Context, key string, username string)) *ServerRecordPersonalDataService_Load_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordPersonalDataService_Load_Call) Return(_a0 string, _a1 error) *ServerRecordPersonalDataService_Load_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // Remove provides a mock function with given fields: ctx, key, username
 func (_m *ServerRecordPersonalDataService) Remove(ctx context.Context, key string, username string) error {
 	ret := _m.Called(ctx, key, username)
@@ -50,6 +83,31 @@ func (_m *ServerRecordPersonalDataService) Remove(ctx context.Context, key strin
 	return r0
 }
 
+// ServerRecordPersonalDataService_Remove_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Remove'
+type ServerRecordPersonalDataService_Remove_Call struct {
+	*mock.Call
+}
+
+// Remove is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - username string
+func (_e *ServerRecordPersonalDataService_Expecter) Remove(ctx interface{}, key interface{}, username interface{}) *ServerRecordPersonalDataService_Remove_Call {
+	return &ServerRecordPersonalDataService_Remove_Call{Call: _e.mock.On("Remove", ctx, key, username)}
+}
+
+func (_c *ServerRecordPersonalDataService_Remove_Call) Run(run func(ctx context.Context, key string, username string)) *ServerRecordPersonalDataService_Remove_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordPersonalDataService_Remove_Call) Return(_a0 error) *ServerRecordPersonalDataService_Remove_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 // Save provides a mock function with given fields: ctx, key, username, data
 func (_m *ServerRecordPersonalDataService) Save(ctx context.Context, key string, username string, data string) error {
 	ret := _m.Called(ctx, key, username, data)
@@ -62,6 +120,32 @@ func (_m *ServerRecordPersonalDataService) Save(ctx context.Context, key string,
 	}
 
 	return r0
+}
+
+// ServerRecordPersonalDataService_Save_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Save'
+type ServerRecordPersonalDataService_Save_Call struct {
+	*mock.Call
+}
+
+// Save is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - username string
+//  - data string
+func (_e *ServerRecordPersonalDataService_Expecter) Save(ctx interface{}, key interface{}, username interface{}, data interface{}) *ServerRecordPersonalDataService_Save_Call {
+	return &ServerRecordPersonalDataService_Save_Call{Call: _e.mock.On("Save", ctx, key, username, data)}
+}
+
+func (_c *ServerRecordPersonalDataService_Save_Call) Run(run func(ctx context.Context, key string, username string, data string)) *ServerRecordPersonalDataService_Save_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].(string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordPersonalDataService_Save_Call) Return(_a0 error) *ServerRecordPersonalDataService_Save_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewServerRecordPersonalDataService creates a new instance of ServerRecordPersonalDataService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

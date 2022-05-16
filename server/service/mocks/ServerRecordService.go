@@ -16,6 +16,14 @@ type ServerRecordService struct {
 	mock.Mock
 }
 
+type ServerRecordService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ServerRecordService) EXPECT() *ServerRecordService_Expecter {
+	return &ServerRecordService_Expecter{mock: &_m.Mock}
+}
+
 // Load provides a mock function with given fields: ctx, username, loadFn
 func (_m *ServerRecordService) Load(ctx context.Context, username string, loadFn func(models.StorageData) string) (string, error) {
 	ret := _m.Called(ctx, username, loadFn)
@@ -37,12 +45,37 @@ func (_m *ServerRecordService) Load(ctx context.Context, username string, loadFn
 	return r0, r1
 }
 
+// ServerRecordService_Load_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Load'
+type ServerRecordService_Load_Call struct {
+	*mock.Call
+}
+
+// Load is a helper method to define mock.On call
+//  - ctx context.Context
+//  - username string
+//  - loadFn func(models.StorageData) string
+func (_e *ServerRecordService_Expecter) Load(ctx interface{}, username interface{}, loadFn interface{}) *ServerRecordService_Load_Call {
+	return &ServerRecordService_Load_Call{Call: _e.mock.On("Load", ctx, username, loadFn)}
+}
+
+func (_c *ServerRecordService_Load_Call) Run(run func(ctx context.Context, username string, loadFn func(models.StorageData) string)) *ServerRecordService_Load_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(func(models.StorageData) string))
+	})
+	return _c
+}
+
+func (_c *ServerRecordService_Load_Call) Return(_a0 string, _a1 error) *ServerRecordService_Load_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // Remove provides a mock function with given fields: ctx, username, removeFn
-func (_m *ServerRecordService) Remove(ctx context.Context, username string, removeFn func(models.StorageData) error) error {
+func (_m *ServerRecordService) Remove(ctx context.Context, username string, removeFn func(*models.StorageData) error) error {
 	ret := _m.Called(ctx, username, removeFn)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, func(models.StorageData) error) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, func(*models.StorageData) error) error); ok {
 		r0 = rf(ctx, username, removeFn)
 	} else {
 		r0 = ret.Error(0)
@@ -51,18 +84,68 @@ func (_m *ServerRecordService) Remove(ctx context.Context, username string, remo
 	return r0
 }
 
+// ServerRecordService_Remove_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Remove'
+type ServerRecordService_Remove_Call struct {
+	*mock.Call
+}
+
+// Remove is a helper method to define mock.On call
+//  - ctx context.Context
+//  - username string
+//  - removeFn func(*models.StorageData) error
+func (_e *ServerRecordService_Expecter) Remove(ctx interface{}, username interface{}, removeFn interface{}) *ServerRecordService_Remove_Call {
+	return &ServerRecordService_Remove_Call{Call: _e.mock.On("Remove", ctx, username, removeFn)}
+}
+
+func (_c *ServerRecordService_Remove_Call) Run(run func(ctx context.Context, username string, removeFn func(*models.StorageData) error)) *ServerRecordService_Remove_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(func(*models.StorageData) error))
+	})
+	return _c
+}
+
+func (_c *ServerRecordService_Remove_Call) Return(_a0 error) *ServerRecordService_Remove_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 // Save provides a mock function with given fields: ctx, username, updateFn
-func (_m *ServerRecordService) Save(ctx context.Context, username string, updateFn func(models.StorageData) error) error {
+func (_m *ServerRecordService) Save(ctx context.Context, username string, updateFn func(*models.StorageData) error) error {
 	ret := _m.Called(ctx, username, updateFn)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, func(models.StorageData) error) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, func(*models.StorageData) error) error); ok {
 		r0 = rf(ctx, username, updateFn)
 	} else {
 		r0 = ret.Error(0)
 	}
 
 	return r0
+}
+
+// ServerRecordService_Save_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Save'
+type ServerRecordService_Save_Call struct {
+	*mock.Call
+}
+
+// Save is a helper method to define mock.On call
+//  - ctx context.Context
+//  - username string
+//  - updateFn func(*models.StorageData) error
+func (_e *ServerRecordService_Expecter) Save(ctx interface{}, username interface{}, updateFn interface{}) *ServerRecordService_Save_Call {
+	return &ServerRecordService_Save_Call{Call: _e.mock.On("Save", ctx, username, updateFn)}
+}
+
+func (_c *ServerRecordService_Save_Call) Run(run func(ctx context.Context, username string, updateFn func(*models.StorageData) error)) *ServerRecordService_Save_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(func(*models.StorageData) error))
+	})
+	return _c
+}
+
+func (_c *ServerRecordService_Save_Call) Return(_a0 error) *ServerRecordService_Save_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewServerRecordService creates a new instance of ServerRecordService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

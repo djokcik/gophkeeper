@@ -8,7 +8,7 @@ import (
 	"gophkeeper/server"
 )
 
-//go:generate mockery --name=ServerRecordBinaryDataService
+//go:generate mockery --name=ServerRecordBinaryDataService  --with-expecter
 type ServerRecordBinaryDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)
@@ -28,7 +28,7 @@ func NewServerRecordBinaryDataService(cfg server.Config, record ServerRecordServ
 }
 
 func (s recordBinaryDataService) Save(ctx context.Context, key string, username string, data string) error {
-	return s.record.Save(ctx, username, func(store models.StorageData) error {
+	return s.record.Save(ctx, username, func(store *models.StorageData) error {
 		if store.BinaryData == nil {
 			store.BinaryData = make(map[string]string)
 		}
@@ -46,7 +46,7 @@ func (s recordBinaryDataService) Load(ctx context.Context, key string, username 
 }
 
 func (s recordBinaryDataService) Remove(ctx context.Context, key string, username string) error {
-	return s.record.Remove(ctx, username, func(store models.StorageData) error {
+	return s.record.Remove(ctx, username, func(store *models.StorageData) error {
 		if store.BinaryData == nil {
 			return ErrNotFoundRecord
 		}

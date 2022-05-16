@@ -13,6 +13,14 @@ type AuthUtilsService struct {
 	mock.Mock
 }
 
+type AuthUtilsService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *AuthUtilsService) EXPECT() *AuthUtilsService_Expecter {
+	return &AuthUtilsService_Expecter{mock: &_m.Mock}
+}
+
 // CompareHashAndPassword provides a mock function with given fields: password, hash
 func (_m *AuthUtilsService) CompareHashAndPassword(password string, hash string) error {
 	ret := _m.Called(password, hash)
@@ -25,6 +33,30 @@ func (_m *AuthUtilsService) CompareHashAndPassword(password string, hash string)
 	}
 
 	return r0
+}
+
+// AuthUtilsService_CompareHashAndPassword_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CompareHashAndPassword'
+type AuthUtilsService_CompareHashAndPassword_Call struct {
+	*mock.Call
+}
+
+// CompareHashAndPassword is a helper method to define mock.On call
+//  - password string
+//  - hash string
+func (_e *AuthUtilsService_Expecter) CompareHashAndPassword(password interface{}, hash interface{}) *AuthUtilsService_CompareHashAndPassword_Call {
+	return &AuthUtilsService_CompareHashAndPassword_Call{Call: _e.mock.On("CompareHashAndPassword", password, hash)}
+}
+
+func (_c *AuthUtilsService_CompareHashAndPassword_Call) Run(run func(password string, hash string)) *AuthUtilsService_CompareHashAndPassword_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *AuthUtilsService_CompareHashAndPassword_Call) Return(_a0 error) *AuthUtilsService_CompareHashAndPassword_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // CreateToken provides a mock function with given fields: secretKey, username
@@ -48,6 +80,30 @@ func (_m *AuthUtilsService) CreateToken(secretKey string, username string) (stri
 	return r0, r1
 }
 
+// AuthUtilsService_CreateToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateToken'
+type AuthUtilsService_CreateToken_Call struct {
+	*mock.Call
+}
+
+// CreateToken is a helper method to define mock.On call
+//  - secretKey string
+//  - username string
+func (_e *AuthUtilsService_Expecter) CreateToken(secretKey interface{}, username interface{}) *AuthUtilsService_CreateToken_Call {
+	return &AuthUtilsService_CreateToken_Call{Call: _e.mock.On("CreateToken", secretKey, username)}
+}
+
+func (_c *AuthUtilsService_CreateToken_Call) Run(run func(secretKey string, username string)) *AuthUtilsService_CreateToken_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *AuthUtilsService_CreateToken_Call) Return(_a0 string, _a1 error) *AuthUtilsService_CreateToken_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // HashAndSalt provides a mock function with given fields: pwd, pepper
 func (_m *AuthUtilsService) HashAndSalt(pwd string, pepper string) (string, error) {
 	ret := _m.Called(pwd, pepper)
@@ -69,6 +125,30 @@ func (_m *AuthUtilsService) HashAndSalt(pwd string, pepper string) (string, erro
 	return r0, r1
 }
 
+// AuthUtilsService_HashAndSalt_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'HashAndSalt'
+type AuthUtilsService_HashAndSalt_Call struct {
+	*mock.Call
+}
+
+// HashAndSalt is a helper method to define mock.On call
+//  - pwd string
+//  - pepper string
+func (_e *AuthUtilsService_Expecter) HashAndSalt(pwd interface{}, pepper interface{}) *AuthUtilsService_HashAndSalt_Call {
+	return &AuthUtilsService_HashAndSalt_Call{Call: _e.mock.On("HashAndSalt", pwd, pepper)}
+}
+
+func (_c *AuthUtilsService_HashAndSalt_Call) Run(run func(pwd string, pepper string)) *AuthUtilsService_HashAndSalt_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *AuthUtilsService_HashAndSalt_Call) Return(_a0 string, _a1 error) *AuthUtilsService_HashAndSalt_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // ParseToken provides a mock function with given fields: accessToken, secretKey
 func (_m *AuthUtilsService) ParseToken(accessToken string, secretKey string) (string, error) {
 	ret := _m.Called(accessToken, secretKey)
@@ -88,6 +168,30 @@ func (_m *AuthUtilsService) ParseToken(accessToken string, secretKey string) (st
 	}
 
 	return r0, r1
+}
+
+// AuthUtilsService_ParseToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ParseToken'
+type AuthUtilsService_ParseToken_Call struct {
+	*mock.Call
+}
+
+// ParseToken is a helper method to define mock.On call
+//  - accessToken string
+//  - secretKey string
+func (_e *AuthUtilsService_Expecter) ParseToken(accessToken interface{}, secretKey interface{}) *AuthUtilsService_ParseToken_Call {
+	return &AuthUtilsService_ParseToken_Call{Call: _e.mock.On("ParseToken", accessToken, secretKey)}
+}
+
+func (_c *AuthUtilsService_ParseToken_Call) Run(run func(accessToken string, secretKey string)) *AuthUtilsService_ParseToken_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *AuthUtilsService_ParseToken_Call) Return(_a0 string, _a1 error) *AuthUtilsService_ParseToken_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
 }
 
 // NewAuthUtilsService creates a new instance of AuthUtilsService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

@@ -16,6 +16,14 @@ type AuthService struct {
 	mock.Mock
 }
 
+type AuthService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *AuthService) EXPECT() *AuthService_Expecter {
+	return &AuthService_Expecter{mock: &_m.Mock}
+}
+
 // GetUserByToken provides a mock function with given fields: ctx, token
 func (_m *AuthService) GetUserByToken(ctx context.Context, token string) (models.User, error) {
 	ret := _m.Called(ctx, token)
@@ -35,6 +43,30 @@ func (_m *AuthService) GetUserByToken(ctx context.Context, token string) (models
 	}
 
 	return r0, r1
+}
+
+// AuthService_GetUserByToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUserByToken'
+type AuthService_GetUserByToken_Call struct {
+	*mock.Call
+}
+
+// GetUserByToken is a helper method to define mock.On call
+//  - ctx context.Context
+//  - token string
+func (_e *AuthService_Expecter) GetUserByToken(ctx interface{}, token interface{}) *AuthService_GetUserByToken_Call {
+	return &AuthService_GetUserByToken_Call{Call: _e.mock.On("GetUserByToken", ctx, token)}
+}
+
+func (_c *AuthService_GetUserByToken_Call) Run(run func(ctx context.Context, token string)) *AuthService_GetUserByToken_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *AuthService_GetUserByToken_Call) Return(_a0 models.User, _a1 error) *AuthService_GetUserByToken_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
 }
 
 // NewAuthService creates a new instance of AuthService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

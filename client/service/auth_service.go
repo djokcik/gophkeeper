@@ -43,7 +43,7 @@ func (s authService) SignIn(ctx context.Context, username string, password strin
 func (s authService) Register(ctx context.Context, username string, password string) (models.ClientUser, error) {
 	token, err := s.api.Register(ctx, username, password)
 	if err != nil && !errors.Is(err, ErrAnonymousUser) {
-		s.Log(ctx).Warn().Err(err).Msg("CreateUser:")
+		s.Log(ctx).Warn().Err(err).Msg("Register:")
 		return models.ClientUser{}, err
 	}
 

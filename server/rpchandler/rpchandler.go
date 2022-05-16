@@ -14,8 +14,6 @@ import (
 
 // RpcHandler struct for all rpc handlers and require DI dependencies
 type RpcHandler struct {
-	cfg server.Config
-
 	user service.ServerUserService
 	auth common.AuthService
 
@@ -32,8 +30,6 @@ func NewRpcHandler(cfg server.Config, store storage.Storage) *RpcHandler {
 	serviceRegistry := registry.NewServerServiceRegistry(cfg, store, authUtils)
 
 	return &RpcHandler{
-		cfg: cfg,
-
 		user: serviceRegistry.GetUserService(),
 		auth: auth,
 

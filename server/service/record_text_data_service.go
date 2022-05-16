@@ -8,7 +8,7 @@ import (
 	"gophkeeper/server"
 )
 
-//go:generate mockery --name=ServerRecordTextDataService
+//go:generate mockery --name=ServerRecordTextDataService --with-expecter
 type ServerRecordTextDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)
@@ -28,7 +28,7 @@ func NewServerRecordTextDataService(cfg server.Config, record ServerRecordServic
 }
 
 func (s recordTextDataService) Save(ctx context.Context, key string, username string, data string) error {
-	return s.record.Save(ctx, username, func(store models.StorageData) error {
+	return s.record.Save(ctx, username, func(store *models.StorageData) error {
 		if store.TextData == nil {
 			store.TextData = make(map[string]string)
 		}
@@ -46,7 +46,7 @@ func (s recordTextDataService) Load(ctx context.Context, key string, username st
 }
 
 func (s recordTextDataService) Remove(ctx context.Context, key string, username string) error {
-	return s.record.Remove(ctx, username, func(store models.StorageData) error {
+	return s.record.Remove(ctx, username, func(store *models.StorageData) error {
 		if store.TextData == nil {
 			return ErrNotFoundRecord
 		}
