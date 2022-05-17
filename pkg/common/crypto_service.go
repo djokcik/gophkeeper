@@ -9,8 +9,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/pkg/logging"
 	"io"
 )
 

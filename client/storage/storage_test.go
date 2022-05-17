@@ -2,10 +2,10 @@ package storage
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/clientmodels"
+	"github.com/djokcik/gophkeeper/client/storage/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"gophkeeper/client/clientmodels"
-	"gophkeeper/client/storage/mocks"
 	"testing"
 )
 

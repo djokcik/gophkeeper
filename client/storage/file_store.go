@@ -3,7 +3,7 @@ package storage
 import (
 	"encoding/json"
 	"errors"
-	"gophkeeper/client/clientmodels"
+	"github.com/djokcik/gophkeeper/client/clientmodels"
 	"io"
 	"os"
 )

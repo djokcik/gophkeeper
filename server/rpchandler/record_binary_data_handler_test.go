@@ -1,12 +1,12 @@
 package rpchandler
 
 import (
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/models/rpcdto"
+	"github.com/djokcik/gophkeeper/pkg/common/mocks"
+	mocks2 "github.com/djokcik/gophkeeper/server/service/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"gophkeeper/models"
-	"gophkeeper/models/rpcdto"
-	"gophkeeper/pkg/common/mocks"
-	mocks2 "gophkeeper/server/service/mocks"
 	"testing"
 )
 

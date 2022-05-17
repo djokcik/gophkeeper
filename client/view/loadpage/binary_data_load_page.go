@@ -3,10 +3,10 @@ package loadpage
 import (
 	"context"
 	"fmt"
+	"github.com/djokcik/gophkeeper/client/registry"
+	"github.com/djokcik/gophkeeper/client/view"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/marcusolsson/tui-go"
-	"gophkeeper/client/registry"
-	"gophkeeper/client/view"
-	"gophkeeper/pkg/logging"
 	"os"
 )
 

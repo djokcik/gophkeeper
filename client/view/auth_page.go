@@ -2,8 +2,8 @@ package view
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/registry"
 	"github.com/marcusolsson/tui-go"
-	"gophkeeper/client/registry"
 )
 
 type AuthPage struct {

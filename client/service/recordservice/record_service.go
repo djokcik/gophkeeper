@@ -2,11 +2,11 @@ package recordservice
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/service"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/client/service"
-	"gophkeeper/models"
-	"gophkeeper/pkg/common"
-	"gophkeeper/pkg/logging"
 )
 
 //go:generate mockery --name=ClientRecordService --with-expecter

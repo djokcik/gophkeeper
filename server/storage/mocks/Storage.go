@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	models "gophkeeper/models"
+	models "github.com/djokcik/gophkeeper/models"
 
 	mock "github.com/stretchr/testify/mock"
 

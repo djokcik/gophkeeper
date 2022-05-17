@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/clientmodels"
+	"github.com/djokcik/gophkeeper/client/storage"
+	"github.com/djokcik/gophkeeper/models/rpcdto"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/client/clientmodels"
-	"gophkeeper/client/storage"
-	"gophkeeper/models/rpcdto"
-	"gophkeeper/pkg/logging"
 )
 
 //go:generate mockery --name=ClientStorageService --with-expecter

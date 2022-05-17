@@ -2,7 +2,7 @@ package client
 
 import (
 	"github.com/caarlos0/env/v6"
-	"gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 )
 
 type Config struct {

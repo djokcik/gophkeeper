@@ -3,13 +3,13 @@ package service
 import (
 	"context"
 	"errors"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server"
+	"github.com/djokcik/gophkeeper/server/storage"
 	"github.com/rs/zerolog"
 	"golang.org/x/crypto/bcrypt"
-	"gophkeeper/models"
-	"gophkeeper/pkg/common"
-	"gophkeeper/pkg/logging"
-	"gophkeeper/server"
-	"gophkeeper/server/storage"
 )
 
 //go:generate mockery --name=ServerUserService  --with-expecter

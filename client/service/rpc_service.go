@@ -4,12 +4,12 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
+	"github.com/djokcik/gophkeeper/client"
+	"github.com/djokcik/gophkeeper/client/storage"
+	"github.com/djokcik/gophkeeper/models/rpcdto"
+	"github.com/djokcik/gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/client"
-	"gophkeeper/client/storage"
-	"gophkeeper/models/rpcdto"
-	"gophkeeper/pkg/common"
-	"gophkeeper/pkg/logging"
 	"net/rpc"
 )
 

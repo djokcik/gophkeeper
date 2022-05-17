@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 	"errors"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/models"
-	"gophkeeper/pkg/common"
-	"gophkeeper/pkg/logging"
 )
 
 //go:generate mockery --name=ClientAuthService

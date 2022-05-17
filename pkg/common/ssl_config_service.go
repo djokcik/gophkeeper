@@ -3,9 +3,9 @@ package common
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"gophkeeper/client"
-	"gophkeeper/pkg/logging"
-	"gophkeeper/server"
+	"github.com/djokcik/gophkeeper/client"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server"
 	"io/ioutil"
 )
 

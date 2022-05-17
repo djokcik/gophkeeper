@@ -2,9 +2,9 @@ package common
 
 import (
 	"fmt"
+	"github.com/djokcik/gophkeeper/models"
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
-	"gophkeeper/models"
 	"time"
 )
 

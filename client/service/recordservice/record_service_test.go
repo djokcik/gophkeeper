@@ -3,11 +3,11 @@ package recordservice
 import (
 	"context"
 	"encoding/json"
+	service2 "github.com/djokcik/gophkeeper/client/service"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/pkg/common/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	service2 "gophkeeper/client/service"
-	"gophkeeper/models"
-	"gophkeeper/pkg/common/mocks"
 	"testing"
 )
 

@@ -2,10 +2,10 @@ package recordservice
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/clientmodels"
+	"github.com/djokcik/gophkeeper/client/service"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/client/clientmodels"
-	"gophkeeper/client/service"
-	"gophkeeper/pkg/logging"
 )
 
 //go:generate mockery --name=RecordBinaryDataService --with-expecter

@@ -2,8 +2,8 @@ package rpchandler
 
 import (
 	"context"
-	"gophkeeper/models/rpcdto"
-	"gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/models/rpcdto"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 )
 
 func (h *RpcHandler) LoadRecordPersonalDataByKeyHandler(dto rpcdto.LoadRecordRequestDto, Reply *string) error {

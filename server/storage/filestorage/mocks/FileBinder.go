@@ -7,7 +7,7 @@ import (
 
 	mock "github.com/stretchr/testify/mock"
 
-	models "gophkeeper/models"
+	models "github.com/djokcik/gophkeeper/models"
 
 	testing "testing"
 )

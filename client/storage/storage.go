@@ -2,9 +2,9 @@ package storage
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/clientmodels"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
-	"gophkeeper/client/clientmodels"
-	"gophkeeper/pkg/logging"
 	"os"
 	"path"
 )

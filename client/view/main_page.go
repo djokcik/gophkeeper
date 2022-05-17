@@ -3,9 +3,9 @@ package view
 import (
 	"context"
 	"fmt"
+	"github.com/djokcik/gophkeeper/client/registry"
+	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/marcusolsson/tui-go"
-	"gophkeeper/client/registry"
-	"gophkeeper/pkg/logging"
 )
 
 type MainPage struct {
