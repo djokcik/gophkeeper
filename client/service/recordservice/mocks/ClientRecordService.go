@@ -16,6 +16,14 @@ type ClientRecordService struct {
 	mock.Mock
 }
 
+type ClientRecordService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ClientRecordService) EXPECT() *ClientRecordService_Expecter {
+	return &ClientRecordService_Expecter{mock: &_m.Mock}
+}
+
 // LoadRecordByKey provides a mock function with given fields: ctx, user, response, loadFn
 func (_m *ClientRecordService) LoadRecordByKey(ctx context.Context, user models.ClientUser, response interface{}, loadFn func() (string, error)) error {
 	ret := _m.Called(ctx, user, response, loadFn)
@@ -30,6 +38,32 @@ func (_m *ClientRecordService) LoadRecordByKey(ctx context.Context, user models.
 	return r0
 }
 
+// ClientRecordService_LoadRecordByKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'LoadRecordByKey'
+type ClientRecordService_LoadRecordByKey_Call struct {
+	*mock.Call
+}
+
+// LoadRecordByKey is a helper method to define mock.On call
+//  - ctx context.Context
+//  - user models.ClientUser
+//  - response interface{}
+//  - loadFn func()(string , error)
+func (_e *ClientRecordService_Expecter) LoadRecordByKey(ctx interface{}, user interface{}, response interface{}, loadFn interface{}) *ClientRecordService_LoadRecordByKey_Call {
+	return &ClientRecordService_LoadRecordByKey_Call{Call: _e.mock.On("LoadRecordByKey", ctx, user, response, loadFn)}
+}
+
+func (_c *ClientRecordService_LoadRecordByKey_Call) Run(run func(ctx context.Context, user models.ClientUser, response interface{}, loadFn func() (string, error))) *ClientRecordService_LoadRecordByKey_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(models.ClientUser), args[2].(interface{}), args[3].(func() (string, error)))
+	})
+	return _c
+}
+
+func (_c *ClientRecordService_LoadRecordByKey_Call) Return(_a0 error) *ClientRecordService_LoadRecordByKey_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 // SaveRecord provides a mock function with given fields: ctx, user, data, updateFn
 func (_m *ClientRecordService) SaveRecord(ctx context.Context, user models.ClientUser, data interface{}, updateFn func(string) error) error {
 	ret := _m.Called(ctx, user, data, updateFn)
@@ -42,6 +76,32 @@ func (_m *ClientRecordService) SaveRecord(ctx context.Context, user models.Clien
 	}
 
 	return r0
+}
+
+// ClientRecordService_SaveRecord_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SaveRecord'
+type ClientRecordService_SaveRecord_Call struct {
+	*mock.Call
+}
+
+// SaveRecord is a helper method to define mock.On call
+//  - ctx context.Context
+//  - user models.ClientUser
+//  - data interface{}
+//  - updateFn func(string) error
+func (_e *ClientRecordService_Expecter) SaveRecord(ctx interface{}, user interface{}, data interface{}, updateFn interface{}) *ClientRecordService_SaveRecord_Call {
+	return &ClientRecordService_SaveRecord_Call{Call: _e.mock.On("SaveRecord", ctx, user, data, updateFn)}
+}
+
+func (_c *ClientRecordService_SaveRecord_Call) Run(run func(ctx context.Context, user models.ClientUser, data interface{}, updateFn func(string) error)) *ClientRecordService_SaveRecord_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(models.ClientUser), args[2].(interface{}), args[3].(func(string) error))
+	})
+	return _c
+}
+
+func (_c *ClientRecordService_SaveRecord_Call) Return(_a0 error) *ClientRecordService_SaveRecord_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewClientRecordService creates a new instance of ClientRecordService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

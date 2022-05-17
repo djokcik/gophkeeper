@@ -8,7 +8,7 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
-//go:generate mockery --name=RecordBinaryDataService
+//go:generate mockery --name=RecordBinaryDataService --with-expecter
 type RecordBinaryDataService interface {
 	RemoveRecordByKey(ctx context.Context, key string) error
 	LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordBinaryData, error)

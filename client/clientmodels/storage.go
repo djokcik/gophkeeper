@@ -6,6 +6,8 @@ var (
 )
 
 type (
+	StoreActions []RecordFileLine
+
 	RecordActionType string
 
 	RecordFileLine struct {

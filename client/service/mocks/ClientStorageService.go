@@ -16,6 +16,14 @@ type ClientStorageService struct {
 	mock.Mock
 }
 
+type ClientStorageService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ClientStorageService) EXPECT() *ClientStorageService_Expecter {
+	return &ClientStorageService_Expecter{mock: &_m.Mock}
+}
+
 // LoadRecords provides a mock function with given fields: ctx
 func (_m *ClientStorageService) LoadRecords(ctx context.Context) ([]clientmodels.RecordFileLine, error) {
 	ret := _m.Called(ctx)
@@ -39,6 +47,29 @@ func (_m *ClientStorageService) LoadRecords(ctx context.Context) ([]clientmodels
 	return r0, r1
 }
 
+// ClientStorageService_LoadRecords_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'LoadRecords'
+type ClientStorageService_LoadRecords_Call struct {
+	*mock.Call
+}
+
+// LoadRecords is a helper method to define mock.On call
+//  - ctx context.Context
+func (_e *ClientStorageService_Expecter) LoadRecords(ctx interface{}) *ClientStorageService_LoadRecords_Call {
+	return &ClientStorageService_LoadRecords_Call{Call: _e.mock.On("LoadRecords", ctx)}
+}
+
+func (_c *ClientStorageService_LoadRecords_Call) Run(run func(ctx context.Context)) *ClientStorageService_LoadRecords_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *ClientStorageService_LoadRecords_Call) Return(_a0 []clientmodels.RecordFileLine, _a1 error) *ClientStorageService_LoadRecords_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // SyncServer provides a mock function with given fields: ctx
 func (_m *ClientStorageService) SyncServer(ctx context.Context) error {
 	ret := _m.Called(ctx)
@@ -51,6 +82,29 @@ func (_m *ClientStorageService) SyncServer(ctx context.Context) error {
 	}
 
 	return r0
+}
+
+// ClientStorageService_SyncServer_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SyncServer'
+type ClientStorageService_SyncServer_Call struct {
+	*mock.Call
+}
+
+// SyncServer is a helper method to define mock.On call
+//  - ctx context.Context
+func (_e *ClientStorageService_Expecter) SyncServer(ctx interface{}) *ClientStorageService_SyncServer_Call {
+	return &ClientStorageService_SyncServer_Call{Call: _e.mock.On("SyncServer", ctx)}
+}
+
+func (_c *ClientStorageService_SyncServer_Call) Run(run func(ctx context.Context)) *ClientStorageService_SyncServer_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *ClientStorageService_SyncServer_Call) Return(_a0 error) *ClientStorageService_SyncServer_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewClientStorageService creates a new instance of ClientStorageService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.
