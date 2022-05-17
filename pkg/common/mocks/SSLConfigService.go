@@ -3,11 +3,11 @@
 package mocks
 
 import (
-	client "gophkeeper/client"
+	client "github.com/djokcik/gophkeeper/client"
 
 	mock "github.com/stretchr/testify/mock"
 
-	server "gophkeeper/server"
+	server "github.com/djokcik/gophkeeper/server"
 
 	testing "testing"
 

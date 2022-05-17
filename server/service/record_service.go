@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server/storage"
 	"github.com/rs/zerolog"
-	"gophkeeper/models"
-	"gophkeeper/pkg/logging"
-	"gophkeeper/server/storage"
 )
 
 //go:generate mockery --name=ServerRecordService --with-expecter

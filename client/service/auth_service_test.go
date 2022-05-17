@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/service/mocks"
+	"github.com/djokcik/gophkeeper/models"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"gophkeeper/client/service/mocks"
-	"gophkeeper/models"
 	"testing"
 )
 

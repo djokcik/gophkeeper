@@ -3,13 +3,13 @@ package rpchandler
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server"
+	"github.com/djokcik/gophkeeper/server/registry"
+	"github.com/djokcik/gophkeeper/server/service"
+	"github.com/djokcik/gophkeeper/server/storage"
 	"github.com/rs/zerolog"
-	"gophkeeper/pkg/common"
-	"gophkeeper/pkg/logging"
-	"gophkeeper/server"
-	"gophkeeper/server/registry"
-	"gophkeeper/server/service"
-	"gophkeeper/server/storage"
 )
 
 // RpcHandler struct for all rpc handlers and require DI dependencies

@@ -2,11 +2,11 @@ package registry
 
 import (
 	"context"
-	"gophkeeper/client"
-	"gophkeeper/client/service"
-	"gophkeeper/client/service/recordservice"
-	"gophkeeper/client/storage"
-	"gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/client"
+	"github.com/djokcik/gophkeeper/client/service"
+	"github.com/djokcik/gophkeeper/client/service/recordservice"
+	"github.com/djokcik/gophkeeper/client/storage"
+	"github.com/djokcik/gophkeeper/pkg/common"
 )
 
 type ClientServiceRegistry interface {

@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"gophkeeper/client/registry"
-	"gophkeeper/client/view"
-	"gophkeeper/client/view/loadpage"
-	"gophkeeper/client/view/removepage"
-	"gophkeeper/client/view/savepage"
+	"github.com/djokcik/gophkeeper/client/registry"
+	"github.com/djokcik/gophkeeper/client/view"
+	"github.com/djokcik/gophkeeper/client/view/loadpage"
+	"github.com/djokcik/gophkeeper/client/view/removepage"
+	"github.com/djokcik/gophkeeper/client/view/savepage"
 )
 
 type UIController struct {

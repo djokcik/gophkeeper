@@ -2,9 +2,9 @@ package controller
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/registry"
+	"github.com/djokcik/gophkeeper/client/view"
 	"github.com/marcusolsson/tui-go"
-	"gophkeeper/client/registry"
-	"gophkeeper/client/view"
 )
 
 func Start(_ context.Context, serviceRegistry registry.ClientServiceRegistry) {

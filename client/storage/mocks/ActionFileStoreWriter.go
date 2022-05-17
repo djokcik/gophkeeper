@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	clientmodels "gophkeeper/client/clientmodels"
+	clientmodels "github.com/djokcik/gophkeeper/client/clientmodels"
 
 	mock "github.com/stretchr/testify/mock"
 

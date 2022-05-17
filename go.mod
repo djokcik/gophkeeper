@@ -1,4 +1,4 @@
-module gophkeeper
+module github.com/djokcik/gophkeeper
 
 go 1.18
 

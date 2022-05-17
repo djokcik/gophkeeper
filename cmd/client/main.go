@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"gophkeeper/client"
-	"gophkeeper/client/controller"
-	"gophkeeper/client/registry"
+	"github.com/djokcik/gophkeeper/client"
+	"github.com/djokcik/gophkeeper/client/controller"
+	"github.com/djokcik/gophkeeper/client/registry"
 	"os/signal"
 	"syscall"
 )

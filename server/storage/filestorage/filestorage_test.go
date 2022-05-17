@@ -2,11 +2,11 @@ package filestorage
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/server/storage"
+	"github.com/djokcik/gophkeeper/server/storage/filestorage/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"gophkeeper/models"
-	"gophkeeper/server/storage"
-	"gophkeeper/server/storage/filestorage/mocks"
 	"testing"
 )
 

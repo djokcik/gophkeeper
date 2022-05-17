@@ -1,10 +1,10 @@
 package registry
 
 import (
-	"gophkeeper/pkg/common"
-	"gophkeeper/server"
-	"gophkeeper/server/service"
-	"gophkeeper/server/storage"
+	"github.com/djokcik/gophkeeper/pkg/common"
+	"github.com/djokcik/gophkeeper/server"
+	"github.com/djokcik/gophkeeper/server/service"
+	"github.com/djokcik/gophkeeper/server/storage"
 )
 
 type ServerServiceRegistry interface {

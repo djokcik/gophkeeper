@@ -2,9 +2,9 @@ package logging
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/pkg"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-	"gophkeeper/pkg"
 )
 
 const (

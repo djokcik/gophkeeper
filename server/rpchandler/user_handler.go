@@ -3,10 +3,10 @@ package rpchandler
 import (
 	"context"
 	"errors"
-	"gophkeeper/models/rpcdto"
-	"gophkeeper/pkg/logging"
-	"gophkeeper/server/service"
-	"gophkeeper/server/storage"
+	"github.com/djokcik/gophkeeper/models/rpcdto"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server/service"
+	"github.com/djokcik/gophkeeper/server/storage"
 )
 
 func (h *RpcHandler) SignInHandler(loginDto rpcdto.LoginDto, Reply *string) error {

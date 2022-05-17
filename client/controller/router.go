@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"github.com/djokcik/gophkeeper/client/view"
 	"github.com/marcusolsson/tui-go"
-	"gophkeeper/client/view"
 )
 
 type Route map[*tui.Button]view.Page

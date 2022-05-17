@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 	"errors"
-	"gophkeeper/models"
+	"github.com/djokcik/gophkeeper/models"
 )
 
 //go:generate mockery --name=Storage --with-expecter

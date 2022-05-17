@@ -1,7 +1,7 @@
 package service
 
 import (
-	"gophkeeper/models"
+	"github.com/djokcik/gophkeeper/models"
 )
 
 //go:generate mockery --name=ClientUserService --with-expecter

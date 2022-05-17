@@ -2,12 +2,12 @@ package recordservice
 
 import (
 	"context"
+	"github.com/djokcik/gophkeeper/client/clientmodels"
+	"github.com/djokcik/gophkeeper/client/service/mocks"
+	mocks2 "github.com/djokcik/gophkeeper/client/service/recordservice/mocks"
+	"github.com/djokcik/gophkeeper/models"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"gophkeeper/client/clientmodels"
-	"gophkeeper/client/service/mocks"
-	mocks2 "gophkeeper/client/service/recordservice/mocks"
-	"gophkeeper/models"
 	"testing"
 )
 
