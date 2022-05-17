@@ -15,6 +15,14 @@ type ClientUserService struct {
 	mock.Mock
 }
 
+type ClientUserService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *ClientUserService) EXPECT() *ClientUserService_Expecter {
+	return &ClientUserService_Expecter{mock: &_m.Mock}
+}
+
 // GetUser provides a mock function with given fields:
 func (_m *ClientUserService) GetUser() models.ClientUser {
 	ret := _m.Called()
@@ -29,6 +37,28 @@ func (_m *ClientUserService) GetUser() models.ClientUser {
 	return r0
 }
 
+// ClientUserService_GetUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUser'
+type ClientUserService_GetUser_Call struct {
+	*mock.Call
+}
+
+// GetUser is a helper method to define mock.On call
+func (_e *ClientUserService_Expecter) GetUser() *ClientUserService_GetUser_Call {
+	return &ClientUserService_GetUser_Call{Call: _e.mock.On("GetUser")}
+}
+
+func (_c *ClientUserService_GetUser_Call) Run(run func()) *ClientUserService_GetUser_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *ClientUserService_GetUser_Call) Return(_a0 models.ClientUser) *ClientUserService_GetUser_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 // SaveUser provides a mock function with given fields: user
 func (_m *ClientUserService) SaveUser(user models.ClientUser) error {
 	ret := _m.Called(user)
@@ -41,6 +71,29 @@ func (_m *ClientUserService) SaveUser(user models.ClientUser) error {
 	}
 
 	return r0
+}
+
+// ClientUserService_SaveUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SaveUser'
+type ClientUserService_SaveUser_Call struct {
+	*mock.Call
+}
+
+// SaveUser is a helper method to define mock.On call
+//  - user models.ClientUser
+func (_e *ClientUserService_Expecter) SaveUser(user interface{}) *ClientUserService_SaveUser_Call {
+	return &ClientUserService_SaveUser_Call{Call: _e.mock.On("SaveUser", user)}
+}
+
+func (_c *ClientUserService_SaveUser_Call) Run(run func(user models.ClientUser)) *ClientUserService_SaveUser_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(models.ClientUser))
+	})
+	return _c
+}
+
+func (_c *ClientUserService_SaveUser_Call) Return(_a0 error) *ClientUserService_SaveUser_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewClientUserService creates a new instance of ClientUserService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

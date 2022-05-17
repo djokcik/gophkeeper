@@ -9,7 +9,7 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
-//go:generate mockery --name=ClientRecordService
+//go:generate mockery --name=ClientRecordService --with-expecter
 type ClientRecordService interface {
 	LoadRecordByKey(ctx context.Context, user models.ClientUser, response interface{}, loadFn func() (string, error)) error
 	SaveRecord(ctx context.Context, user models.ClientUser, data interface{}, updateFn func(encryptedData string) error) error

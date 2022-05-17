@@ -16,6 +16,14 @@ type RecordBankCardService struct {
 	mock.Mock
 }
 
+type RecordBankCardService_Expecter struct {
+	mock *mock.Mock
+}
+
+func (_m *RecordBankCardService) EXPECT() *RecordBankCardService_Expecter {
+	return &RecordBankCardService_Expecter{mock: &_m.Mock}
+}
+
 // LoadRecordByKey provides a mock function with given fields: ctx, key
 func (_m *RecordBankCardService) LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordBankCardData, error) {
 	ret := _m.Called(ctx, key)
@@ -37,6 +45,30 @@ func (_m *RecordBankCardService) LoadRecordByKey(ctx context.Context, key string
 	return r0, r1
 }
 
+// RecordBankCardService_LoadRecordByKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'LoadRecordByKey'
+type RecordBankCardService_LoadRecordByKey_Call struct {
+	*mock.Call
+}
+
+// LoadRecordByKey is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+func (_e *RecordBankCardService_Expecter) LoadRecordByKey(ctx interface{}, key interface{}) *RecordBankCardService_LoadRecordByKey_Call {
+	return &RecordBankCardService_LoadRecordByKey_Call{Call: _e.mock.On("LoadRecordByKey", ctx, key)}
+}
+
+func (_c *RecordBankCardService_LoadRecordByKey_Call) Run(run func(ctx context.Context, key string)) *RecordBankCardService_LoadRecordByKey_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *RecordBankCardService_LoadRecordByKey_Call) Return(_a0 clientmodels.RecordBankCardData, _a1 error) *RecordBankCardService_LoadRecordByKey_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
 // RemoveRecordByKey provides a mock function with given fields: ctx, key
 func (_m *RecordBankCardService) RemoveRecordByKey(ctx context.Context, key string) error {
 	ret := _m.Called(ctx, key)
@@ -51,6 +83,30 @@ func (_m *RecordBankCardService) RemoveRecordByKey(ctx context.Context, key stri
 	return r0
 }
 
+// RecordBankCardService_RemoveRecordByKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RemoveRecordByKey'
+type RecordBankCardService_RemoveRecordByKey_Call struct {
+	*mock.Call
+}
+
+// RemoveRecordByKey is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+func (_e *RecordBankCardService_Expecter) RemoveRecordByKey(ctx interface{}, key interface{}) *RecordBankCardService_RemoveRecordByKey_Call {
+	return &RecordBankCardService_RemoveRecordByKey_Call{Call: _e.mock.On("RemoveRecordByKey", ctx, key)}
+}
+
+func (_c *RecordBankCardService_RemoveRecordByKey_Call) Run(run func(ctx context.Context, key string)) *RecordBankCardService_RemoveRecordByKey_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *RecordBankCardService_RemoveRecordByKey_Call) Return(_a0 error) *RecordBankCardService_RemoveRecordByKey_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 // SaveRecord provides a mock function with given fields: ctx, key, data
 func (_m *RecordBankCardService) SaveRecord(ctx context.Context, key string, data clientmodels.RecordBankCardData) error {
 	ret := _m.Called(ctx, key, data)
@@ -63,6 +119,31 @@ func (_m *RecordBankCardService) SaveRecord(ctx context.Context, key string, dat
 	}
 
 	return r0
+}
+
+// RecordBankCardService_SaveRecord_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SaveRecord'
+type RecordBankCardService_SaveRecord_Call struct {
+	*mock.Call
+}
+
+// SaveRecord is a helper method to define mock.On call
+//  - ctx context.Context
+//  - key string
+//  - data clientmodels.RecordBankCardData
+func (_e *RecordBankCardService_Expecter) SaveRecord(ctx interface{}, key interface{}, data interface{}) *RecordBankCardService_SaveRecord_Call {
+	return &RecordBankCardService_SaveRecord_Call{Call: _e.mock.On("SaveRecord", ctx, key, data)}
+}
+
+func (_c *RecordBankCardService_SaveRecord_Call) Run(run func(ctx context.Context, key string, data clientmodels.RecordBankCardData)) *RecordBankCardService_SaveRecord_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(clientmodels.RecordBankCardData))
+	})
+	return _c
+}
+
+func (_c *RecordBankCardService_SaveRecord_Call) Return(_a0 error) *RecordBankCardService_SaveRecord_Call {
+	_c.Call.Return(_a0)
+	return _c
 }
 
 // NewRecordBankCardService creates a new instance of RecordBankCardService. It also registers the testing.TB interface on the mock and a cleanup function to assert the mocks expectations.

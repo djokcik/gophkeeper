@@ -8,7 +8,7 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
-//go:generate mockery --name=RecordTextDataService
+//go:generate mockery --name=RecordTextDataService --with-expecter
 type RecordTextDataService interface {
 	RemoveRecordByKey(ctx context.Context, key string) error
 	LoadRecordByKey(ctx context.Context, key string) (clientmodels.RecordTextData, error)

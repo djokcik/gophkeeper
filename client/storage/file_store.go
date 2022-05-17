@@ -8,14 +8,18 @@ import (
 	"os"
 )
 
-type storeActions []clientmodels.RecordFileLine
+//go:generate mockery --name=ActionFileStoreReader --with-expecter
+type ActionFileStoreReader interface {
+	ReadActions() (clientmodels.StoreActions, error)
+	Close() error
+}
 
 type actionFileStoreReader struct {
 	file    *os.File
 	decoder *json.Decoder
 }
 
-func newActionFileStoreReader(filename string) (*actionFileStoreReader, error) {
+func newActionFileStoreReader(filename string) (ActionFileStoreReader, error) {
 	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDONLY, 0777)
 	if err != nil {
 		return nil, err
@@ -27,13 +31,13 @@ func newActionFileStoreReader(filename string) (*actionFileStoreReader, error) {
 	}, nil
 }
 
-func (r *actionFileStoreReader) ReadActions() (storeActions, error) {
+func (r *actionFileStoreReader) ReadActions() (clientmodels.StoreActions, error) {
 	_, err := r.file.Seek(0, 0)
 	if err != nil {
 		return nil, err
 	}
 
-	var actions storeActions
+	var actions clientmodels.StoreActions
 	err = r.decoder.Decode(&actions)
 
 	if errors.Is(err, io.EOF) {
@@ -47,12 +51,18 @@ func (r *actionFileStoreReader) Close() error {
 	return r.file.Close()
 }
 
+//go:generate mockery --name=ActionFileStoreWriter --with-expecter
+type ActionFileStoreWriter interface {
+	SaveActions(actions clientmodels.StoreActions) error
+	Close() error
+}
+
 type actionFileStoreWriter struct {
 	file    *os.File
 	encoder *json.Encoder
 }
 
-func newActionFileStoreWriter(filename string) (*actionFileStoreWriter, error) {
+func newActionFileStoreWriter(filename string) (ActionFileStoreWriter, error) {
 	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
@@ -65,7 +75,7 @@ func newActionFileStoreWriter(filename string) (*actionFileStoreWriter, error) {
 	}, nil
 }
 
-func (w *actionFileStoreWriter) SaveActions(actions storeActions) error {
+func (w *actionFileStoreWriter) SaveActions(actions clientmodels.StoreActions) error {
 	err := w.file.Truncate(0)
 	if err != nil {
 		return err

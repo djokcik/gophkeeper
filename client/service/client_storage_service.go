@@ -9,7 +9,7 @@ import (
 	"gophkeeper/pkg/logging"
 )
 
-//go:generate mockery --name=ClientStorageService
+//go:generate mockery --name=ClientStorageService --with-expecter
 type ClientStorageService interface {
 	LoadRecords(ctx context.Context) ([]clientmodels.RecordFileLine, error)
 	SyncServer(ctx context.Context) error
@@ -53,14 +53,14 @@ func (s storageService) SyncServer(ctx context.Context) error {
 		s.Log(ctx).Trace().Msgf("SyncServer: start action - %+v", action)
 		switch action.ActionType {
 		case clientmodels.SaveMethod:
-			reply := struct{}{}
+			var reply struct{}
 			err = s.api.Call(ctx, action.Method, rpcdto.SaveRecordRequestDto{Key: action.Key, Data: action.Data, Token: user.Token}, &reply)
 			if err != nil {
 				s.Log(ctx).Warn().Err(err).Msgf("SyncServer: invalid call save action - %+v", action)
 				return err
 			}
 		case clientmodels.RemoveMethod:
-			reply := struct{}{}
+			var reply struct{}
 			err = s.api.Call(ctx, action.Method, rpcdto.RemoveRecordRequestDto{Key: action.Key, Token: user.Token}, &reply)
 			if err != nil {
 				s.Log(ctx).Warn().Err(err).Msgf("SyncServer: invalid call remove action - %+v", action)

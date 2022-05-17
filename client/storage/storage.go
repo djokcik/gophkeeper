@@ -9,7 +9,7 @@ import (
 	"path"
 )
 
-//go:generate mockery --name=ClientLocalStorage
+//go:generate mockery --name=ClientLocalStorage --with-expecter
 type ClientLocalStorage interface {
 	ClearActions(ctx context.Context) error
 	SaveRecord(ctx context.Context, key string, data string, method string) error
@@ -19,8 +19,8 @@ type ClientLocalStorage interface {
 }
 
 type localStorage struct {
-	FileReader *actionFileStoreReader
-	FileWriter *actionFileStoreWriter
+	FileReader ActionFileStoreReader
+	FileWriter ActionFileStoreWriter
 }
 
 func NewClientLocalStorage(ctx context.Context) ClientLocalStorage {
@@ -60,7 +60,7 @@ func NewClientLocalStorage(ctx context.Context) ClientLocalStorage {
 }
 
 func (s localStorage) ClearActions(_ context.Context) error {
-	return s.FileWriter.SaveActions(storeActions{})
+	return s.FileWriter.SaveActions(clientmodels.StoreActions{})
 }
 
 func (s localStorage) LoadRecords(_ context.Context) ([]clientmodels.RecordFileLine, error) {

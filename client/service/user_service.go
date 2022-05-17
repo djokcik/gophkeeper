@@ -4,7 +4,7 @@ import (
 	"gophkeeper/models"
 )
 
-//go:generate mockery --name=ClientUserService
+//go:generate mockery --name=ClientUserService --with-expecter
 type ClientUserService interface {
 	GetUser() models.ClientUser
 	SaveUser(user models.ClientUser) error
