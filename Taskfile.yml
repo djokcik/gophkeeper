@@ -40,6 +40,28 @@ tasks:
       - task: build_darwin_arm64
       - task: build_darwin_amd64
 
+  build_server_bin:
+    cmds:
+      - GOOS=linux GOARCH=amd64 go build -o bin_server/app cmd/server/main.go
+
+  down:
+    cmds:
+      - docker-compose down -v --rmi local --remove-orphans
+
+  up_e2e:
+    cmds:
+      - docker-compose up --build --force-recreate app
+      - test -f ./e2e/e2e_success
+
+  run_e2e:
+    cmds:
+      - mkdir -p ./cache
+      - task: build_server_bin
+      - task: down
+      - task: up_e2e
+      - rm -rf ./e2e/e2e_success
+      - task: down
+
   generate:
     cmds:
       - go generate ./...

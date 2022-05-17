@@ -21,6 +21,8 @@ func (h *RpcHandler) LoadRecordTextDataByKeyHandler(dto rpcdto.LoadRecordRequest
 		h.Log(ctx).Trace().Err(err).Msg("LoadRecordPrivateDataByKeyHandler: err call load personal data")
 	}
 
+	h.Log(ctx).Trace().Msg("LoadRecordTextDataByKeyHandler: load success")
+
 	return nil
 }
 
@@ -40,6 +42,8 @@ func (h *RpcHandler) SaveRecordTextDataHandler(dto rpcdto.SaveRecordRequestDto, 
 		return err
 	}
 
+	h.Log(ctx).Trace().Msg("SaveRecordTextDataHandler: saved success")
+
 	return nil
 }
 
@@ -58,6 +62,8 @@ func (h *RpcHandler) RemoveRecordTextDataByKeyHandler(dto rpcdto.RemoveRecordReq
 		h.Log(ctx).Trace().Err(err).Msg("SaveRecordTextDataHandler: err call Save")
 		return err
 	}
+
+	h.Log(ctx).Trace().Msg("RemoveRecordTextDataByKeyHandler: removed success")
 
 	return nil
 }

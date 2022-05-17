@@ -26,7 +26,7 @@ func (h *RpcHandler) SignInHandler(loginDto rpcdto.LoginDto, Reply *string) erro
 
 	*Reply = token
 
-	h.Log(ctx).Info().Msgf("RegisterHandler: success login - %v", loginDto.Login)
+	h.Log(ctx).Info().Msgf("SignInHandler: success login - %v", loginDto.Login)
 
 	return nil
 }

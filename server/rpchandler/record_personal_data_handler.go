@@ -21,6 +21,8 @@ func (h *RpcHandler) LoadRecordPersonalDataByKeyHandler(dto rpcdto.LoadRecordReq
 		h.Log(ctx).Trace().Err(err).Msg("LoadRecordPrivateDataByKeyHandler: err call load personal data")
 	}
 
+	h.Log(ctx).Trace().Msg("LoadRecordPersonalDataByKeyHandler: load success")
+
 	return nil
 }
 
@@ -40,6 +42,8 @@ func (h *RpcHandler) SaveRecordPersonalDataHandler(dto rpcdto.SaveRecordRequestD
 		return err
 	}
 
+	h.Log(ctx).Trace().Msg("SaveRecordPersonalDataHandler: saved success")
+
 	return nil
 }
 
@@ -58,6 +62,8 @@ func (h *RpcHandler) RemoveRecordPersonalDataByKeyHandler(dto rpcdto.RemoveRecor
 		h.Log(ctx).Trace().Err(err).Msg("SaveRecordPersonalDataHandler: err call Save")
 		return err
 	}
+
+	h.Log(ctx).Trace().Msg("RemoveRecordPersonalDataByKeyHandler: removed success")
 
 	return nil
 }

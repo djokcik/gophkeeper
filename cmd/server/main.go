@@ -21,7 +21,7 @@ func main() {
 
 	log.Info().Msgf("config: %+v", cfg)
 
-	cert, _ := tls.LoadX509KeyPair("cert/localhost.crt", "cert/localhost.key")
+	cert, _ := tls.LoadX509KeyPair(cfg.SSLCertPath, cfg.SSLKeyPath)
 	conn, err := tls.Listen("tcp", cfg.Address, &tls.Config{Certificates: []tls.Certificate{cert}})
 
 	if err != nil {

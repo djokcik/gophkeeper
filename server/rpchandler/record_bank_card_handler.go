@@ -23,6 +23,8 @@ func (h *RpcHandler) LoadRecordBankCardByKeyHandler(dto rpcdto.LoadRecordRequest
 		h.Log(ctx).Trace().Err(err).Msg("LoadRecordPrivateDataByKeyHandler: err call load personal data")
 	}
 
+	h.Log(ctx).Trace().Msg("LoadRecordBankCardByKeyHandler: load success")
+
 	return nil
 }
 
@@ -42,6 +44,8 @@ func (h *RpcHandler) SaveRecordBankCardHandler(dto rpcdto.SaveRecordRequestDto, 
 		return err
 	}
 
+	h.Log(ctx).Trace().Msg("SaveRecordBankCardHandler: saved success")
+
 	return nil
 }
 
@@ -60,6 +64,8 @@ func (h *RpcHandler) RemoveRecordBankCardByKeyHandler(dto rpcdto.RemoveRecordReq
 		h.Log(ctx).Trace().Err(err).Msg("SaveRecordBankCardHandler: err call Save")
 		return err
 	}
+
+	h.Log(ctx).Trace().Msg("RemoveRecordBankCardByKeyHandler: removed success")
 
 	return nil
 }

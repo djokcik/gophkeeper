@@ -21,6 +21,8 @@ func (h *RpcHandler) LoadRecordBinaryDataByKeyHandler(dto rpcdto.LoadRecordReque
 		h.Log(ctx).Trace().Err(err).Msg("LoadRecordPrivateDataByKeyHandler: err call load personal data")
 	}
 
+	h.Log(ctx).Trace().Msg("LoadRecordBinaryDataByKeyHandler: load success")
+
 	return nil
 }
 
@@ -40,6 +42,8 @@ func (h *RpcHandler) SaveRecordBinaryDataHandler(dto rpcdto.SaveRecordRequestDto
 		return err
 	}
 
+	h.Log(ctx).Trace().Msg("SaveRecordBinaryDataHandler: saved success")
+
 	return nil
 }
 
@@ -58,6 +62,8 @@ func (h *RpcHandler) RemoveRecordBinaryDataByKeyHandler(dto rpcdto.RemoveRecordR
 		h.Log(ctx).Trace().Err(err).Msg("SaveRecordBinaryDataHandler: err call Save")
 		return err
 	}
+
+	h.Log(ctx).Trace().Msg("RemoveRecordBinaryDataByKeyHandler: removed success")
 
 	return nil
 }
