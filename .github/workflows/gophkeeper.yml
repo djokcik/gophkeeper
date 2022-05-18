@@ -1,0 +1,72 @@
+name: gophkeeper
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build_bin:
+    runs-on: ubuntu-latest
+    container: golang:1.18
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
+      - name: Prepare binaries
+        run: |
+          task build_server_bin
+        env:
+          GOOS: linux
+          GOARCH: amd64
+
+      - name: Upload binary files
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin
+          path: bin_server/app
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    container: golang:1.18
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Tests
+        run: |
+          go test -v ./...
+
+  e2e_tests:
+    runs-on: ubuntu-latest
+    needs: build_bin
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
+      - name: Download binary files
+        uses: actions/download-artifact@v3
+        with:
+          name: bin
+          path: bin_server
+
+      - name: Setup autotest binary
+        run: |
+          chmod -R +x $GITHUB_WORKSPACE/bin_server/app
+          ls -la bin_server
+
+      - name: Test
+        run: |
+          task run_e2e
