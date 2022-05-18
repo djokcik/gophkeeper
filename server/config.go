@@ -33,9 +33,7 @@ func NewConfig() Config {
 }
 
 func (cfg *Config) parseEnv() {
-	var err error
-
-	err = env.Parse(cfg)
+	err := env.Parse(cfg)
 	if err != nil {
 		logging.NewLogger().Fatal().Err(err).Msg("error parse environment")
 	}

@@ -59,17 +59,17 @@ func Test_storageService_SyncServer(t *testing.T) {
 
 		saveRecordDto := rpcdto.SaveRecordRequestDto{Key: "testKeyAction", Data: "testActionData", Token: "userToken"}
 
-		mApi := mocks2.ClientRpcService{Mock: mock.Mock{}}
-		mApi.EXPECT().Call(ctx, "actionMethod", saveRecordDto, mock.Anything).Return(nil)
+		mAPI := mocks2.ClientRPCService{Mock: mock.Mock{}}
+		mAPI.EXPECT().Call(ctx, "actionMethod", saveRecordDto, mock.Anything).Return(nil)
 
-		svc := storageService{api: &mApi, user: &mUser, store: &mStore}
+		svc := storageService{api: &mAPI, user: &mUser, store: &mStore}
 		err := svc.SyncServer(ctx)
 
 		require.Equal(t, err, nil)
 		mStore.AssertNumberOfCalls(t, "LoadRecords", 1)
 		mStore.AssertNumberOfCalls(t, "ClearActions", 1)
 		mUser.AssertNumberOfCalls(t, "GetUser", 1)
-		mApi.AssertNumberOfCalls(t, "Call", 1)
+		mAPI.AssertNumberOfCalls(t, "Call", 1)
 	})
 
 	t.Run("client removed actions should be synced to server", func(t *testing.T) {
@@ -86,16 +86,16 @@ func Test_storageService_SyncServer(t *testing.T) {
 
 		removeRecordDto := rpcdto.RemoveRecordRequestDto{Key: "testKeyAction", Token: "userToken"}
 
-		mApi := mocks2.ClientRpcService{Mock: mock.Mock{}}
-		mApi.EXPECT().Call(ctx, "actionMethod", removeRecordDto, mock.Anything).Return(nil)
+		mAPI := mocks2.ClientRPCService{Mock: mock.Mock{}}
+		mAPI.EXPECT().Call(ctx, "actionMethod", removeRecordDto, mock.Anything).Return(nil)
 
-		svc := storageService{api: &mApi, user: &mUser, store: &mStore}
+		svc := storageService{api: &mAPI, user: &mUser, store: &mStore}
 		err := svc.SyncServer(ctx)
 
 		require.Equal(t, err, nil)
 		mStore.AssertNumberOfCalls(t, "LoadRecords", 1)
 		mStore.AssertNumberOfCalls(t, "ClearActions", 1)
 		mUser.AssertNumberOfCalls(t, "GetUser", 1)
-		mApi.AssertNumberOfCalls(t, "Call", 1)
+		mAPI.AssertNumberOfCalls(t, "Call", 1)
 	})
 }

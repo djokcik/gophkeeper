@@ -16,14 +16,14 @@ type ClientStorageService interface {
 }
 
 type storageService struct {
-	api  ClientRpcService
+	api  ClientRPCService
 	user ClientUserService
 
 	store storage.ClientLocalStorage
 }
 
 func NewClientStorageService(
-	api ClientRpcService,
+	api ClientRPCService,
 	localStorage storage.ClientLocalStorage,
 	user ClientUserService,
 ) ClientStorageService {

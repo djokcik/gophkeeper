@@ -22,7 +22,7 @@ func TestRpcHandler_LoadRecordTextDataByKeyHandler(t *testing.T) {
 
 		var reply string
 
-		handler := &RpcHandler{auth: &mAuth, recordTextData: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordTextData: &mRecord}
 		err := handler.LoadRecordTextDataByKeyHandler(rpcdto.LoadRecordRequestDto{Key: "testKey", Token: "token"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -44,7 +44,7 @@ func TestRpcHandler_SaveRecordTextDataHandler(t *testing.T) {
 
 		var reply struct{}
 
-		handler := &RpcHandler{auth: &mAuth, recordTextData: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordTextData: &mRecord}
 		err := handler.SaveRecordTextDataHandler(rpcdto.SaveRecordRequestDto{Key: "testKey", Token: "token", Data: "testData"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -65,7 +65,7 @@ func TestRpcHandler_RemoveRecordTextDataByKeyHandler(t *testing.T) {
 
 		var reply struct{}
 
-		handler := &RpcHandler{auth: &mAuth, recordTextData: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordTextData: &mRecord}
 		err := handler.RemoveRecordTextDataByKeyHandler(rpcdto.RemoveRecordRequestDto{Key: "testKey", Token: "token"}, &reply)
 
 		require.Equal(t, err, nil)

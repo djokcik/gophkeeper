@@ -4,6 +4,7 @@ import (
 	"github.com/caarlos0/env/v6"
 	"github.com/rs/zerolog"
 	"os"
+	"time"
 )
 
 var cfg loggerConfig
@@ -13,6 +14,11 @@ type loggerConfig struct {
 }
 
 func init() {
+	zerolog.TimeFieldFormat = time.RFC3339Nano
+	zerolog.TimestampFieldName = "@timestamp"
+	zerolog.LevelFieldName = "level"
+	zerolog.MessageFieldName = "message"
+
 	err := env.Parse(&cfg)
 	if err != nil {
 		NewLogger().Fatal().Err(err).Msg("loggerConfig: error parse environment")

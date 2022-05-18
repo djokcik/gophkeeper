@@ -8,7 +8,7 @@ import (
 )
 
 func Start(_ context.Context, serviceRegistry registry.ClientServiceRegistry) {
-	client := view.NewUiClient()
+	client := view.NewUIClient()
 
 	ctr := NewUIController(serviceRegistry)
 	router := GenerateRouter(ctr)

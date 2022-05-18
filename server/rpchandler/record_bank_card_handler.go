@@ -6,7 +6,7 @@ import (
 	"github.com/djokcik/gophkeeper/pkg/logging"
 )
 
-func (h *RpcHandler) LoadRecordBankCardByKeyHandler(dto rpcdto.LoadRecordRequestDto, Reply *string) error {
+func (h *RPCHandler) LoadRecordBankCardByKeyHandler(dto rpcdto.LoadRecordRequestDto, Reply *string) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
 
@@ -28,7 +28,7 @@ func (h *RpcHandler) LoadRecordBankCardByKeyHandler(dto rpcdto.LoadRecordRequest
 	return nil
 }
 
-func (h *RpcHandler) SaveRecordBankCardHandler(dto rpcdto.SaveRecordRequestDto, Reply *struct{}) error {
+func (h *RPCHandler) SaveRecordBankCardHandler(dto rpcdto.SaveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
 
@@ -49,7 +49,7 @@ func (h *RpcHandler) SaveRecordBankCardHandler(dto rpcdto.SaveRecordRequestDto, 
 	return nil
 }
 
-func (h *RpcHandler) RemoveRecordBankCardByKeyHandler(dto rpcdto.RemoveRecordRequestDto, Reply *struct{}) error {
+func (h *RPCHandler) RemoveRecordBankCardByKeyHandler(dto rpcdto.RemoveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
 

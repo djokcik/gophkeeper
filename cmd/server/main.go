@@ -29,7 +29,7 @@ func main() {
 	}
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(rpchandler.NewRpcHandler(cfg, filestorage.NewFileStorage(cfg)))
+	rpcServer.Register(rpchandler.NewRPCHandler(cfg, filestorage.NewFileStorage(cfg)))
 
 	go func() {
 		rpcServer.Accept(conn)

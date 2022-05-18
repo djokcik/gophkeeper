@@ -39,7 +39,11 @@ func CreateApplication(ctx context.Context, t *testing.T) *Application {
 }
 
 func (a *Application) Run() {
-	a.exit <- a.Cmd.Run()
+	a.t.Logf("Start app. Envs: %+v", a.Cmd.Env)
+	err := a.Cmd.Run()
+	fmt.Println(err)
+
+	a.exit <- err
 }
 
 func (a *Application) InitClient() {

@@ -22,7 +22,7 @@ func TestRpcHandler_LoadRecordBankCardDataByKeyHandler(t *testing.T) {
 
 		var reply string
 
-		handler := &RpcHandler{auth: &mAuth, recordBankCard: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordBankCard: &mRecord}
 		err := handler.LoadRecordBankCardByKeyHandler(rpcdto.LoadRecordRequestDto{Key: "testKey", Token: "token"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -44,7 +44,7 @@ func TestRpcHandler_SaveRecordBankCardHandler(t *testing.T) {
 
 		var reply struct{}
 
-		handler := &RpcHandler{auth: &mAuth, recordBankCard: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordBankCard: &mRecord}
 		err := handler.SaveRecordBankCardHandler(rpcdto.SaveRecordRequestDto{Key: "testKey", Token: "token", Data: "testData"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -65,7 +65,7 @@ func TestRpcHandler_RemoveRecordBankCardDataByKeyHandler(t *testing.T) {
 
 		var reply struct{}
 
-		handler := &RpcHandler{auth: &mAuth, recordBankCard: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordBankCard: &mRecord}
 		err := handler.RemoveRecordBankCardByKeyHandler(rpcdto.RemoveRecordRequestDto{Key: "testKey", Token: "token"}, &reply)
 
 		require.Equal(t, err, nil)

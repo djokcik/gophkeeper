@@ -61,8 +61,6 @@ func (p RecordPersonalDataLoadPage) OnActivated(fn func(b *tui.Button)) {
 			data.URL,
 			data.Comment,
 		))
-
-		return
 	})
 }
 

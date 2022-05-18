@@ -25,6 +25,5 @@ services:
       - /bin/bash
       - -c
       - |
-        chmod +x /app/bin/app
         go mod download
         go test -v ./... && touch ./e2e_success

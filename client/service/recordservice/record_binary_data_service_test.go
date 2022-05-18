@@ -18,10 +18,10 @@ func Test_recordBinaryDataService_RemoveRecordByKey(t *testing.T) {
 		mUser := mocks.ClientUserService{Mock: mock.Mock{}}
 		mUser.EXPECT().GetUser().Return(models.ClientUser{Token: "userToken"})
 
-		mApi := mocks.ClientRpcService{Mock: mock.Mock{}}
-		mApi.EXPECT().RemoveRecordBinaryDataByKey(ctx, "userToken", "testKey").Return(nil)
+		mAPI := mocks.ClientRPCService{Mock: mock.Mock{}}
+		mAPI.EXPECT().RemoveRecordBinaryDataByKey(ctx, "userToken", "testKey").Return(nil)
 
-		svc := recordBinaryDataService{user: &mUser, api: &mApi}
+		svc := recordBinaryDataService{user: &mUser, api: &mAPI}
 		err := svc.RemoveRecordByKey(ctx, "testKey")
 
 		require.Equal(t, err, nil)
@@ -37,8 +37,8 @@ func Test_recordBinaryDataService_LoadRecordByKey(t *testing.T) {
 		mUser := mocks.ClientUserService{Mock: mock.Mock{}}
 		mUser.EXPECT().GetUser().Return(user)
 
-		mApi := mocks.ClientRpcService{Mock: mock.Mock{}}
-		mApi.EXPECT().LoadRecordBinaryDataByKey(ctx, "userToken", "testKey").Return("testData", nil)
+		mAPI := mocks.ClientRPCService{Mock: mock.Mock{}}
+		mAPI.EXPECT().LoadRecordBinaryDataByKey(ctx, "userToken", "testKey").Return("testData", nil)
 
 		mRecord := mocks2.ClientRecordService{Mock: mock.Mock{}}
 		mRecord.EXPECT().LoadRecordByKey(ctx, user, mock.Anything, mock.Anything).
@@ -51,7 +51,7 @@ func Test_recordBinaryDataService_LoadRecordByKey(t *testing.T) {
 				require.Equal(t, data, "testData")
 			}).Return(nil)
 
-		svc := recordBinaryDataService{api: &mApi, record: &mRecord, user: &mUser}
+		svc := recordBinaryDataService{api: &mAPI, record: &mRecord, user: &mUser}
 		binaryData, err := svc.LoadRecordByKey(ctx, "testKey")
 
 		require.Equal(t, err, nil)
@@ -69,8 +69,8 @@ func Test_recordBinaryDataService_SaveRecord(t *testing.T) {
 		mUser := mocks.ClientUserService{Mock: mock.Mock{}}
 		mUser.EXPECT().GetUser().Return(user)
 
-		mApi := mocks.ClientRpcService{Mock: mock.Mock{}}
-		mApi.EXPECT().SaveRecordBinaryData(ctx, "userToken", "testKey", "encryptedData").Return(nil)
+		mAPI := mocks.ClientRPCService{Mock: mock.Mock{}}
+		mAPI.EXPECT().SaveRecordBinaryData(ctx, "userToken", "testKey", "encryptedData").Return(nil)
 
 		mRecord := mocks2.ClientRecordService{Mock: mock.Mock{}}
 		mRecord.EXPECT().SaveRecord(ctx, user, data, mock.Anything).
@@ -78,7 +78,7 @@ func Test_recordBinaryDataService_SaveRecord(t *testing.T) {
 				updateFn("encryptedData")
 			}).Return(nil)
 
-		service := recordBinaryDataService{api: &mApi, user: &mUser, record: &mRecord}
+		service := recordBinaryDataService{api: &mAPI, user: &mUser, record: &mRecord}
 		err := service.SaveRecord(ctx, "testKey", clientmodels.RecordBinaryData{Data: []byte("testText")})
 
 		require.Equal(t, err, nil)

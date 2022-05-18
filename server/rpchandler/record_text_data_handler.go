@@ -6,7 +6,7 @@ import (
 	"github.com/djokcik/gophkeeper/pkg/logging"
 )
 
-func (h *RpcHandler) LoadRecordTextDataByKeyHandler(dto rpcdto.LoadRecordRequestDto, Reply *string) error {
+func (h *RPCHandler) LoadRecordTextDataByKeyHandler(dto rpcdto.LoadRecordRequestDto, Reply *string) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
 
@@ -26,7 +26,7 @@ func (h *RpcHandler) LoadRecordTextDataByKeyHandler(dto rpcdto.LoadRecordRequest
 	return nil
 }
 
-func (h *RpcHandler) SaveRecordTextDataHandler(dto rpcdto.SaveRecordRequestDto, Reply *struct{}) error {
+func (h *RPCHandler) SaveRecordTextDataHandler(dto rpcdto.SaveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
 
@@ -47,7 +47,7 @@ func (h *RpcHandler) SaveRecordTextDataHandler(dto rpcdto.SaveRecordRequestDto, 
 	return nil
 }
 
-func (h *RpcHandler) RemoveRecordTextDataByKeyHandler(dto rpcdto.RemoveRecordRequestDto, Reply *struct{}) error {
+func (h *RPCHandler) RemoveRecordTextDataByKeyHandler(dto rpcdto.RemoveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
 

@@ -22,7 +22,7 @@ func TestRpcHandler_LoadRecordBinaryDataByKeyHandler(t *testing.T) {
 
 		var reply string
 
-		handler := &RpcHandler{auth: &mAuth, recordBinaryData: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordBinaryData: &mRecord}
 		err := handler.LoadRecordBinaryDataByKeyHandler(rpcdto.LoadRecordRequestDto{Key: "testKey", Token: "token"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -44,7 +44,7 @@ func TestRpcHandler_SaveRecordBinaryDataHandler(t *testing.T) {
 
 		var reply struct{}
 
-		handler := &RpcHandler{auth: &mAuth, recordBinaryData: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordBinaryData: &mRecord}
 		err := handler.SaveRecordBinaryDataHandler(rpcdto.SaveRecordRequestDto{Key: "testKey", Token: "token", Data: "testData"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -65,7 +65,7 @@ func TestRpcHandler_RemoveRecordBinaryDataByKeyHandler(t *testing.T) {
 
 		var reply struct{}
 
-		handler := &RpcHandler{auth: &mAuth, recordBinaryData: &mRecord}
+		handler := &RPCHandler{auth: &mAuth, recordBinaryData: &mRecord}
 		err := handler.RemoveRecordBinaryDataByKeyHandler(rpcdto.RemoveRecordRequestDto{Key: "testKey", Token: "token"}, &reply)
 
 		require.Equal(t, err, nil)
