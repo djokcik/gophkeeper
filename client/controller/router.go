@@ -5,8 +5,10 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// Route contains navigations by buttons click
 type Route map[*tui.Button]view.Page
 
+// GenerateRouter generate Route
 func GenerateRouter(ctr *UIController) Route {
 	m := make(Route)
 	m[ctr.RegisterLoginPage.Login] = ctr.MainPage

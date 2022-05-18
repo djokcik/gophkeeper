@@ -31,6 +31,8 @@ const (
 )
 
 //go:generate mockery --name=FileBinder --with-expecter
+
+// FileBinder provides methods for file binder
 type FileBinder interface {
 	CheckFileExist(ctx context.Context, username string) (bool, error)
 	SaveStorage(ctx context.Context, data models.StorageData) error
@@ -53,6 +55,7 @@ func NewFileCryptoBinder(secretKey string, baseDir string) FileBinder {
 	}
 }
 
+// CheckFileExist returns true if file exists else false
 func (s fileCryptoBinder) CheckFileExist(ctx context.Context, username string) (bool, error) {
 	_, err := os.Stat(s.GetFilename(ctx, username))
 	if err != nil {
@@ -66,6 +69,7 @@ func (s fileCryptoBinder) CheckFileExist(ctx context.Context, username string) (
 	return true, nil
 }
 
+// ReadStorage returns storageData by username
 func (s fileCryptoBinder) ReadStorage(ctx context.Context, username string) (models.StorageData, error) {
 	filename := s.GetFilename(ctx, username)
 
@@ -110,6 +114,7 @@ func (s fileCryptoBinder) ReadStorage(ctx context.Context, username string) (mod
 	return data, nil
 }
 
+// SaveStorage is saved data to DB
 func (s fileCryptoBinder) SaveStorage(ctx context.Context, data models.StorageData) error {
 	filename := s.GetFilename(ctx, data.User.Username)
 
@@ -146,6 +151,7 @@ func (s fileCryptoBinder) SaveStorage(ctx context.Context, data models.StorageDa
 	return nil
 }
 
+// GetFilename return filename by username
 func (s fileCryptoBinder) GetFilename(_ context.Context, username string) string {
 	return fmt.Sprintf("%s/%s.gkdb", s.baseDir, s.crypto.GenerateHash(username))
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// SavePage is main page widget for Save all records
 type SavePage struct {
 	view.PageHooks
 	Root *tui.Box
@@ -17,14 +18,17 @@ type SavePage struct {
 	Back *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p SavePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.LoginPassword, p.TextButton, p.BinButton, p.CardButton, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p SavePage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p SavePage) OnActivated(fn func(b *tui.Button)) {
 	buttons := []*tui.Button{p.LoginPassword, p.TextButton, p.BinButton, p.CardButton, p.Back}
 

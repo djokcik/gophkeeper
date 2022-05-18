@@ -6,6 +6,7 @@ import (
 	"github.com/djokcik/gophkeeper/pkg/logging"
 )
 
+// LoadRecordBinaryDataByKeyHandler handler for load record binary data
 func (h *RPCHandler) LoadRecordBinaryDataByKeyHandler(dto rpcdto.LoadRecordRequestDto, Reply *string) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
@@ -26,6 +27,7 @@ func (h *RPCHandler) LoadRecordBinaryDataByKeyHandler(dto rpcdto.LoadRecordReque
 	return nil
 }
 
+// SaveRecordBinaryDataHandler handler for save record binary data
 func (h *RPCHandler) SaveRecordBinaryDataHandler(dto rpcdto.SaveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
@@ -47,6 +49,7 @@ func (h *RPCHandler) SaveRecordBinaryDataHandler(dto rpcdto.SaveRecordRequestDto
 	return nil
 }
 
+// RemoveRecordBinaryDataByKeyHandler handler for remove record binary data
 func (h *RPCHandler) RemoveRecordBinaryDataByKeyHandler(dto rpcdto.RemoveRecordRequestDto, Reply *struct{}) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())

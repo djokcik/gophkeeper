@@ -1,3 +1,4 @@
+// Package controller is control all client move pages
 package controller
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/djokcik/gophkeeper/client/view/savepage"
 )
 
+// UIController contains instances of all pages
 type UIController struct {
 	RegisterLoginPage *view.AuthPage
 	MainPage          *view.MainPage

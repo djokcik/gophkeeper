@@ -69,7 +69,6 @@ jobs:
       - name: Setup autotest binary
         run: |
           chmod -R +x $GITHUB_WORKSPACE/bin_server/app
-          ls -la bin_server
 
       - name: Test
         run: |

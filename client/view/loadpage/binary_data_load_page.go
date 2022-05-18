@@ -10,6 +10,7 @@ import (
 	"os"
 )
 
+// BinaryDataLoadPage is widget for Load BinaryData
 type BinaryDataLoadPage struct {
 	view.PageHooks
 
@@ -25,14 +26,17 @@ type BinaryDataLoadPage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p BinaryDataLoadPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.pathToFileField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p BinaryDataLoadPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p BinaryDataLoadPage) OnActivated(fn func(b *tui.Button)) {
 	service := p.serviceRegistry.GetRecordBinaryDataService()
 

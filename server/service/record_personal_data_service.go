@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=ServerRecordPersonalDataService --with-expecter
+
+// ServerRecordPersonalDataService provide methods for control PersonalData
 type ServerRecordPersonalDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)
@@ -27,6 +29,7 @@ func NewServerRecordPersonalDataService(cfg server.Config, record ServerRecordSe
 	}
 }
 
+// Save is save record personal data
 func (s recordPersonalDataService) Save(ctx context.Context, key string, username string, data string) error {
 	return s.record.Save(ctx, username, func(store *models.StorageData) error {
 		if store.PersonalData == nil {
@@ -39,12 +42,14 @@ func (s recordPersonalDataService) Save(ctx context.Context, key string, usernam
 	})
 }
 
+// Load is load record personal data
 func (s recordPersonalDataService) Load(ctx context.Context, key string, username string) (string, error) {
 	return s.record.Load(ctx, username, func(store models.StorageData) string {
 		return store.PersonalData[key]
 	})
 }
 
+// Remove is remove record personal data
 func (s recordPersonalDataService) Remove(ctx context.Context, key string, username string) error {
 	return s.record.Remove(ctx, username, func(store *models.StorageData) error {
 		if store.PersonalData == nil {

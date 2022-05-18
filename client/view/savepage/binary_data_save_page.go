@@ -11,6 +11,7 @@ import (
 	"os"
 )
 
+// BinaryDataSavePage is widget for Save BinaryData
 type BinaryDataSavePage struct {
 	view.PageHooks
 
@@ -26,14 +27,17 @@ type BinaryDataSavePage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p BinaryDataSavePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.pathToFileField, p.commentField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p BinaryDataSavePage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p BinaryDataSavePage) OnActivated(fn func(b *tui.Button)) {
 	service := p.serviceRegistry.GetRecordBinaryDataService()
 

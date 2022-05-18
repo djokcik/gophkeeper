@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=ActionFileStoreReader --with-expecter
+
+// ActionFileStoreReader provides methods for read actions
 type ActionFileStoreReader interface {
 	ReadActions() (clientmodels.StoreActions, error)
 	Close() error
@@ -31,6 +33,7 @@ func newActionFileStoreReader(filename string) (ActionFileStoreReader, error) {
 	}, nil
 }
 
+// ReadActions read list of actions
 func (r *actionFileStoreReader) ReadActions() (clientmodels.StoreActions, error) {
 	_, err := r.file.Seek(0, 0)
 	if err != nil {
@@ -52,6 +55,8 @@ func (r *actionFileStoreReader) Close() error {
 }
 
 //go:generate mockery --name=ActionFileStoreWriter --with-expecter
+
+// ActionFileStoreWriter provides methods for write actions
 type ActionFileStoreWriter interface {
 	SaveActions(actions clientmodels.StoreActions) error
 	Close() error
@@ -75,6 +80,7 @@ func newActionFileStoreWriter(filename string) (ActionFileStoreWriter, error) {
 	}, nil
 }
 
+// SaveActions save to file list of actions
 func (w *actionFileStoreWriter) SaveActions(actions clientmodels.StoreActions) error {
 	err := w.file.Truncate(0)
 	if err != nil {

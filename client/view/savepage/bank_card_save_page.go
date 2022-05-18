@@ -10,6 +10,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// BankCardSavePage is widget for Save BankCard
 type BankCardSavePage struct {
 	view.PageHooks
 
@@ -27,14 +28,17 @@ type BankCardSavePage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p BankCardSavePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.cardNumberField, p.yearField, p.cvvField, p.comment, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p BankCardSavePage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p BankCardSavePage) OnActivated(fn func(b *tui.Button)) {
 	recordBankCardService := p.serviceRegistry.GetRecordBankCardService()
 

@@ -7,6 +7,8 @@ import (
 )
 
 //go:generate mockery --name=Storage --with-expecter
+
+// Storage is provides methods for DB
 type Storage interface {
 	CreateUser(ctx context.Context, user models.User) error
 	UserByUsername(ctx context.Context, username string) (models.User, error)

@@ -8,6 +8,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// MainPage is widget for MainPage
 type MainPage struct {
 	PageHooks
 	serviceRegistry registry.ClientServiceRegistry
@@ -24,14 +25,17 @@ type MainPage struct {
 	status       *tui.StatusBar
 }
 
+// GetFocusChain returns list of focused widgets
 func (p MainPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.SaveData, p.LoadData, p.RemoveData, p.SyncData}
 }
 
+// GetRoot return Root winget element
 func (p MainPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p MainPage) OnActivated(fn func(*tui.Button)) {
 	for _, button := range []*tui.Button{p.SaveData, p.LoadData, p.RemoveData} {
 		button.OnActivated(func(b *tui.Button) { fn(b) })
@@ -65,6 +69,7 @@ func (p MainPage) OnActivated(fn func(*tui.Button)) {
 	})
 }
 
+// Before call method before start widget
 func (p *MainPage) Before() {
 	user := p.serviceRegistry.GetUserService().GetUser()
 	if user.Token == "" {

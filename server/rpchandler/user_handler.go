@@ -9,6 +9,7 @@ import (
 	"github.com/djokcik/gophkeeper/server/storage"
 )
 
+// SignInHandler handler for login user
 func (h *RPCHandler) SignInHandler(loginDto rpcdto.LoginDto, Reply *string) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())
@@ -31,6 +32,7 @@ func (h *RPCHandler) SignInHandler(loginDto rpcdto.LoginDto, Reply *string) erro
 	return nil
 }
 
+// RegisterHandler handler for register user
 func (h *RPCHandler) RegisterHandler(registerDto rpcdto.RegisterDto, Reply *string) error {
 	ctx := context.Background()
 	ctx = logging.SetCtxLogger(ctx, h.Log(ctx).With().Logger())

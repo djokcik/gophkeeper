@@ -16,6 +16,7 @@ var (
 	CardDataItem     = "Данные банковских карт"
 )
 
+// RemovePage is widget for remove all types records
 type RemovePage struct {
 	view.PageHooks
 	serviceRegistry registry.ClientServiceRegistry
@@ -31,10 +32,12 @@ type RemovePage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p RemovePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.list, p.Remove, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p RemovePage) GetRoot() tui.Widget {
 	return p.Root
 }

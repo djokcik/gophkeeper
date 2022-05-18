@@ -10,6 +10,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// RecordPersonalDataSavePage is widget for Save PersonalData
 type RecordPersonalDataSavePage struct {
 	view.PageHooks
 	serviceRegistry registry.ClientServiceRegistry
@@ -27,14 +28,17 @@ type RecordPersonalDataSavePage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p RecordPersonalDataSavePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.loginField, p.passwordField, p.urlField, p.commentField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p RecordPersonalDataSavePage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p RecordPersonalDataSavePage) OnActivated(fn func(b *tui.Button)) {
 	recordPersonalDataService := p.serviceRegistry.GetRecordPersonalDataService()
 

@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=ServerRecordBinaryDataService  --with-expecter
+
+// ServerRecordBinaryDataService provide methods for control BinaryData
 type ServerRecordBinaryDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)
@@ -27,6 +29,7 @@ func NewServerRecordBinaryDataService(cfg server.Config, record ServerRecordServ
 	}
 }
 
+// Save is save record binary data
 func (s recordBinaryDataService) Save(ctx context.Context, key string, username string, data string) error {
 	return s.record.Save(ctx, username, func(store *models.StorageData) error {
 		if store.BinaryData == nil {
@@ -39,12 +42,14 @@ func (s recordBinaryDataService) Save(ctx context.Context, key string, username 
 	})
 }
 
+// Load is load record binary data
 func (s recordBinaryDataService) Load(ctx context.Context, key string, username string) (string, error) {
 	return s.record.Load(ctx, username, func(store models.StorageData) string {
 		return store.BinaryData[key]
 	})
 }
 
+// Remove is remove record binary data
 func (s recordBinaryDataService) Remove(ctx context.Context, key string, username string) error {
 	return s.record.Remove(ctx, username, func(store *models.StorageData) error {
 		if store.BinaryData == nil {

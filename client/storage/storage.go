@@ -10,6 +10,8 @@ import (
 )
 
 //go:generate mockery --name=ClientLocalStorage --with-expecter
+
+// ClientLocalStorage provides methods for control client LocalStorage
 type ClientLocalStorage interface {
 	ClearActions(ctx context.Context) error
 	SaveRecord(ctx context.Context, key string, data string, method string) error
@@ -59,14 +61,17 @@ func NewClientLocalStorage(ctx context.Context) ClientLocalStorage {
 	return s
 }
 
+// ClearActions clear list of actions
 func (s localStorage) ClearActions(_ context.Context) error {
 	return s.FileWriter.SaveActions(clientmodels.StoreActions{})
 }
 
+// LoadRecords returns list of records
 func (s localStorage) LoadRecords(_ context.Context) ([]clientmodels.RecordFileLine, error) {
 	return s.FileReader.ReadActions()
 }
 
+// RemoveRecord add new record with type remove
 func (s localStorage) RemoveRecord(ctx context.Context, key string, method string) error {
 	fileLine := clientmodels.RecordFileLine{
 		Key:        key,
@@ -91,6 +96,7 @@ func (s localStorage) RemoveRecord(ctx context.Context, key string, method strin
 	return nil
 }
 
+// SaveRecord add new record with type save
 func (s localStorage) SaveRecord(ctx context.Context, key string, data string, method string) error {
 	fileLine := clientmodels.RecordFileLine{
 		Data:       data,

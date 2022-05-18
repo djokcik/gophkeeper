@@ -10,6 +10,8 @@ import (
 )
 
 //go:generate mockery --name=SSLConfigService
+
+// SSLConfigService provide methods for ssl
 type SSLConfigService interface {
 	LoadClientCertificate(cfg client.Config) (*tls.Config, error)
 	LoadServerCertificate(cfg server.Config) (*tls.Config, error)
@@ -22,6 +24,7 @@ func NewSSLConfigService() SSLConfigService {
 	return &sslConfigService{}
 }
 
+// LoadClientCertificate returns client tls config by path
 func (s sslConfigService) LoadClientCertificate(cfg client.Config) (*tls.Config, error) {
 	log := logging.NewFileLogger()
 
@@ -36,6 +39,7 @@ func (s sslConfigService) LoadClientCertificate(cfg client.Config) (*tls.Config,
 	return &tls.Config{RootCAs: certPool}, nil
 }
 
+// LoadServerCertificate returns server tls config by path
 func (s sslConfigService) LoadServerCertificate(cfg server.Config) (*tls.Config, error) {
 	cert, err := tls.LoadX509KeyPair(cfg.SSLCertPath, cfg.SSLKeyPath)
 	if err != nil {
