@@ -71,7 +71,7 @@ func (s recordBinaryDataService) SaveRecord(ctx context.Context, key string, dat
 
 func (s recordBinaryDataService) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxFileLogger(ctx)
-	logger = logger.With().Str(logging.ServiceKey, "ServerRecordBinaryDataService").Logger()
+	logger = logger.With().Str(logging.ServiceKey, "ClientRecordBinaryDataService").Logger()
 
 	return &logger
 }

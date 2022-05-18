@@ -71,7 +71,7 @@ func (s recordPersonalDataService) SaveRecord(ctx context.Context, key string, d
 
 func (s recordPersonalDataService) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxFileLogger(ctx)
-	logger = logger.With().Str(logging.ServiceKey, "ServerRecordPersonalDataService").Logger()
+	logger = logger.With().Str(logging.ServiceKey, "ClientRecordPersonalDataService").Logger()
 
 	return &logger
 }

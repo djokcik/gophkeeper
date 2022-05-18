@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/djokcik/gophkeeper/models"
-	"github.com/djokcik/gophkeeper/pkg/common"
 	"github.com/djokcik/gophkeeper/pkg/logging"
 	"github.com/rs/zerolog"
 )
@@ -19,14 +18,12 @@ type ClientAuthService interface {
 var _ ClientAuthService = (*authService)(nil)
 
 type authService struct {
-	api    ClientRPCService
-	crypto common.CryptoService
+	api ClientRPCService
 }
 
-func NewClientAuthService(api ClientRPCService, crypto common.CryptoService) ClientAuthService {
+func NewClientAuthService(api ClientRPCService) ClientAuthService {
 	return &authService{
-		api:    api,
-		crypto: crypto,
+		api: api,
 	}
 }
 
