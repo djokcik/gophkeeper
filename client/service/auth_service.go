@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=ClientAuthService
+
+// ClientAuthService provides methods for authorise
 type ClientAuthService interface {
 	SignIn(ctx context.Context, username string, password string) (models.ClientUser, error)
 	Register(ctx context.Context, username string, password string) (models.ClientUser, error)
@@ -27,6 +29,7 @@ func NewClientAuthService(api ClientRPCService) ClientAuthService {
 	}
 }
 
+// SignIn user using username and password
 func (s authService) SignIn(ctx context.Context, username string, password string) (models.ClientUser, error) {
 	token, err := s.api.Login(ctx, username, password)
 	if err != nil && !errors.Is(err, ErrAnonymousUser) {
@@ -37,6 +40,7 @@ func (s authService) SignIn(ctx context.Context, username string, password strin
 	return models.ClientUser{Username: username, Password: password, Token: token}, nil
 }
 
+// Register user using username and password
 func (s authService) Register(ctx context.Context, username string, password string) (models.ClientUser, error) {
 	token, err := s.api.Register(ctx, username, password)
 	if err != nil && !errors.Is(err, ErrAnonymousUser) {

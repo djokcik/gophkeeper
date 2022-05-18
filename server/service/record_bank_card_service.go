@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=ServerRecordBankCardDataService  --with-expecter
+
+// ServerRecordBankCardDataService provide methods for control BankCardData
 type ServerRecordBankCardDataService interface {
 	Save(ctx context.Context, key string, username string, data string) error
 	Load(ctx context.Context, key string, username string) (string, error)
@@ -27,6 +29,7 @@ func NewServerRecordBankCardDataService(cfg server.Config, record ServerRecordSe
 	}
 }
 
+// Save is save record bank card data
 func (s recordBankCardDataService) Save(ctx context.Context, key string, username string, data string) error {
 	return s.record.Save(ctx, username, func(store *models.StorageData) error {
 		if store.BankCardData == nil {
@@ -39,12 +42,14 @@ func (s recordBankCardDataService) Save(ctx context.Context, key string, usernam
 	})
 }
 
+// Load is load record bank card data
 func (s recordBankCardDataService) Load(ctx context.Context, key string, username string) (string, error) {
 	return s.record.Load(ctx, username, func(store models.StorageData) string {
 		return store.BankCardData[key]
 	})
 }
 
+// Remove is remove record bank card data
 func (s recordBankCardDataService) Remove(ctx context.Context, key string, username string) error {
 	return s.record.Remove(ctx, username, func(store *models.StorageData) error {
 		if store.BankCardData == nil {

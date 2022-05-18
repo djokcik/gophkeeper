@@ -15,18 +15,22 @@ func NewFileStorage(cfg server.Config) storage.Storage {
 	}
 }
 
+// fileStorage is implements Storage
 type fileStorage struct {
 	bind FileBinder
 }
 
+// Read returns storageData by username
 func (s fileStorage) Read(ctx context.Context, username string) (models.StorageData, error) {
 	return s.bind.ReadStorage(ctx, username)
 }
 
+// Save is saved storageData in DB
 func (s fileStorage) Save(ctx context.Context, data models.StorageData) error {
 	return s.bind.SaveStorage(ctx, data)
 }
 
+// UserByUsername returns user by username
 func (s fileStorage) UserByUsername(ctx context.Context, username string) (models.User, error) {
 	fileExists, err := s.bind.CheckFileExist(ctx, username)
 	if err != nil {
@@ -48,6 +52,7 @@ func (s fileStorage) UserByUsername(ctx context.Context, username string) (model
 	return data.User, nil
 }
 
+// CreateUser is created user in DB
 func (s fileStorage) CreateUser(ctx context.Context, user models.User) error {
 	storageData := models.StorageData{User: user}
 

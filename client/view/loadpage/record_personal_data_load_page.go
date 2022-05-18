@@ -9,6 +9,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// RecordPersonalDataLoadPage is widget for Load PersonalData
 type RecordPersonalDataLoadPage struct {
 	view.PageHooks
 	serviceRegistry registry.ClientServiceRegistry
@@ -23,14 +24,17 @@ type RecordPersonalDataLoadPage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p RecordPersonalDataLoadPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p RecordPersonalDataLoadPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p RecordPersonalDataLoadPage) OnActivated(fn func(b *tui.Button)) {
 	service := p.serviceRegistry.GetRecordPersonalDataService()
 

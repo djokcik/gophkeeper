@@ -9,6 +9,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// TextDataLoadPage is widget for Load TextData
 type TextDataLoadPage struct {
 	view.PageHooks
 
@@ -23,14 +24,17 @@ type TextDataLoadPage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p TextDataLoadPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p TextDataLoadPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p TextDataLoadPage) OnActivated(fn func(b *tui.Button)) {
 	service := p.serviceRegistry.GetRecordTextDataService()
 

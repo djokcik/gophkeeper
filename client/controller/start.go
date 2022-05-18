@@ -7,6 +7,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// Start starts terminal user interface
 func Start(_ context.Context, serviceRegistry registry.ClientServiceRegistry) {
 	client := view.NewUIClient()
 

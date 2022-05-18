@@ -6,10 +6,12 @@ var (
 )
 
 type (
+	// StoreActions are actions with local storage
 	StoreActions []RecordFileLine
 
 	RecordActionType string
 
+	// RecordFileLine is struct for store did offline
 	RecordFileLine struct {
 		Method     string           `json:"method"`
 		ActionType RecordActionType `json:"action_type"`

@@ -10,6 +10,8 @@ import (
 )
 
 //go:generate mockery --name=AuthService --with-expecter
+
+// AuthService provide operations with token
 type AuthService interface {
 	GetUserByToken(ctx context.Context, token string) (models.User, error)
 }
@@ -28,6 +30,7 @@ func NewAuthService(store storage.Storage, jwtSecretKey string, userUtils AuthUt
 	}
 }
 
+// GetUserByToken returns user by token
 func (s authService) GetUserByToken(ctx context.Context, token string) (models.User, error) {
 	if token == "" {
 		s.Log(ctx).Warn().Msg("GetUserByToken: token is empty")

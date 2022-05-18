@@ -9,6 +9,7 @@ import (
 	"github.com/djokcik/gophkeeper/pkg/common"
 )
 
+// ClientServiceRegistry is registered all services
 type ClientServiceRegistry interface {
 	GetCryptoService() common.CryptoService
 	GetSSLConfigService() common.SSLConfigService
@@ -67,42 +68,52 @@ func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServ
 	}
 }
 
+// GetRecordBankCardService returns RecordBankCardService
 func (r clientServiceRegistry) GetRecordBankCardService() recordservice.RecordBankCardService {
 	return r.recordBankCardService
 }
 
+// GetAPIService returns ClientRPCService
 func (r clientServiceRegistry) GetAPIService() service.ClientRPCService {
 	return r.apiService
 }
 
+// GetStorageService returns ClientStorageService
 func (r clientServiceRegistry) GetStorageService() service.ClientStorageService {
 	return r.storageService
 }
 
+// GetCryptoService returns CryptoService
 func (r clientServiceRegistry) GetCryptoService() common.CryptoService {
 	return r.cryptoService
 }
 
+// GetSSLConfigService returns SSLConfigService
 func (r clientServiceRegistry) GetSSLConfigService() common.SSLConfigService {
 	return r.sslConfigService
 }
 
+// GetAuthService returns ClientAuthService
 func (r clientServiceRegistry) GetAuthService() service.ClientAuthService {
 	return r.authService
 }
 
+// GetUserService returns ClientUserService
 func (r clientServiceRegistry) GetUserService() service.ClientUserService {
 	return r.userService
 }
 
+// GetRecordPersonalDataService returns RecordPersonalDataService
 func (r clientServiceRegistry) GetRecordPersonalDataService() recordservice.RecordPersonalDataService {
 	return r.recordPersonalDataService
 }
 
+// GetRecordTextDataService returns RecordTextDataService
 func (r clientServiceRegistry) GetRecordTextDataService() recordservice.RecordTextDataService {
 	return r.recordTextDataService
 }
 
+// GetRecordBinaryDataService returns RecordBinaryDataService
 func (r clientServiceRegistry) GetRecordBinaryDataService() recordservice.RecordBinaryDataService {
 	return r.recordBinaryDataService
 }

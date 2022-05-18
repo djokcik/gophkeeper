@@ -5,6 +5,8 @@ import (
 )
 
 //go:generate mockery --name=ClientUserService --with-expecter
+
+// ClientUserService provides methods for save and get users
 type ClientUserService interface {
 	GetUser() models.ClientUser
 	SaveUser(user models.ClientUser) error
@@ -17,10 +19,12 @@ type userService struct {
 	user models.ClientUser
 }
 
+// GetUser returns user
 func (s userService) GetUser() models.ClientUser {
 	return s.user
 }
 
+// SaveUser save user in memory
 func (s *userService) SaveUser(user models.ClientUser) error {
 	s.user = user
 	return nil

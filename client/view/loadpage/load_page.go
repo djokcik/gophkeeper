@@ -5,6 +5,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// LoadPage is main page for navigate load Data
 type LoadPage struct {
 	view.PageHooks
 	Root *tui.Box
@@ -17,14 +18,17 @@ type LoadPage struct {
 	Back *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p LoadPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.LoginPassword, p.TextButton, p.BinButton, p.CardButton, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p LoadPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p LoadPage) OnActivated(fn func(b *tui.Button)) {
 	buttons := []*tui.Button{p.LoginPassword, p.TextButton, p.BinButton, p.CardButton, p.Back}
 

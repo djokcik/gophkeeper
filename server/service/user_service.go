@@ -13,6 +13,8 @@ import (
 )
 
 //go:generate mockery --name=ServerUserService  --with-expecter
+
+// ServerUserService provide methods for control user
 type ServerUserService interface {
 	Authenticate(ctx context.Context, login string, password string) (string, error)
 	CreateUser(ctx context.Context, username string, password string) error
@@ -35,6 +37,7 @@ func NewAuthService(cfg server.Config, storage storage.Storage, auth common.Auth
 	}
 }
 
+// Authenticate generates user token by login and password
 func (u userService) Authenticate(ctx context.Context, login string, password string) (string, error) {
 	user, err := u.GetUserByUsername(ctx, login)
 	if err != nil {
@@ -63,6 +66,7 @@ func (u userService) Authenticate(ctx context.Context, login string, password st
 	return token, err
 }
 
+// CreateUser create user by login and password
 func (u userService) CreateUser(ctx context.Context, username string, password string) error {
 	user := models.User{Username: username, Password: password}
 	err := user.Validate()
@@ -91,6 +95,7 @@ func (u userService) CreateUser(ctx context.Context, username string, password s
 	return nil
 }
 
+// GetUserByUsername returns user by username
 func (u userService) GetUserByUsername(ctx context.Context, username string) (models.User, error) {
 	user, err := u.repo.UserByUsername(ctx, username)
 	if err != nil {
@@ -100,6 +105,7 @@ func (u userService) GetUserByUsername(ctx context.Context, username string) (mo
 	return user, nil
 }
 
+// GenerateToken returns token by user
 func (u userService) GenerateToken(ctx context.Context, user models.User) (string, error) {
 	token, err := u.auth.CreateToken(u.cfg.JWTSecretKey, user.Username)
 	if err != nil {

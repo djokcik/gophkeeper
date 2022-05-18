@@ -10,6 +10,8 @@ import (
 )
 
 //go:generate mockery --name=ClientStorageService --with-expecter
+
+// ClientStorageService provides methods for save data in clients
 type ClientStorageService interface {
 	LoadRecords(ctx context.Context) ([]clientmodels.RecordFileLine, error)
 	SyncServer(ctx context.Context) error
@@ -34,6 +36,7 @@ func NewClientStorageService(
 	}
 }
 
+// SyncServer load records and try to send to server
 func (s storageService) SyncServer(ctx context.Context) error {
 	actions, err := s.LoadRecords(ctx)
 	if err != nil {
@@ -82,6 +85,7 @@ func (s storageService) SyncServer(ctx context.Context) error {
 	return nil
 }
 
+// LoadRecords returns records
 func (s storageService) LoadRecords(ctx context.Context) ([]clientmodels.RecordFileLine, error) {
 	return s.store.LoadRecords(ctx)
 }

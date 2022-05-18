@@ -9,6 +9,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// BankCardLoadPage is widget for Load BankCard
 type BankCardLoadPage struct {
 	view.PageHooks
 
@@ -23,14 +24,17 @@ type BankCardLoadPage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p BankCardLoadPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p BankCardLoadPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p BankCardLoadPage) OnActivated(fn func(b *tui.Button)) {
 	service := p.serviceRegistry.GetRecordBankCardService()
 

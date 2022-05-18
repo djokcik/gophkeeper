@@ -7,6 +7,7 @@ import (
 	"github.com/djokcik/gophkeeper/server/storage"
 )
 
+// ServerServiceRegistry is registered all server services
 type ServerServiceRegistry interface {
 	GetUserService() service.ServerUserService
 	GetKeyLockService() service.KeyLockService
@@ -41,26 +42,32 @@ func NewServerServiceRegistry(cfg server.Config, store storage.Storage, auth com
 	}
 }
 
+// GetUserService returns ServerUserService
 func (r serviceRegistry) GetUserService() service.ServerUserService {
 	return r.user
 }
 
+// GetKeyLockService returns KeyLockService
 func (r serviceRegistry) GetKeyLockService() service.KeyLockService {
 	return r.keyLock
 }
 
+// GetRecordPersonalDataService returns ServerRecordPersonalDataService
 func (r serviceRegistry) GetRecordPersonalDataService() service.ServerRecordPersonalDataService {
 	return r.recordPersonalData
 }
 
+// GetRecordBankCardService returns ServerRecordBankCardDataService
 func (r serviceRegistry) GetRecordBankCardService() service.ServerRecordBankCardDataService {
 	return r.recordBankCard
 }
 
+// GetRecordTextDataService returns ServerRecordTextDataService
 func (r serviceRegistry) GetRecordTextDataService() service.ServerRecordTextDataService {
 	return r.recordTextData
 }
 
+// GetRecordBinaryDataService returns ServerRecordBinaryDataService
 func (r serviceRegistry) GetRecordBinaryDataService() service.ServerRecordBinaryDataService {
 	return r.recordBinaryData
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// AuthPage is widget for authorization page
 type AuthPage struct {
 	PageHooks
 	serviceRegistry registry.ClientServiceRegistry
@@ -20,14 +21,17 @@ type AuthPage struct {
 	Register *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p AuthPage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.user, p.password, p.Login, p.Register}
 }
 
+// GetRoot return Root winget element
 func (p AuthPage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p AuthPage) OnActivated(fn func(b *tui.Button)) {
 	loginService := p.serviceRegistry.GetAuthService()
 	userService := p.serviceRegistry.GetUserService()

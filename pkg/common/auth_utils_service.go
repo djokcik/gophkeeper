@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=AuthUtilsService --with-expecter
+
+// AuthUtilsService provides methods for password and token
 type AuthUtilsService interface {
 	CreateToken(secretKey string, username string) (string, error)
 	ParseToken(accessToken string, secretKey string) (string, error)
@@ -23,10 +25,12 @@ func NewAuthUtilsService() AuthUtilsService {
 type userUtilsService struct {
 }
 
+// CompareHashAndPassword compare password expected and actual
 func (a userUtilsService) CompareHashAndPassword(password string, hash string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }
 
+// HashAndSalt return hash password with pepper
 func (a userUtilsService) HashAndSalt(pwd string, pepper string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(pwd+pepper), bcrypt.DefaultCost)
 	if err != nil {
@@ -36,6 +40,7 @@ func (a userUtilsService) HashAndSalt(pwd string, pepper string) (string, error)
 	return string(hash), nil
 }
 
+// CreateToken creates token with username and secretKey
 func (a userUtilsService) CreateToken(secretKey string, username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, models.Claims{
 		Username: username,
@@ -48,6 +53,7 @@ func (a userUtilsService) CreateToken(secretKey string, username string) (string
 	return token.SignedString([]byte(secretKey))
 }
 
+// ParseToken returns username by token
 func (a userUtilsService) ParseToken(accessToken string, secretKey string) (string, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &models.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

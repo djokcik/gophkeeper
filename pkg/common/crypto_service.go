@@ -15,6 +15,8 @@ import (
 )
 
 //go:generate mockery --name=CryptoService --with-expecter
+
+// CryptoService provides methods for crypto
 type CryptoService interface {
 	GenerateHash(value string) string
 	Encrypt(ctx context.Context, data []byte, key string) (string, error)
@@ -31,12 +33,14 @@ func NewCryptoService() CryptoService {
 	return &cryptoService{}
 }
 
+// GenerateHash returns hash by key
 func (s cryptoService) GenerateHash(key string) string {
 	h := sha256.New()
 	h.Write([]byte(key))
 	return hex.EncodeToString(h.Sum(nil))
 }
 
+// Encrypt returns encrypted data by key
 func (s cryptoService) Encrypt(ctx context.Context, data []byte, keyString string) (string, error) {
 	//Since the key is in string, we need to convert decode it to bytes
 	key, _ := hex.DecodeString(keyString)
@@ -69,6 +73,7 @@ func (s cryptoService) Encrypt(ctx context.Context, data []byte, keyString strin
 	return fmt.Sprintf("%x", ciphertext), nil
 }
 
+// Decrypt returns decrypted data by key
 func (s cryptoService) Decrypt(ctx context.Context, encryptedString string, keyString string) ([]byte, error) {
 	key, _ := hex.DecodeString(keyString)
 	enc, _ := hex.DecodeString(encryptedString)
@@ -103,6 +108,7 @@ func (s cryptoService) Decrypt(ctx context.Context, encryptedString string, keyS
 	return plaintext, nil
 }
 
+// EncryptData return encrypted data by password
 func (s cryptoService) EncryptData(ctx context.Context, userPassword string, data interface{}) (string, error) {
 	key := s.GenerateHash(userPassword)
 
@@ -121,6 +127,7 @@ func (s cryptoService) EncryptData(ctx context.Context, userPassword string, dat
 	return encryptedData, nil
 }
 
+// DecryptData return decrypted data by password
 func (s cryptoService) DecryptData(ctx context.Context, userPassword string, encryptedData string, response interface{}) error {
 	key := s.GenerateHash(userPassword)
 

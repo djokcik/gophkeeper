@@ -35,6 +35,8 @@ const (
 )
 
 //go:generate mockery --name=ClientRPCService --with-expecter
+
+// ClientRPCService provides methods for call RPC API
 type ClientRPCService interface {
 	Login(ctx context.Context, username string, password string) (string, error)
 	Register(ctx context.Context, username string, password string) (string, error)
@@ -90,6 +92,7 @@ func NewRPCService(
 	return &service
 }
 
+// Reconnect try to reconnect RPC API
 func (s *rpcService) Reconnect(ctx context.Context) error {
 	conf, err := s.sslConfig.LoadClientCertificate(s.cfg)
 	if err != nil {
@@ -112,10 +115,12 @@ func (s *rpcService) Reconnect(ctx context.Context) error {
 	return nil
 }
 
+// CheckOnline returns true if api exists
 func (s rpcService) CheckOnline() bool {
 	return s.api != nil
 }
 
+// Call should call RPC API with method, args and reply
 func (s *rpcService) Call(ctx context.Context, serviceMethod string, args interface{}, reply interface{}) error {
 	s.Log(ctx).Trace().Msgf("Call: start method - %s, args - %s", serviceMethod, args)
 
@@ -133,6 +138,7 @@ func (s *rpcService) Call(ctx context.Context, serviceMethod string, args interf
 	return err
 }
 
+// Login call RPC API Login user
 func (s rpcService) Login(ctx context.Context, username string, password string) (string, error) {
 	if !s.CheckOnline() {
 		return "", ErrAnonymousUser
@@ -153,6 +159,7 @@ func (s rpcService) Login(ctx context.Context, username string, password string)
 	return token, nil
 }
 
+// Register call RPC API Register user
 func (s rpcService) Register(ctx context.Context, username string, password string) (string, error) {
 	if !s.CheckOnline() {
 		return "", ErrAnonymousUser
@@ -171,50 +178,62 @@ func (s rpcService) Register(ctx context.Context, username string, password stri
 	return token, nil
 }
 
+// SaveRecordPersonalData call RPC API Save Personal Data Record
 func (s rpcService) SaveRecordPersonalData(ctx context.Context, token string, key string, data string) error {
 	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordPersonalDataHandler)
 }
 
+// LoadRecordPersonalDataByKey call RPC API Load Personal Data Record
 func (s rpcService) LoadRecordPersonalDataByKey(ctx context.Context, token string, key string) (string, error) {
 	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordPersonalDataByKeyHandler)
 }
 
+// RemoveRecordPersonalDataByKey call RPC API Remove Personal Data Record
 func (s rpcService) RemoveRecordPersonalDataByKey(ctx context.Context, token string, key string) error {
 	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordPersonalDataByKeyHandler)
 }
 
+// SaveRecordBankCard call RPC API Save Personal Bank Card
 func (s rpcService) SaveRecordBankCard(ctx context.Context, token string, key string, data string) error {
 	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordBankCardHandler)
 }
 
+// LoadRecordBankCardByKey call RPC API Load Bank Card
 func (s rpcService) LoadRecordBankCardByKey(ctx context.Context, token string, key string) (string, error) {
 	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordBankCardByKeyHandler)
 }
 
+// RemoveRecordBankCardByKey call RPC API Remove Bank Card
 func (s rpcService) RemoveRecordBankCardByKey(ctx context.Context, token string, key string) error {
 	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordBankCardByKeyHandler)
 }
 
+// SaveRecordTextData call RPC API Save Text Data
 func (s rpcService) SaveRecordTextData(ctx context.Context, token string, key string, data string) error {
 	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordTextDataHandler)
 }
 
+// LoadRecordTextDataByKey call RPC API Load Text Data
 func (s rpcService) LoadRecordTextDataByKey(ctx context.Context, token string, key string) (string, error) {
 	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordTextDataByKeyHandler)
 }
 
+// RemoveRecordTextDataByKey call RPC API Remove Text Data
 func (s rpcService) RemoveRecordTextDataByKey(ctx context.Context, token string, key string) error {
 	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordTextDataByKeyHandler)
 }
 
+// SaveRecordBinaryData call RPC API Save Binary Data
 func (s rpcService) SaveRecordBinaryData(ctx context.Context, token string, key string, data string) error {
 	return s.saveRecord(ctx, rpcdto.SaveRecordRequestDto{Token: token, Key: key, Data: data}, CallSaveRecordBinaryDataHandler)
 }
 
+// LoadRecordBinaryDataByKey call RPC API Load Binary Data
 func (s rpcService) LoadRecordBinaryDataByKey(ctx context.Context, token string, key string) (string, error) {
 	return s.loadRecordByKey(ctx, rpcdto.LoadRecordRequestDto{Key: key, Token: token}, CallLoadRecordBinaryDataByKeyHandler)
 }
 
+// RemoveRecordBinaryDataByKey call RPC API Remove Binary Data
 func (s rpcService) RemoveRecordBinaryDataByKey(ctx context.Context, token string, key string) error {
 	return s.removeRecordByKey(ctx, rpcdto.RemoveRecordRequestDto{Key: key, Token: token}, CallRemoveRecordBinaryDataByKeyHandler)
 }
@@ -272,6 +291,7 @@ func (s rpcService) saveRecord(ctx context.Context, recordDto rpcdto.SaveRecordR
 	return nil
 }
 
+// ActionRemove mark action as remove and save to local storage
 func (s rpcService) ActionRemove(ctx context.Context, key string, method string) error {
 	err := s.localStorage.RemoveRecord(ctx, key, method)
 	if err != nil {
@@ -282,6 +302,7 @@ func (s rpcService) ActionRemove(ctx context.Context, key string, method string)
 	return ErrSaveLocalStorage
 }
 
+// ActionSave mark action as save and save to local storage
 func (s rpcService) ActionSave(ctx context.Context, key string, data string, method string) error {
 	err := s.localStorage.SaveRecord(ctx, key, data, method)
 	if err != nil {

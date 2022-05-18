@@ -9,6 +9,8 @@ import (
 )
 
 //go:generate mockery --name=ServerRecordService --with-expecter
+
+// ServerRecordService provides base methods for all types record operations
 type ServerRecordService interface {
 	Save(ctx context.Context, username string, updateFn func(store *models.StorageData) error) error
 	Load(ctx context.Context, username string, loadFn func(store models.StorageData) string) (string, error)
@@ -27,6 +29,7 @@ func NewRecordService(keyLock KeyLockService, storage storage.Storage) ServerRec
 	}
 }
 
+// Save is base save record
 func (s recordService) Save(ctx context.Context, username string, updateFn func(store *models.StorageData) error) error {
 	s.keyLock.Lock(username)
 	defer s.keyLock.Unlock(username)
@@ -52,6 +55,7 @@ func (s recordService) Save(ctx context.Context, username string, updateFn func(
 	return nil
 }
 
+// Load is base load record
 func (s recordService) Load(ctx context.Context, username string, loadFn func(store models.StorageData) string) (string, error) {
 	store, err := s.storage.Read(ctx, username)
 	if err != nil {
@@ -62,6 +66,7 @@ func (s recordService) Load(ctx context.Context, username string, loadFn func(st
 	return loadFn(store), nil
 }
 
+// Remove is base remove record
 func (s recordService) Remove(ctx context.Context, username string, removeFn func(store *models.StorageData) error) error {
 	s.keyLock.Lock(username)
 	defer s.keyLock.Unlock(username)

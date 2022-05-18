@@ -10,6 +10,7 @@ import (
 	"github.com/marcusolsson/tui-go"
 )
 
+// TextDataSavePage is widget for Save TextData
 type TextDataSavePage struct {
 	view.PageHooks
 
@@ -25,14 +26,17 @@ type TextDataSavePage struct {
 	Back   *tui.Button
 }
 
+// GetFocusChain returns list of focused widgets
 func (p TextDataSavePage) GetFocusChain() []tui.Widget {
 	return []tui.Widget{p.keyField, p.textDataField, p.commentField, p.Submit, p.Back}
 }
 
+// GetRoot return Root winget element
 func (p TextDataSavePage) GetRoot() tui.Widget {
 	return p.Root
 }
 
+// OnActivated call one time. Needed for navigate between pages
 func (p TextDataSavePage) OnActivated(fn func(b *tui.Button)) {
 	service := p.serviceRegistry.GetRecordTextDataService()
 
