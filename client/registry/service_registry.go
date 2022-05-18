@@ -14,7 +14,7 @@ type ClientServiceRegistry interface {
 	GetSSLConfigService() common.SSLConfigService
 	GetStorageService() service.ClientStorageService
 
-	GetApiService() service.ClientRpcService
+	GetAPIService() service.ClientRPCService
 	GetAuthService() service.ClientAuthService
 	GetUserService() service.ClientUserService
 
@@ -28,7 +28,7 @@ type clientServiceRegistry struct {
 	cryptoService    common.CryptoService
 	sslConfigService common.SSLConfigService
 
-	apiService     service.ClientRpcService
+	apiService     service.ClientRPCService
 	authService    service.ClientAuthService
 	userService    service.ClientUserService
 	storageService service.ClientStorageService
@@ -45,7 +45,7 @@ func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServ
 	localStorage := storage.NewClientLocalStorage(ctx)
 
 	user := service.NewUserService()
-	api := service.NewRpcService(cfg, crypto, sslConfig, localStorage)
+	api := service.NewRPCService(cfg, crypto, sslConfig, localStorage)
 	clientStorage := service.NewClientStorageService(api, localStorage, user)
 	auth := service.NewClientAuthService(api, crypto)
 	record := recordservice.NewClientRecordService(crypto)
@@ -71,7 +71,7 @@ func (r clientServiceRegistry) GetRecordBankCardService() recordservice.RecordBa
 	return r.recordBankCardService
 }
 
-func (r clientServiceRegistry) GetApiService() service.ClientRpcService {
+func (r clientServiceRegistry) GetAPIService() service.ClientRPCService {
 	return r.apiService
 }
 

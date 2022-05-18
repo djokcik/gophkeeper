@@ -10,7 +10,7 @@ type UIClient struct {
 	widget Page
 }
 
-func NewUiClient() *UIClient {
+func NewUIClient() *UIClient {
 	ui, err := tui.New(nil)
 	if err != nil {
 		log.Fatal(err)

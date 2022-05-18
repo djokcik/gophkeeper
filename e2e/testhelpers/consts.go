@@ -20,22 +20,22 @@ var (
 var E2EUser = testmodels.ClientUser{Username: "my_name", Password: "my_password"}
 
 const (
-	CallSaveRecordPersonalDataHandler        = "RpcHandler.SaveRecordPersonalDataHandler"
-	CallLoadRecordPersonalDataByKeyHandler   = "RpcHandler.LoadRecordPersonalDataByKeyHandler"
-	CallRemoveRecordPersonalDataByKeyHandler = "RpcHandler.RemoveRecordPersonalDataByKeyHandler"
+	CallSaveRecordPersonalDataHandler        = "RPCHandler.SaveRecordPersonalDataHandler"
+	CallLoadRecordPersonalDataByKeyHandler   = "RPCHandler.LoadRecordPersonalDataByKeyHandler"
+	CallRemoveRecordPersonalDataByKeyHandler = "RPCHandler.RemoveRecordPersonalDataByKeyHandler"
 
-	CallSaveRecordBankCardHandler        = "RpcHandler.SaveRecordBankCardHandler"
-	CallLoadRecordBankCardByKeyHandler   = "RpcHandler.LoadRecordBankCardByKeyHandler"
-	CallRemoveRecordBankCardByKeyHandler = "RpcHandler.RemoveRecordBankCardByKeyHandler"
+	CallSaveRecordBankCardHandler        = "RPCHandler.SaveRecordBankCardHandler"
+	CallLoadRecordBankCardByKeyHandler   = "RPCHandler.LoadRecordBankCardByKeyHandler"
+	CallRemoveRecordBankCardByKeyHandler = "RPCHandler.RemoveRecordBankCardByKeyHandler"
 
-	CallSaveRecordTextDataHandler        = "RpcHandler.SaveRecordTextDataHandler"
-	CallLoadRecordTextDataByKeyHandler   = "RpcHandler.LoadRecordTextDataByKeyHandler"
-	CallRemoveRecordTextDataByKeyHandler = "RpcHandler.RemoveRecordTextDataByKeyHandler"
+	CallSaveRecordTextDataHandler        = "RPCHandler.SaveRecordTextDataHandler"
+	CallLoadRecordTextDataByKeyHandler   = "RPCHandler.LoadRecordTextDataByKeyHandler"
+	CallRemoveRecordTextDataByKeyHandler = "RPCHandler.RemoveRecordTextDataByKeyHandler"
 
-	CallSaveRecordBinaryDataHandler        = "RpcHandler.SaveRecordBinaryDataHandler"
-	CallLoadRecordBinaryDataByKeyHandler   = "RpcHandler.LoadRecordBinaryDataByKeyHandler"
-	CallRemoveRecordBinaryDataByKeyHandler = "RpcHandler.RemoveRecordBinaryDataByKeyHandler"
+	CallSaveRecordBinaryDataHandler        = "RPCHandler.SaveRecordBinaryDataHandler"
+	CallLoadRecordBinaryDataByKeyHandler   = "RPCHandler.LoadRecordBinaryDataByKeyHandler"
+	CallRemoveRecordBinaryDataByKeyHandler = "RPCHandler.RemoveRecordBinaryDataByKeyHandler"
 
-	CallRegisterHandler = "RpcHandler.RegisterHandler"
-	CallSignInHandler   = "RpcHandler.SignInHandler"
+	CallRegisterHandler = "RPCHandler.RegisterHandler"
+	CallSignInHandler   = "RPCHandler.SignInHandler"
 )

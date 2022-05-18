@@ -16,12 +16,12 @@ type RecordTextDataService interface {
 }
 
 type recordTextDataService struct {
-	api    service.ClientRpcService
+	api    service.ClientRPCService
 	user   service.ClientUserService
 	record ClientRecordService
 }
 
-func NewTextDataService(api service.ClientRpcService, user service.ClientUserService, record ClientRecordService) RecordTextDataService {
+func NewTextDataService(api service.ClientRPCService, user service.ClientUserService, record ClientRecordService) RecordTextDataService {
 	return &recordTextDataService{
 		api:    api,
 		user:   user,

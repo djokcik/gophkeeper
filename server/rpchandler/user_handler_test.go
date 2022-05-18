@@ -16,7 +16,7 @@ func TestRpcHandler_SignInHandler(t *testing.T) {
 
 		var reply string
 
-		handler := &RpcHandler{user: &mUser}
+		handler := &RPCHandler{user: &mUser}
 		err := handler.SignInHandler(rpcdto.LoginDto{Login: "test_login", Password: "test_password"}, &reply)
 
 		require.Equal(t, err, nil)
@@ -35,7 +35,7 @@ func TestRpcHandler_RegisterHandler(t *testing.T) {
 
 		var reply string
 
-		handler := &RpcHandler{user: &mUser}
+		handler := &RPCHandler{user: &mUser}
 		err := handler.RegisterHandler(rpcdto.RegisterDto{Login: "username", Password: "pass"}, &reply)
 
 		require.Equal(t, err, nil)

@@ -4,6 +4,7 @@ package mocks
 
 import (
 	context "context"
+
 	clientmodels "github.com/djokcik/gophkeeper/client/clientmodels"
 
 	mock "github.com/stretchr/testify/mock"

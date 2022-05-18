@@ -4,7 +4,6 @@ package mocks
 
 import (
 	models "github.com/djokcik/gophkeeper/models"
-
 	mock "github.com/stretchr/testify/mock"
 
 	testing "testing"

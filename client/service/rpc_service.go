@@ -34,8 +34,8 @@ const (
 	CallSignInHandler   = "RpcHandler.SignInHandler"
 )
 
-//go:generate mockery --name=ClientRpcService --with-expecter
-type ClientRpcService interface {
+//go:generate mockery --name=ClientRPCService --with-expecter
+type ClientRPCService interface {
 	Login(ctx context.Context, username string, password string) (string, error)
 	Register(ctx context.Context, username string, password string) (string, error)
 
@@ -56,7 +56,7 @@ type ClientRpcService interface {
 	SaveRecordBinaryData(ctx context.Context, token string, key string, data string) error
 
 	CheckOnline() bool
-	Call(ctx context.Context, serviceMethod string, args any, reply any) error
+	Call(ctx context.Context, serviceMethod string, args interface{}, reply interface{}) error
 }
 
 type rpcService struct {
@@ -68,12 +68,12 @@ type rpcService struct {
 	localStorage storage.ClientLocalStorage
 }
 
-func NewRpcService(
+func NewRPCService(
 	cfg client.Config,
 	crypto common.CryptoService,
 	sslConfig common.SSLConfigService,
 	localStorage storage.ClientLocalStorage,
-) ClientRpcService {
+) ClientRPCService {
 	ctx := context.Background()
 	service := rpcService{
 		cfg:          cfg,

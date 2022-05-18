@@ -33,7 +33,7 @@ tasks:
           GOOS: darwin
           GOARCH: arm64
 
-  build:
+  build_client_bin:
     cmds:
       - task: build_linux_amd64
       - task: build_windows_amd64
@@ -55,12 +55,23 @@ tasks:
 
   run_e2e:
     cmds:
+      - task: down
+      - task: up_e2e
+      - rm -rf ./e2e/e2e_success
+      - task: down
+
+  run_e2e_local:
+    cmds:
       - mkdir -p ./cache
       - task: build_server_bin
       - task: down
       - task: up_e2e
       - rm -rf ./e2e/e2e_success
       - task: down
+
+  test:
+    cmds:
+      - go test -v ./...
 
   generate:
     cmds:

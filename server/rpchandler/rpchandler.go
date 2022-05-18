@@ -12,8 +12,8 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// RpcHandler struct for all rpc handlers and require DI dependencies
-type RpcHandler struct {
+// RPCHandler struct for all rpc handlers and require DI dependencies
+type RPCHandler struct {
 	user service.ServerUserService
 	auth common.AuthService
 
@@ -23,13 +23,13 @@ type RpcHandler struct {
 	recordBinaryData   service.ServerRecordBinaryDataService
 }
 
-// NewRpcHandler constructor for RpcHandler
-func NewRpcHandler(cfg server.Config, store storage.Storage) *RpcHandler {
+// NewRPCHandler constructor for RPCHandler
+func NewRPCHandler(cfg server.Config, store storage.Storage) *RPCHandler {
 	authUtils := common.NewAuthUtilsService()
 	auth := common.NewAuthService(store, cfg.JWTSecretKey, authUtils)
 	serviceRegistry := registry.NewServerServiceRegistry(cfg, store, authUtils)
 
-	return &RpcHandler{
+	return &RPCHandler{
 		user: serviceRegistry.GetUserService(),
 		auth: auth,
 
@@ -40,9 +40,9 @@ func NewRpcHandler(cfg server.Config, store storage.Storage) *RpcHandler {
 	}
 }
 
-func (h *RpcHandler) Log(ctx context.Context) *zerolog.Logger {
+func (h *RPCHandler) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxLogger(ctx)
-	logger = logger.With().Str(logging.ServiceKey, "RpcHandler").Logger()
+	logger = logger.With().Str(logging.ServiceKey, "RPCHandler").Logger()
 
 	return &logger
 }

@@ -17,12 +17,12 @@ type RecordBankCardService interface {
 }
 
 type recordBankCardService struct {
-	api    service.ClientRpcService
+	api    service.ClientRPCService
 	user   service.ClientUserService
 	record ClientRecordService
 }
 
-func NewBankCardService(api service.ClientRpcService, user service.ClientUserService, record ClientRecordService) RecordBankCardService {
+func NewBankCardService(api service.ClientRPCService, user service.ClientUserService, record ClientRecordService) RecordBankCardService {
 	return &recordBankCardService{
 		api:    api,
 		user:   user,

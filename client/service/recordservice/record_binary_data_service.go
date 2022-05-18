@@ -16,12 +16,12 @@ type RecordBinaryDataService interface {
 }
 
 type recordBinaryDataService struct {
-	api    service.ClientRpcService
+	api    service.ClientRPCService
 	user   service.ClientUserService
 	record ClientRecordService
 }
 
-func NewBinaryDataService(api service.ClientRpcService, user service.ClientUserService, record ClientRecordService) RecordBinaryDataService {
+func NewBinaryDataService(api service.ClientRPCService, user service.ClientUserService, record ClientRecordService) RecordBinaryDataService {
 	return &recordBinaryDataService{
 		api:    api,
 		user:   user,

@@ -23,6 +23,7 @@ jobs:
       - name: Prepare binaries
         run: |
           task build_server_bin
+          task build_client_bin
         env:
           GOOS: linux
           GOARCH: amd64
@@ -41,9 +42,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
       - name: Tests
         run: |
-          go test -v ./...
+          task test
 
   e2e_tests:
     runs-on: ubuntu-latest
