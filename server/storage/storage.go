@@ -19,6 +19,7 @@ var (
 	ErrNotFound           = errors.New("storage: not found")
 	ErrLoginAlreadyExists = errors.New("storage: login already exists")
 
+	ErrInvalidSignature    = errors.New("storage: invalid signature")
 	ErrInvalidFileVersion  = errors.New("storage: invalid file version")
 	ErrNotFoundFileDecrypt = errors.New("storage: not found file decrypted")
 )

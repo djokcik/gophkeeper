@@ -72,7 +72,7 @@ func (s recordBankCardService) SaveRecord(ctx context.Context, key string, data 
 
 func (s recordBankCardService) Log(ctx context.Context) *zerolog.Logger {
 	_, logger := logging.GetCtxFileLogger(ctx)
-	logger = logger.With().Str(logging.ServiceKey, "ServerRecordBankCardService").Logger()
+	logger = logger.With().Str(logging.ServiceKey, "ClientRecordBankCardService").Logger()
 
 	return &logger
 }

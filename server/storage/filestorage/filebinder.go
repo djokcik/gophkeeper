@@ -9,6 +9,7 @@ import (
 	"github.com/djokcik/gophkeeper/models"
 	"github.com/djokcik/gophkeeper/pkg/common"
 	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server/helpers"
 	"github.com/djokcik/gophkeeper/server/storage"
 	"github.com/rs/zerolog"
 	"os"
@@ -19,10 +20,14 @@ var (
 )
 
 const (
-	lenVersion             = 2
-	lenAlgorithm           = 2
-	lenVersionAndAlgorithm = lenAlgorithm + lenAlgorithm
-	lenBeforeData          = lenVersionAndAlgorithm
+	BaseSignature = "0x9555123"
+
+	lenSignature                       = 4
+	lenVersion                         = 2
+	lenAlgorithm                       = 2
+	lenSignatureAndVersion             = lenSignature + lenVersion
+	lenSignatureAndVersionAndAlgorithm = lenSignatureAndVersion + lenAlgorithm
+	lenBeforeData                      = lenSignatureAndVersionAndAlgorithm
 )
 
 //go:generate mockery --name=FileBinder --with-expecter
@@ -70,15 +75,21 @@ func (s fileCryptoBinder) ReadStorage(ctx context.Context, username string) (mod
 		return models.StorageData{}, err
 	}
 
-	version := binary.BigEndian.Uint16(bytes[:lenVersion])
+	signature := binary.BigEndian.Uint32(bytes[:lenSignature])
+	if fmt.Sprintf("0x%s", helpers.IntToHex(signature)) != BaseSignature {
+		s.Log(ctx).Warn().Msgf("ReadStorage: invalid signature. Signature - %s", helpers.IntToHex(signature))
+		return models.StorageData{}, storage.ErrInvalidSignature
+	}
+
+	version := binary.BigEndian.Uint16(bytes[lenSignature:lenSignatureAndVersion])
 	if version != 1 {
-		s.Log(ctx).Warn().Err(err).Msg("ReadStorage: invalid version")
+		s.Log(ctx).Warn().Err(err).Msgf("ReadStorage: invalid version. Version - %d", version)
 		return models.StorageData{}, storage.ErrInvalidFileVersion
 	}
 
-	algo := binary.BigEndian.Uint16(bytes[lenVersion:lenVersionAndAlgorithm])
+	algo := binary.BigEndian.Uint16(bytes[lenSignatureAndVersion:lenSignatureAndVersionAndAlgorithm])
 	if _, ok := algorithm[algo]; !ok {
-		s.Log(ctx).Warn().Err(err).Msg("ReadStorage: invalid algorithm")
+		s.Log(ctx).Warn().Err(err).Msgf("ReadStorage: invalid algorithm. Algorithm - %d:%s", algo, algorithm[algo])
 		return models.StorageData{}, storage.ErrNotFoundFileDecrypt
 	}
 
@@ -114,9 +125,16 @@ func (s fileCryptoBinder) SaveStorage(ctx context.Context, data models.StorageDa
 		return err
 	}
 
+	signatureValue, err := helpers.HexToInt(BaseSignature)
+	if err != nil {
+		s.Log(ctx).Trace().Err(err).Msg("SaveStorage: invalid hext to int BaseSignature")
+		return err
+	}
+
 	bytes := make([]byte, lenBeforeData, lenBeforeData+len(encryptedData))
-	binary.BigEndian.PutUint16(bytes, 1)              // version
-	binary.BigEndian.PutUint16(bytes[lenVersion:], 1) // algorithm
+	binary.BigEndian.PutUint32(bytes, signatureValue)             // version
+	binary.BigEndian.PutUint16(bytes[lenSignature:], 1)           // version
+	binary.BigEndian.PutUint16(bytes[lenSignatureAndVersion:], 1) // algorithm
 	bytes = append(bytes, []byte(encryptedData)...)
 
 	err = os.WriteFile(filename, bytes, 0644)

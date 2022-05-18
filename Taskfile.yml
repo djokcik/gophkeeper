@@ -3,7 +3,7 @@ version: '3'
 tasks:
   build_bin:
     cmds:
-      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -o bin/gophkeeper_{{.GOOS}}_{{.GOARCH}} -ldflags "-X gophkeeper/client/view.BuildDate=`date -u +%Y-%m-%d.%H:%M:%S` -X gophkeeper/client/view.BuildVersion=1.0.0" cmd/client/main.go
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -o bin/gophkeeper_{{.GOOS}}_{{.GOARCH}} -ldflags "-X github.com/djokcik/gophkeeper/client/view.BuildDate=`date -u +%Y-%m-%d.%H:%M:%S` -X github.com/djokcik/gophkeeper/client/view.BuildVersion=1.0.0" cmd/client/main.go
 
   build_linux_amd64:
     cmds:

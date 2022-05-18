@@ -47,7 +47,7 @@ func NewClientServiceRegistry(ctx context.Context, cfg client.Config) ClientServ
 	user := service.NewUserService()
 	api := service.NewRPCService(cfg, crypto, sslConfig, localStorage)
 	clientStorage := service.NewClientStorageService(api, localStorage, user)
-	auth := service.NewClientAuthService(api, crypto)
+	auth := service.NewClientAuthService(api)
 	record := recordservice.NewClientRecordService(crypto)
 
 	return &clientServiceRegistry{
