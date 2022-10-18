@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  app:
+    image: golang:1.17-buster
+    working_dir: /app/e2e
+    ports:
+      - "8080:8080"
+    environment:
+      ADDRESS: localhost:8080
+      STORE_FILE: /tmp
+      PASSWORD_PEPPER: pepper
+      JWT_SECRET_KEY: JWTSecretKey
+      DB_SECRET_KEY: DBSecretKey
+      SSL_CERT_PATH: /app/cert/localhost.crt
+      SSL_KEY_PATH: /app/cert/localhost.key
+
+      GOPATH: /app/.cache
+    volumes:
+      - ./.cache:/app/.cache
+      - ./bin_server:/app/bin
+      - ./e2e:/app/e2e
+      - ./cert:/app/cert
+    command:
+      - /bin/bash
+      - -c
+      - |
+        go mod download
+        go test -v ./... && touch ./e2e_success

@@ -1,0 +1,74 @@
+package service
+
+import (
+	"context"
+	"github.com/djokcik/gophkeeper/models"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server"
+	"github.com/rs/zerolog"
+)
+
+//go:generate mockery --name=ServerRecordBankCardDataService  --with-expecter
+
+// ServerRecordBankCardDataService provide methods for control BankCardData
+type ServerRecordBankCardDataService interface {
+	Save(ctx context.Context, key string, username string, data string) error
+	Load(ctx context.Context, key string, username string) (string, error)
+	Remove(ctx context.Context, key string, username string) error
+}
+
+type recordBankCardDataService struct {
+	cfg    server.Config
+	record ServerRecordService
+}
+
+func NewServerRecordBankCardDataService(cfg server.Config, record ServerRecordService) ServerRecordBankCardDataService {
+	return &recordBankCardDataService{
+		cfg:    cfg,
+		record: record,
+	}
+}
+
+// Save is save record bank card data
+func (s recordBankCardDataService) Save(ctx context.Context, key string, username string, data string) error {
+	return s.record.Save(ctx, username, func(store *models.StorageData) error {
+		if store.BankCardData == nil {
+			store.BankCardData = make(map[string]string)
+		}
+
+		store.BankCardData[key] = data
+
+		return nil
+	})
+}
+
+// Load is load record bank card data
+func (s recordBankCardDataService) Load(ctx context.Context, key string, username string) (string, error) {
+	return s.record.Load(ctx, username, func(store models.StorageData) string {
+		return store.BankCardData[key]
+	})
+}
+
+// Remove is remove record bank card data
+func (s recordBankCardDataService) Remove(ctx context.Context, key string, username string) error {
+	return s.record.Remove(ctx, username, func(store *models.StorageData) error {
+		if store.BankCardData == nil {
+			return ErrNotFoundRecord
+		}
+
+		if _, ok := store.BankCardData[key]; !ok {
+			return ErrNotFoundRecord
+		}
+
+		delete(store.BankCardData, key)
+
+		return nil
+	})
+}
+
+func (s *recordBankCardDataService) Log(ctx context.Context) *zerolog.Logger {
+	_, logger := logging.GetCtxLogger(ctx)
+	logger = logger.With().Str(logging.ServiceKey, "ServerRecordBankCardDataService").Logger()
+
+	return &logger
+}

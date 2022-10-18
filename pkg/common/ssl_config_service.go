@@ -1,0 +1,51 @@
+package common
+
+import (
+	"crypto/tls"
+	"crypto/x509"
+	"github.com/djokcik/gophkeeper/client"
+	"github.com/djokcik/gophkeeper/pkg/logging"
+	"github.com/djokcik/gophkeeper/server"
+	"io/ioutil"
+)
+
+//go:generate mockery --name=SSLConfigService
+
+// SSLConfigService provide methods for ssl
+type SSLConfigService interface {
+	LoadClientCertificate(cfg client.Config) (*tls.Config, error)
+	LoadServerCertificate(cfg server.Config) (*tls.Config, error)
+}
+
+type sslConfigService struct {
+}
+
+func NewSSLConfigService() SSLConfigService {
+	return &sslConfigService{}
+}
+
+// LoadClientCertificate returns client tls config by path
+func (s sslConfigService) LoadClientCertificate(cfg client.Config) (*tls.Config, error) {
+	log := logging.NewFileLogger()
+
+	cert, err := ioutil.ReadFile(cfg.SSLCert)
+	if err != nil {
+		log.Error().Err(err).Msgf("Couldn't load ssl certificate *.crt: %v", cfg)
+		return nil, err
+	}
+
+	certPool := x509.NewCertPool()
+	certPool.AppendCertsFromPEM(cert)
+	return &tls.Config{RootCAs: certPool}, nil
+}
+
+// LoadServerCertificate returns server tls config by path
+func (s sslConfigService) LoadServerCertificate(cfg server.Config) (*tls.Config, error) {
+	cert, err := tls.LoadX509KeyPair(cfg.SSLCertPath, cfg.SSLKeyPath)
+	if err != nil {
+		logging.NewLogger().Err(err).Msgf("Couldn't load ssl certificate *.crt, *.key: %v", cfg)
+		return nil, err
+	}
+
+	return &tls.Config{Certificates: []tls.Certificate{cert}}, nil
+}

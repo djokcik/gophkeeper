@@ -1,0 +1,78 @@
+version: '3'
+
+tasks:
+  build_bin:
+    cmds:
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -o bin/gophkeeper_{{.GOOS}}_{{.GOARCH}} -ldflags "-X github.com/djokcik/gophkeeper/client/view.BuildDate=`date -u +%Y-%m-%d.%H:%M:%S` -X github.com/djokcik/gophkeeper/client/view.BuildVersion=1.0.0" cmd/client/main.go
+
+  build_linux_amd64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: linux
+          GOARCH: amd64
+
+  build_windows_amd64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: windows
+          GOARCH: amd64
+
+  build_darwin_amd64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: darwin
+          GOARCH: amd64
+
+  build_darwin_arm64:
+    cmds:
+      - task: build_bin
+        vars:
+          GOOS: darwin
+          GOARCH: arm64
+
+  build_client_bin:
+    cmds:
+      - task: build_linux_amd64
+      - task: build_windows_amd64
+      - task: build_darwin_arm64
+      - task: build_darwin_amd64
+
+  build_server_bin:
+    cmds:
+      - GOOS=linux GOARCH=amd64 go build -o bin_server/app cmd/server/main.go
+
+  down:
+    cmds:
+      - docker-compose down -v --rmi local --remove-orphans
+
+  up_e2e:
+    cmds:
+      - docker-compose up --build --force-recreate app
+      - test -f ./e2e/e2e_success
+
+  run_e2e:
+    cmds:
+      - task: down
+      - task: up_e2e
+      - rm -rf ./e2e/e2e_success
+      - task: down
+
+  run_e2e_local:
+    cmds:
+      - mkdir -p ./cache
+      - task: build_server_bin
+      - task: down
+      - task: up_e2e
+      - rm -rf ./e2e/e2e_success
+      - task: down
+
+  test:
+    cmds:
+      - go test -v ./...
+
+  generate:
+    cmds:
+      - go generate ./...
